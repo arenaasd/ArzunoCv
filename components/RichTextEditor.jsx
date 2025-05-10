@@ -1,5 +1,5 @@
 'use client';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Editor,
   EditorProvider,
@@ -28,6 +28,12 @@ Rules:
 
 const RichTextEditor = ({ value, onChange, title }) => {
   const [generating, setGenerating] = useState(false);
+  const [editorValue, setEditorValue] = useState(value || '');
+  
+  // Sync the component with external value changes
+  useEffect(() => {
+    setEditorValue(value || '');
+  }, [value]);
   
   const sanitizeHtml = (html) => {
     // Remove any non-HTML content
@@ -64,6 +70,12 @@ const RichTextEditor = ({ value, onChange, title }) => {
     return cleanHtml;
   };
   
+  const handleEditorChange = (e) => {
+    const newValue = e.target.value;
+    setEditorValue(newValue);
+    onChange(newValue); // Notify parent component
+  };
+  
   const GenerateSummaryAi = async () => {
     if (!title) {
       toast.error('Please add position title to generate summary.');
@@ -83,7 +95,13 @@ const RichTextEditor = ({ value, onChange, title }) => {
       const cleanSummary = sanitizeHtml(summary);
       console.log('Cleaned summary:', cleanSummary);
       
+      // Update local state
+      setEditorValue(cleanSummary);
+      
+      // Explicitly call onChange to update parent component
       onChange(cleanSummary);
+      
+      toast.success('Summary generated successfully');
     } catch (error) {
       console.error('AI summary error:', error.response?.data || error.message);
       toast.error('Failed to generate summary.');
@@ -123,8 +141,8 @@ const RichTextEditor = ({ value, onChange, title }) => {
             <BtnLink />
           </Toolbar>
           <Editor
-            value={value}
-            onChange={(e) => onChange(e.target.value)}
+            value={editorValue}
+            onChange={handleEditorChange}
             className="w-full"
           />
         </div>

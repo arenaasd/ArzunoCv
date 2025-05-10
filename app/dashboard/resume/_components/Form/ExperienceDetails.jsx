@@ -69,11 +69,14 @@ const ExperienceDetails = ({ enableNext }) => {
     // Log the value being received from the rich text editor
     console.log(`Text editor value for index ${index}:`, value);
     
+    // Ensure value is not null or undefined
+    const sanitizedValue = value || '';
+    
     setExperienceList(prevList => {
       const updated = [...prevList];
       updated[index] = { 
         ...updated[index], 
-        summary: value 
+        summary: sanitizedValue 
       };
       return updated;
     });
@@ -110,12 +113,11 @@ const ExperienceDetails = ({ enableNext }) => {
   
     setSaving(true);
     try {
-      // Remove any Strapi IDs before sending to API
+      // Ensure all experience items have a valid summary
       const cleanExperience = experienceList.map(({ id, ...rest }) => {
-        // Ensure the summary is a string (not null or undefined)
         return {
           ...rest,
-          summary: rest.summary || ''
+          summary: rest.summary || '' // Ensure summary is never null or undefined
         };
       });
       
