@@ -66,9 +66,15 @@ const ExperienceDetails = ({ enableNext }) => {
   };
 
   const handleTextEditorChange = (value, index) => {
+    // Log the value being received from the rich text editor
+    console.log(`Text editor value for index ${index}:`, value);
+    
     setExperienceList(prevList => {
       const updated = [...prevList];
-      updated[index] = { ...updated[index], summary: value };
+      updated[index] = { 
+        ...updated[index], 
+        summary: value 
+      };
       return updated;
     });
   };
@@ -105,7 +111,13 @@ const ExperienceDetails = ({ enableNext }) => {
     setSaving(true);
     try {
       // Remove any Strapi IDs before sending to API
-      const cleanExperience = experienceList.map(({ id, ...rest }) => rest);
+      const cleanExperience = experienceList.map(({ id, ...rest }) => {
+        // Ensure the summary is a string (not null or undefined)
+        return {
+          ...rest,
+          summary: rest.summary || ''
+        };
+      });
       
       const data = {
         data: {
@@ -113,11 +125,25 @@ const ExperienceDetails = ({ enableNext }) => {
         }
       };
       
-      console.log('Sending data to API:', data);
+      // Log the exact data being sent to help debug
+      console.log('Experience data structure:', JSON.stringify(data));
+      
       await GlobalApi.UpdateResumeDetails(params.resumeId, data);
       toast.success('Experience updated successfully.');
     } catch (err) {
-      console.error('Error updating resume:', err.response?.data || err.message);
+      console.error('Error updating resume:', err);
+      
+      // More detailed error logging
+      if (err.response) {
+        console.error('Response data:', err.response.data);
+        console.error('Response status:', err.response.status);
+        console.error('Response headers:', err.response.headers);
+      } else if (err.request) {
+        console.error('Request was made but no response received:', err.request);
+      } else {
+        console.error('Error message:', err.message);
+      }
+      
       toast.error('Failed to update experience. Please try again.');
     } finally {
       setSaving(false);
