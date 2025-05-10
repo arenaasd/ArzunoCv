@@ -39,6 +39,9 @@ import ClientLayout from './ClientLayout'  // Your client-side wrapper (for Cler
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
+       <head>
+        <meta name="google-site-verification" content="WnbzgcKwlmgQNwVamL5Ou7wfRJZVKHMhcmtkQbKE2V4" />     
+         </head>
       <body>
         <ClientLayout>
           {children}
