@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const ExperiencePreview = ({resumeInfo}) => {
   return (
@@ -37,14 +37,15 @@ const ExperiencePreview = ({resumeInfo}) => {
             </div>
           </div>
           
+          {/* Add explicit styling for bullet points and lists */}
           <div 
             dangerouslySetInnerHTML={{__html: experience?.summary}} 
-            className="text-xs mt-1 leading-relaxed"
+            className="text-xs mt-1 leading-relaxed experience-summary"
           />
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default ExperiencePreview
+export default ExperiencePreview;
