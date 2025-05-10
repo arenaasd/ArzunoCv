@@ -1,5 +1,5 @@
 export const metadata = {
-  title: 'Edit Resume',
+  title: 'Edit Resume - ArzunoCV',
   description: 'Easily edit and customize your resume details with ArzunoCV. Update your information and preview changes in real-time.',
 }
 
