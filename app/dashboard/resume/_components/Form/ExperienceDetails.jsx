@@ -104,16 +104,26 @@ const ExperienceDetails = ({ enableNext }) => {
   
     setSaving(true);
     try {
-      const data = {
-        data: {
-          experience: experienceList
-        }
+      // Log the data to see what's being sent
+      console.log('Sending data to API:', { experience: experienceList });
+      
+      // Make sure the API expects this structure - modify if needed
+      const payload = {
+        experience: experienceList
       };
       
-      await GlobalApi.UpdateResumeDetails(params.resumeId, data);
+      // Send the updated payload format
+      await GlobalApi.UpdateResumeDetails(params.resumeId, payload);
       toast.success('Experience updated successfully.');
     } catch (err) {
-      console.error('Error updating resume:', err.response?.data || err.message);
+      console.error('Error updating resume:', err);
+      
+      // More detailed error logging
+      if (err.response) {
+        console.error('Response error:', err.response.data);
+        console.error('Status code:', err.response.status);
+      }
+      
       toast.error('Failed to update experience. Please try again.');
     } finally {
       setSaving(false);
