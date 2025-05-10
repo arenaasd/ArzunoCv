@@ -56,7 +56,7 @@ const ExperienceDetails = ({ enableNext }) => {
     }
   }, [experienceList, setResumeInfo, initialized]);
 
-  const handleChange = (index, e) => {
+  const handleChange = (e, index) => {
     const { name, value } = e.target;
     setExperienceList(prevList => {
       const updated = [...prevList];
@@ -104,26 +104,20 @@ const ExperienceDetails = ({ enableNext }) => {
   
     setSaving(true);
     try {
-      // Log the data to see what's being sent
-      console.log('Sending data to API:', { experience: experienceList });
+      // Remove any Strapi IDs before sending to API
+      const cleanExperience = experienceList.map(({ id, ...rest }) => rest);
       
-      // Make sure the API expects this structure - modify if needed
-      const payload = {
-        experience: experienceList
+      const data = {
+        data: {
+          experience: cleanExperience
+        }
       };
       
-      // Send the updated payload format
-      await GlobalApi.UpdateResumeDetails(params.resumeId, payload);
+      console.log('Sending data to API:', data);
+      await GlobalApi.UpdateResumeDetails(params.resumeId, data);
       toast.success('Experience updated successfully.');
     } catch (err) {
-      console.error('Error updating resume:', err);
-      
-      // More detailed error logging
-      if (err.response) {
-        console.error('Response error:', err.response.data);
-        console.error('Status code:', err.response.status);
-      }
-      
+      console.error('Error updating resume:', err.response?.data || err.message);
       toast.error('Failed to update experience. Please try again.');
     } finally {
       setSaving(false);
@@ -137,64 +131,78 @@ const ExperienceDetails = ({ enableNext }) => {
         <p>Add your previous job experience</p>
 
         {experienceList.map((item, index) => (
-          <div key={index} className="grid grid-cols-2 gap-3 border p-3 my-5 rounded-lg">
-            <div>
-              <label className='text-sm my-1'>Position Title<span className="text-red-500">*</span></label>
-              <Input 
-                value={item.title || ''}
-                name="title" 
-                onChange={(e) => handleChange(index, e)}
-              />
+          <div key={index} className="border p-3 my-5 rounded-lg">
+            <div className="grid grid-cols-2 gap-3">
+              <div>
+                <label className='text-sm my-1'>Position Title<span className="text-red-500">*</span></label>
+                <Input 
+                  value={item.title || ''}
+                  name="title" 
+                  onChange={(e) => handleChange(e, index)}
+                />
+              </div>
+              <div>
+                <label className='text-sm my-1'>Company Name<span className="text-red-500">*</span></label>
+                <Input
+                  value={item.companyName || ''}
+                  name="companyName"
+                  onChange={(e) => handleChange(e, index)} 
+                />
+              </div>
+              <div>
+                <label className='text-sm my-1'>City<span className="text-red-500">*</span></label>
+                <Input 
+                  value={item.city || ''}
+                  name="city" 
+                  onChange={(e) => handleChange(e, index)} 
+                />
+              </div>
+              <div>
+                <label className='text-sm my-1'>State<span className="text-red-500">*</span></label>
+                <Input 
+                  value={item.state || ''}
+                  name="state"
+                  onChange={(e) => handleChange(e, index)}
+                />
+              </div>
+              <div>
+                <label className='text-sm my-1'>Start Date<span className="text-red-500">*</span></label>
+                <Input 
+                  value={item.startDate || ''} 
+                  type="date"
+                  name="startDate" 
+                  onChange={(e) => handleChange(e, index)} 
+                />
+              </div>
+              <div>
+                <label className='text-sm my-1'>End Date</label>
+                <Input 
+                  value={item.endDate || ''} 
+                  type="date" 
+                  name="endDate" 
+                  onChange={(e) => handleChange(e, index)} 
+                />
+              </div>
+              <div className="col-span-2">
+                <RichTextEditor
+                  value={item.summary || ''}
+                  onChange={(value) => handleTextEditorChange(value, index)}
+                  title={item.title || 'Experience Summary'} 
+                />
+              </div>
             </div>
-            <div>
-              <label className='text-sm my-1'>Company Name<span className="text-red-500">*</span></label>
-              <Input
-                value={item.companyName || ''}
-                name="companyName"
-                onChange={(e) => handleChange(index, e)} 
-              />
-            </div>
-            <div>
-              <label className='text-sm my-1'>City<span className="text-red-500">*</span></label>
-              <Input 
-                value={item.city || ''}
-                name="city" 
-                onChange={(e) => handleChange(index, e)} 
-              />
-            </div>
-            <div>
-              <label className='text-sm my-1'>State<span className="text-red-500">*</span></label>
-              <Input 
-                value={item.state || ''}
-                name="state"
-                onChange={(e) => handleChange(index, e)}
-              />
-            </div>
-            <div>
-              <label className='text-sm my-1'>Start Date<span className="text-red-500">*</span></label>
-              <Input 
-                value={item.startDate || ''} 
-                type="date"
-                name="startDate" 
-                onChange={(e) => handleChange(index, e)} 
-              />
-            </div>
-            <div>
-              <label className='text-sm my-1'>End Date</label>
-              <Input 
-                value={item.endDate || ''} 
-                type="date" 
-                name="endDate" 
-                onChange={(e) => handleChange(index, e)} 
-              />
-            </div>
-            <div className="col-span-2">
-              <RichTextEditor
-                value={item.summary || ''}
-                onChange={(value) => handleTextEditorChange(value, index)}
-                title={item.title || 'Experience Summary'} 
-              />
-            </div>
+            {experienceList.length > 1 && (
+              <div className="mt-2 text-right">
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => removeExperience(index)} 
+                  className="bg-red-500 text-white"
+                >
+                  Remove This Entry
+                </Button>
+              </div>
+            )}
           </div>
         ))}
 
