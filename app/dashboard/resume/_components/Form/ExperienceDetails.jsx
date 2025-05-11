@@ -66,9 +66,6 @@ const ExperienceDetails = ({ enableNext }) => {
   };
 
   const handleTextEditorChange = (value, index) => {
-    // Log the value being received from the rich text editor
-    console.log(`Text editor value for index ${index}:`, value);
-    
     // Ensure value is not null or undefined
     const sanitizedValue = value || '';
     
@@ -127,9 +124,6 @@ const ExperienceDetails = ({ enableNext }) => {
         }
       };
       
-      // Log the exact data being sent to help debug
-      console.log('Experience data structure:', JSON.stringify(data));
-      
       await GlobalApi.UpdateResumeDetails(params.resumeId, data);
       toast.success('Experience updated successfully.');
     } catch (err) {
@@ -138,12 +132,6 @@ const ExperienceDetails = ({ enableNext }) => {
       // More detailed error logging
       if (err.response) {
         console.error('Response data:', err.response.data);
-        console.error('Response status:', err.response.status);
-        console.error('Response headers:', err.response.headers);
-      } else if (err.request) {
-        console.error('Request was made but no response received:', err.request);
-      } else {
-        console.error('Error message:', err.message);
       }
       
       toast.error('Failed to update experience. Please try again.');
@@ -154,78 +142,84 @@ const ExperienceDetails = ({ enableNext }) => {
 
   return (
     <div>
-      <div className="p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-8">
+      <div className="p-3 sm:p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-6 sm:mt-8">
         <h2 className="font-bold text-lg">Experience</h2>
-        <p>Add your previous job experience</p>
+        <p className="text-sm sm:text-base text-gray-600">Add your previous job experience</p>
 
         {experienceList.map((item, index) => (
-          <div key={index} className="border p-3 my-5 rounded-lg">
-            <div className="grid grid-cols-2 gap-3">
+          <div key={index} className="border p-2 sm:p-3 my-4 sm:my-5 rounded-lg">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
               <div>
-                <label className='text-sm my-1'>Position Title<span className="text-red-500">*</span></label>
+                <label className='text-xs sm:text-sm my-1 block'>Position Title<span className="text-red-500">*</span></label>
                 <Input 
                   value={item.title || ''}
                   name="title" 
                   onChange={(e) => handleChange(e, index)}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label className='text-sm my-1'>Company Name<span className="text-red-500">*</span></label>
+                <label className='text-xs sm:text-sm my-1 block'>Company Name<span className="text-red-500">*</span></label>
                 <Input
                   value={item.companyName || ''}
                   name="companyName"
-                  onChange={(e) => handleChange(e, index)} 
+                  onChange={(e) => handleChange(e, index)}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label className='text-sm my-1'>City<span className="text-red-500">*</span></label>
+                <label className='text-xs sm:text-sm my-1 block'>City<span className="text-red-500">*</span></label>
                 <Input 
                   value={item.city || ''}
                   name="city" 
-                  onChange={(e) => handleChange(e, index)} 
+                  onChange={(e) => handleChange(e, index)}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label className='text-sm my-1'>State<span className="text-red-500">*</span></label>
+                <label className='text-xs sm:text-sm my-1 block'>State<span className="text-red-500">*</span></label>
                 <Input 
                   value={item.state || ''}
                   name="state"
                   onChange={(e) => handleChange(e, index)}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label className='text-sm my-1'>Start Date<span className="text-red-500">*</span></label>
+                <label className='text-xs sm:text-sm my-1 block'>Start Date<span className="text-red-500">*</span></label>
                 <Input 
                   value={item.startDate || ''} 
                   type="date"
                   name="startDate" 
-                  onChange={(e) => handleChange(e, index)} 
+                  onChange={(e) => handleChange(e, index)}
+                  className="text-sm"
                 />
               </div>
               <div>
-                <label className='text-sm my-1'>End Date</label>
+                <label className='text-xs sm:text-sm my-1 block'>End Date</label>
                 <Input 
                   value={item.endDate || ''} 
                   type="date" 
                   name="endDate" 
-                  onChange={(e) => handleChange(e, index)} 
+                  onChange={(e) => handleChange(e, index)}
+                  className="text-sm"
                 />
               </div>
-              <div className="col-span-2">
+              <div className="col-span-1 sm:col-span-2 mt-2">
                 <RichTextEditor
                   value={item.summary || ''}
                   onChange={(value) => handleTextEditorChange(value, index)}
-                  title={item.title || 'Experience Summary'} 
+                  title={item.title || 'Experience Summary'}
                 />
               </div>
             </div>
             {experienceList.length > 1 && (
-              <div className="mt-2 text-right">
+              <div className="mt-3 flex justify-end">
                 <Button 
                   variant="outline" 
                   size="sm"
                   onClick={() => removeExperience(index)} 
-                  className="bg-red-500 text-white"
+                  className="bg-red-500 text-white text-xs sm:text-sm"
                 >
                   Remove This Entry
                 </Button>
@@ -234,19 +228,32 @@ const ExperienceDetails = ({ enableNext }) => {
           </div>
         ))}
 
-        <div className="flex mt-3 justify-between">
-          <div className="flex gap-2">
-            <Button onClick={addExperience}>+ Add More Experience</Button>
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-3 mt-4">
+          <div className="flex flex-col xs:flex-row gap-2">
+            <Button 
+              onClick={addExperience} 
+              className="text-xs sm:text-sm w-full xs:w-auto whitespace-nowrap"
+              size="sm"
+            >
+              + Add More Experience
+            </Button>
             <Button 
               variant="outline" 
               onClick={() => removeExperience(experienceList.length - 1)} 
-              className="bg-red-500 text-white"
+              className="bg-red-500 text-white text-xs sm:text-sm w-full xs:w-auto whitespace-nowrap"
               disabled={experienceList.length <= 1}
+              size="sm"
             >
               Delete Last Entry
             </Button>
           </div>
-          <Button type="button" onClick={onSave} disabled={saving}>
+          <Button 
+            type="button" 
+            onClick={onSave} 
+            disabled={saving}
+            className="w-full xs:w-auto mt-2 sm:mt-0"
+            size="sm"
+          >
             {saving ? <LoaderCircle className="animate-spin mr-2" size={16} /> : null}
             Save
           </Button>

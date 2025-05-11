@@ -116,72 +116,78 @@ const EducationDetails = ({ enableNext }) => {
 
   return (
     <div>
-      <div className="p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-8">
+      <div className="p-3 sm:p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-6 sm:mt-8">
         <h2 className="font-bold text-lg">Education</h2>
-        <p>Add your education details</p>
+        <p className="text-sm sm:text-base text-gray-600">Add your education details</p>
         <div>
           {educationList.map((item, index) => (
-            <div key={index} className="border p-3 my-5 rounded-lg">
-              <div className="grid grid-cols-2 gap-3">
-                <div className="col-span-2">
-                  <label className="text-sm my-1">University/College Name<span className="text-red-500">*</span></label>
+            <div key={index} className="border p-2 sm:p-3 my-4 sm:my-5 rounded-lg">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 sm:gap-3">
+                <div className="col-span-1 sm:col-span-2">
+                  <label className="text-xs sm:text-sm my-1 block">University/College Name<span className="text-red-500">*</span></label>
                   <Input 
                     value={item.universityOrCollegeName || ''} 
                     name="universityOrCollegeName" 
-                    onChange={(e) => handleChange(e, index)} 
+                    onChange={(e) => handleChange(e, index)}
+                    className="text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-sm my-1">Degree<span className="text-red-500">*</span></label>
+                  <label className="text-xs sm:text-sm my-1 block">Degree<span className="text-red-500">*</span></label>
                   <Input 
                     value={item.degree || ''} 
                     name="degree" 
-                    onChange={(e) => handleChange(e, index)} 
+                    onChange={(e) => handleChange(e, index)}
+                    className="text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-sm my-1">Major</label>
+                  <label className="text-xs sm:text-sm my-1 block">Major</label>
                   <Input 
                     value={item.major || ''} 
                     name="major" 
-                    onChange={(e) => handleChange(e, index)} 
+                    onChange={(e) => handleChange(e, index)}
+                    className="text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-sm my-1">Start Date<span className="text-red-500">*</span></label>
+                  <label className="text-xs sm:text-sm my-1 block">Start Date<span className="text-red-500">*</span></label>
                   <Input 
                     value={item.startDate || ''} 
                     type="date"  
                     name="startDate" 
-                    onChange={(e) => handleChange(e, index)} 
+                    onChange={(e) => handleChange(e, index)}
+                    className="text-sm"
                   />
                 </div>
                 <div>
-                  <label className="text-sm my-1">End Date</label>
+                  <label className="text-xs sm:text-sm my-1 block">End Date</label>
                   <Input 
                     value={item.endDate || ''} 
                     type="date" 
                     name="endDate" 
-                    onChange={(e) => handleChange(e, index)} 
+                    onChange={(e) => handleChange(e, index)}
+                    className="text-sm"
                   />
                 </div>
-                <div className="col-span-2">
-                  <label className="text-sm my-1">Description</label>
+                <div className="col-span-1 sm:col-span-2">
+                  <label className="text-xs sm:text-sm my-1 block">Description</label>
                   <Textarea 
                     value={item.description || ''} 
                     name="description" 
                     onChange={(e) => handleChange(e, index)} 
                     placeholder="Describe your education, achievements, etc."
+                    className="text-sm h-24 sm:h-32"
                   />
                 </div>
               </div>
               {educationList.length > 1 && (
-                <div className="mt-2 text-right">
+                <div className="mt-3 flex justify-end">
                   <Button 
                     variant="outline" 
                     size="sm"
                     onClick={() => removeEducation(index)} 
-                    className="bg-red-500 text-white"
+                    className="bg-red-500 text-white text-xs sm:text-sm"
                   >
                     Remove This Entry
                   </Button>
@@ -190,19 +196,32 @@ const EducationDetails = ({ enableNext }) => {
             </div>
           ))}
         </div>
-        <div className="flex mt-3 justify-between">
-          <div className="flex gap-2">
-            <Button onClick={addNewEducation}>+ Add More Education</Button>
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-3 mt-4">
+          <div className="flex flex-col xs:flex-row gap-2">
+            <Button 
+              onClick={addNewEducation}
+              className="text-xs sm:text-sm w-full xs:w-auto whitespace-nowrap"
+              size="sm"
+            >
+              + Add More Education
+            </Button>
             <Button 
               variant="outline" 
               onClick={() => removeEducation(educationList.length - 1)} 
-              className="bg-red-500 text-white"
+              className="bg-red-500 text-white text-xs sm:text-sm w-full xs:w-auto whitespace-nowrap"
               disabled={educationList.length <= 1}
+              size="sm"
             >
               Delete Last Entry
             </Button>
           </div>
-          <Button type="button" onClick={onSave} disabled={saving}>
+          <Button 
+            type="button" 
+            onClick={onSave} 
+            disabled={saving}
+            className="w-full xs:w-auto mt-2 sm:mt-0"
+            size="sm"
+          >
             {saving ? <LoaderCircle className="animate-spin mr-2" size={16} /> : null}
             Save
           </Button>

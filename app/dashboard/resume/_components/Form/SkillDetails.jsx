@@ -111,24 +111,25 @@ const SkillDetails = ({ enableNext }) => {
 
   return (
     <div>
-      <div className="p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-8">
+      <div className="p-3 sm:p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-6 sm:mt-8">
         <h2 className="font-bold text-lg">Skills</h2>
-        <p>Add your top skills</p>
+        <p className="text-sm sm:text-base text-gray-600">Add your top skills</p>
         <div>
           {skillsList.map((skill, index) => (
-            <div key={index} className="flex flex-col md:flex-row md:items-center justify-between p-3 mb-2 border rounded-lg">
-              <div className="w-full md:w-2/3 mb-2 md:mb-0 md:mr-4">
-                <label className="text-sm my-1">Skill Name<span className="text-red-500">*</span></label>
+            <div key={index} className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2 sm:p-3 mb-2 border rounded-lg">
+              <div className="w-full sm:w-2/3 mb-2 sm:mb-0 sm:mr-4">
+                <label className="text-xs sm:text-sm block my-1">Skill Name<span className="text-red-500">*</span></label>
                 <Input 
                   value={skill.name || ''} 
                   onChange={(e) => handleChange(index, "name", e.target.value)}
                   placeholder="e.g. JavaScript, Project Management, etc."
+                  className="text-sm"
                 />
               </div>
               <div className="flex flex-col items-center">
-                <label className="text-sm mb-1">Skill Level</label>
+                <label className="text-xs sm:text-sm block mb-1">Skill Level</label>
                 <Rating 
-                  style={{ maxWidth: 150 }} 
+                  style={{ maxWidth: 120 }} 
                   value={skill.rating || 0} 
                   onChange={(value) => handleChange(index, "rating", value)} 
                 />
@@ -138,7 +139,8 @@ const SkillDetails = ({ enableNext }) => {
                   variant="outline" 
                   size="icon"
                   onClick={() => removeSkill(index)} 
-                  className="bg-red-500 text-white ml-2 mt-2 md:mt-0"
+                  className="bg-red-500 text-white ml-auto mt-2 sm:mt-0 sm:ml-2"
+                  aria-label="Remove skill"
                 >
                   ×
                 </Button>
@@ -146,19 +148,32 @@ const SkillDetails = ({ enableNext }) => {
             </div>
           ))}
         </div>
-        <div className="flex mt-3 justify-between">
-          <div className="flex gap-2">
-            <Button onClick={addNewSkill}>+ Add More Skill</Button>
+        <div className="flex flex-col sm:flex-row sm:justify-between gap-3 mt-4">
+          <div className="flex flex-col xs:flex-row gap-2">
+            <Button 
+              onClick={addNewSkill}
+              className="text-xs sm:text-sm w-full xs:w-auto whitespace-nowrap"
+              size="sm"
+            >
+              + Add More Skill
+            </Button>
             <Button 
               variant="outline" 
               onClick={() => removeSkill(skillsList.length - 1)} 
-              className="bg-red-500 text-white"
+              className="bg-red-500 text-white text-xs sm:text-sm w-full xs:w-auto whitespace-nowrap"
               disabled={skillsList.length <= 1}
+              size="sm"
             >
               Delete Last Skill
             </Button>
           </div>
-          <Button type="button" onClick={onSave} disabled={saving}>
+          <Button 
+            type="button" 
+            onClick={onSave} 
+            disabled={saving}
+            className="w-full xs:w-auto mt-2 sm:mt-0"
+            size="sm"
+          >
             {saving ? <LoaderCircle className="animate-spin mr-2" size={16} /> : null}
             Save
           </Button>
