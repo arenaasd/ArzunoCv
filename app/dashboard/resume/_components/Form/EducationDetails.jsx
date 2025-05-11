@@ -32,6 +32,7 @@ const EducationDetails = ({ enableNext }) => {
         // Sanitize existing education data
         const sanitized = resumeInfo.education.map(edu => ({
           ...edu,
+          endDate: edu.endDate?.trim() ? edu.endDate : 'Present',
           description: edu.description || ''
         }));
         setEducationList(sanitized);
