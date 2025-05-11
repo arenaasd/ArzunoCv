@@ -13,7 +13,6 @@ const Dashboard = () => {
     user&&getResumeList()
   }, [user])
   
-
   const getResumeList = () => {
     GlobalApi.getUserResumes(user?.primaryEmailAddress?.emailAddress).then((res)=>{
       console.log(res.data.data);
@@ -22,13 +21,19 @@ const Dashboard = () => {
   }
   
   return (
-    <div className="p-4 sm:p-6 sm:px-16">
-      <h1 className='font-bold text-2xl'>My Resume</h1>
-      <p className="text-gray-400 mb-4">Make resume & explore resumes</p>
-      <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 gap-6">
-        <AddResume />
+    <div className="p-3 sm:p-5 md:p-6 md:px-16">
+      <h1 className='font-bold text-xl sm:text-2xl'>My Resume</h1>
+      <p className="text-gray-400 mb-3 sm:mb-4 text-sm sm:text-base">Make resume & explore resumes</p>
+      
+      {/* Fixed 2 columns on mobile, increasing for larger screens */}
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-2 sm:gap-3 md:gap-4 lg:gap-6">
+        <div className="w-full">
+          <AddResume />
+        </div>
         {resumeList.map((resume,index)=>(
-          <ResumeCardItem resume={resume} key={index} refreshData={getResumeList} />
+          <div className="w-full" key={index}>
+            <ResumeCardItem resume={resume} refreshData={getResumeList} />
+          </div>
         ))}
       </div>
     </div>
