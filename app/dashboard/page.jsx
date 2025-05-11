@@ -21,20 +21,20 @@ const Dashboard = () => {
   }
   
   return (
-    <div className="p-2 sm:p-4 md:p-6">
+    <div className="p-3 sm:p-5 md:p-6">
       <h1 className='font-bold text-xl sm:text-2xl'>My Resume</h1>
-      <p className="text-gray-400 mb-2 sm:mb-3 text-sm sm:text-base">Make resume & explore resumes</p>
+      <p className="text-gray-400 mb-3 text-sm sm:text-base">Make resume & explore resumes</p>
       
-      {/* Tighter grid with minimal gaps and container to prevent overflow */}
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-1 sm:gap-2 md:gap-3">
-        {/* AddResume Card */}
-        <div className="p-0.5">
+      {/* Single column mobile (centered), exact 5px gap on desktop */}
+      <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 sm:gap-[5px] items-center sm:items-stretch">
+        {/* Centered AddResume card with max-width on mobile */}
+        <div className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0">
           <AddResume />
         </div>
         
-        {/* Resume Cards */}
+        {/* Resume Cards - centered on mobile */}
         {resumeList.map((resume,index)=>(
-          <div className="p-0.5" key={index}>
+          <div className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0" key={index}>
             <ResumeCardItem resume={resume} refreshData={getResumeList} />
           </div>
         ))}
