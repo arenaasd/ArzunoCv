@@ -33,6 +33,7 @@ const ExperienceDetails = ({ enableNext }) => {
       if (resumeInfo.experience && resumeInfo.experience.length > 0) {
         const sanitized = resumeInfo.experience.map((exp) => ({
           ...exp,
+          endDate: exp.endDate?.trim() ? exp.endDate : 'Present',
           summary: exp.summary || ''
         }));
         setExperienceList(sanitized);
@@ -114,7 +115,6 @@ const ExperienceDetails = ({ enableNext }) => {
       const cleanExperience = experienceList.map(({ id, ...rest }) => {
         return {
           ...rest,
-          endDate: rest.endDate?.trim() ? rest.endDate : 'Present',
           summary: rest.summary || '' // Ensure summary is never null or undefined
         };
       });

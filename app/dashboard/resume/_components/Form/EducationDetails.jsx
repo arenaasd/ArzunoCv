@@ -219,7 +219,7 @@ const EducationDetails = ({ enableNext }) => {
             type="button" 
             onClick={onSave} 
             disabled={saving}
-            className="w-full xs:w-auto mt-2 sm:mt-0"
+            className="w-32 mt-2 sm:mt-0"
             size="sm"
           >
             {saving ? <LoaderCircle className="animate-spin mr-2" size={16} /> : null}
