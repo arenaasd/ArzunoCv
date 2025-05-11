@@ -7,7 +7,9 @@ const PersonalDetailsPreview = ({resumeInfo}) => {
         {resumeInfo?.firstName} {resumeInfo?.lastName}
       </h1>
       
-      <div className="text-md md:text-lg mb-2">
+      <div className="text-md md:text-lg mb-2" style={{
+        color: resumeInfo?.themeColor,
+      }}>
         {resumeInfo?.jobTitle}
       </div>
       
