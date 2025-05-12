@@ -52,12 +52,19 @@ useEffect(() => {
 
     const HandleInputChange = (e) => {
         const { name, value } = e.target
-        setFormData(prev => ({
-            ...prev,
+        const updatedFormData = {
+            ...formData,
             [name]: value
+        }
+    
+        setFormData(updatedFormData)
+        setResumeInfo(prev => ({
+            ...prev,
+            ...updatedFormData
         }))
         setIsSaved(false)
     }
+    
 
     const onSave = (e) => {
         e.preventDefault()
