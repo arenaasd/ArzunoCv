@@ -3,7 +3,7 @@ import React from 'react'
 const PersonalDetailsPreview = ({ resumeInfo }) => {
   return (
     <div className="mb-6">
-      <h1 className="text-xl md:text-2xl lg:text-3xl font-bold mb-1">
+      <h1 className="text-xl md:text-2xl lg:text-2xl font-bold mb-1">
         {resumeInfo?.firstName} {resumeInfo?.lastName}
       </h1>
 
