@@ -12,7 +12,7 @@ const PreviewSection = () => {
 
   const {resumeInfo, setResumeInfo} = useContext(ResumeInfoContext)
   return (
-    <div className='shadow-lg h-full p-14 sm:p-4 border-t-[12px]' style={{
+    <div className='shadow-lg h-full p-4 md:p-8 lg:p-14 border-t-[12px]' style={{
       borderColor:resumeInfo?.themeColor
     }}>
       <PersonalDetailsPreview resumeInfo={resumeInfo} />
