@@ -28,7 +28,7 @@ const Dashboard = () => {
     if (loading) {
       const skeletonCount = resumeList.length || 2 // fallback if data not yet arrived
       return Array(skeletonCount).fill(0).map((_, i) => (
-        <div className="w-full max-w-[250px] sm:max-w-none mb-1 sm:mb-0" key={i}>
+        <div className="w-full max-w-[250px] sm:max-w-none" key={i}>
           <SkeletonCard />
         </div>
       ))
