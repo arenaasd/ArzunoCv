@@ -108,21 +108,22 @@ const FormSection = () => {
   const handleTemplateSelect = (template) => {
     setTempTemplate(template)
     setDialogOPen(true)
-    // Store selected template in localStorage (serializable part only)
-    const { component, ...serializableTemplate } = template
-    localStorage.setItem('selectedTemplate', JSON.stringify(serializableTemplate))
+    // DON'T store here yet
   }
-
+  
   const handleConfirmSelection = () => {
     if (tempTemplate?.isPro && userPlan === 'basic') {
       setDialogOPen(false)
-      router.push('/upgrade')    // Redirect to upgrade page if plan is basic and template is pro
+      router.push('/upgrade')
       return
     }
-    // Otherwise allow selection
     setSelectedTemplate(tempTemplate)
+    // Store in localStorage only after confirmation
+    const { component, ...serializableTemplate } = tempTemplate
+    localStorage.setItem('selectedTemplate', JSON.stringify(serializableTemplate))
     setDialogOPen(false)
   }
+  
 
   // Get the component to render; fallback to PreviewSection if none selected
   const SelectedComponent = selectedTemplate?.component || PreviewSection
