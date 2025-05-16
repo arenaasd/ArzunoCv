@@ -10,7 +10,7 @@ function Home() {
   return (
     <>
       <div className="p-10 mt-44 text-center">
-        <h1 className="bg-gradient-to-b text-6xl  from-[#5A4192] to-[#da984e] bg-clip-text text-transparent">
+        <h1 className=" text-6xl  relative animated-upgrade-button flex items-center gap-2">
           ArzunoCV
         </h1>
         <p className=" mt-16 text-2xl">Build a professional ATS-friendly resume or CV quickly and effortlessly — no design skills required.</p>
