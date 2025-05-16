@@ -28,7 +28,7 @@ const Dashboard = () => {
     if (loading) {
       const skeletonCount = resumeList.length || 2 // fallback if data not yet arrived
       return Array(skeletonCount).fill(0).map((_, i) => (
-        <div className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0" key={i}>
+        <div className="w-full max-w-[250px] sm:max-w-none mb-1 sm:mb-0" key={i}>
           <SkeletonCard />
         </div>
       ))
@@ -42,10 +42,9 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-8 sm:p-5 md:p-6">
-      <h1 className='font-bold text-xl sm:text-2xl'>My Resume</h1>
-      <p className="text-gray-400 mb-3 text-sm sm:text-base">Make resume & explore resumes</p>
-
+    <div className="p-4 sm:p-5 md:p-10">
+      <h1 className='font-bold text-xl sm:text-2xl'>My Resumes</h1>
+      <p className="text-gray-400 mb-3 text-sm sm:text-base">Create resume & explore resumes</p>
       <div className="flex flex-col sm:grid sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 2xl:grid-cols-8 sm:gap-[5px] md:gap-[10px] items-center sm:items-stretch">
         <div className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0">
           <AddResume />
