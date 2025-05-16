@@ -2,11 +2,12 @@
 
 export const metadata = {
   title: {
-    default: 'ArzunoCV',
-    template: '%s - ArzunoCV',
+    default: 'ArzunoCV – Free Resume Builder for Professionals',
+    template: '%s | ArzunoCV – Free Resume Builder',
   },
-  description: 'Create professional resumes effortlessly with ArzunoCV. Design, customize, and download your perfect CV in minutes.',
-  openGraph: {
+  description:
+  'Build a job-winning resume in minutes with ArzunoCV. Choose from professional templates, customize easily, and download instantly. 100% free and ATS-friendly.',
+    openGraph: {
     title: 'ArzunoCV',
     description: 'Create professional resumes effortlessly with ArzunoCV. Design, customize, and download your perfect CV in minutes.',
     url: 'https://arzuno.dev/cv',
