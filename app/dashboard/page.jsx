@@ -1,3 +1,4 @@
+'use client'
 import React, { useEffect, useState } from 'react'
 import AddResume from './_component/AddResume'
 import GlobalApi from '@/Service/GlobalApi'
@@ -6,7 +7,7 @@ import ResumeCardItem from './_component/ResumeCardItem'
 import SkeletonCard from './_component/SkeletonCard'
 
 const Dashboard = () => {
-  const { user } = useUser();
+  const { user } = useUser()
   const [resumeList, setResumeList] = useState([])
   const [loading, setLoading] = useState(true)
 
@@ -23,8 +24,25 @@ const Dashboard = () => {
     })
   }
 
+  const renderContent = () => {
+    if (loading) {
+      const skeletonCount = resumeList.length || 2 // fallback if data not yet arrived
+      return Array(skeletonCount).fill(0).map((_, i) => (
+        <div className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0" key={i}>
+          <SkeletonCard />
+        </div>
+      ))
+    }
+
+    return resumeList.map((resume, index) => (
+      <div className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0" key={index}>
+        <ResumeCardItem resume={resume} refreshData={getResumeList} />
+      </div>
+    ))
+  }
+
   return (
-    <div className="p-4 sm:p-5 md:p-6">
+    <div className="p-8 sm:p-5 md:p-6">
       <h1 className='font-bold text-xl sm:text-2xl'>My Resume</h1>
       <p className="text-gray-400 mb-3 text-sm sm:text-base">Make resume & explore resumes</p>
 
@@ -33,20 +51,7 @@ const Dashboard = () => {
           <AddResume />
         </div>
 
-        {loading ? (
-          // Show 3–6 skeletons depending on how many you want
-          Array(6).fill(0).map((_, index) => (
-            <div key={index} className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0">
-              <SkeletonCard />
-            </div>
-          ))
-        ) : (
-          resumeList.map((resume, index) => (
-            <div key={index} className="w-full max-w-[250px] sm:max-w-none mb-3 sm:mb-0">
-              <ResumeCardItem resume={resume} refreshData={getResumeList} />
-            </div>
-          ))
-        )}
+        {renderContent()}
       </div>
     </div>
   )
