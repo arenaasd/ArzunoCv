@@ -10,7 +10,7 @@ function Home() {
   return (
     <>
       <div className="p-10 mt-44 text-center">
-        <h1 className=" text-6xl  relative animated-upgrade-button flex items-center gap-2">
+        <h1 className="bg-gradient-to-b text-6xl  from-[#5A4192] to-[#da984e] bg-clip-text text-transparent">
           ArzunoCV
         </h1>
         <p className=" mt-16 text-2xl">Build a professional ATS-friendly resume or CV quickly and effortlessly — no design skills required.</p>
@@ -24,7 +24,7 @@ function Home() {
               }}
         className="flex flex-col items-center gap-4  mt-10">
           <Link href="/dashboard" className="w-full max-w-xs">
-            <Button className="w-full text-2xl py-6 flex items-center justify-center gap-3 bg-gradient-to-b from-[#eea34e] to-[#5A4192]">Get Started<ArrowRight style={{ width: "24px", height: "24px" }}/></Button>
+            <Button className="w-full text-2xl py-6 flex items-center justify-center gap-3 relative animated-upgrade-button">Get Started<ArrowRight style={{ width: "24px", height: "24px" }}/></Button>
           </Link>
           <Button className="w-full max-w-xs text-2xl py-6 flex items-center justify-center gap-3"><Video style={{ width: "24px", height: "24px" }} />Demo</Button>
         </motion.div>
