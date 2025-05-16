@@ -38,7 +38,7 @@ const PersonalDetailsPreview = ({ resumeInfo }) => {
               color: resumeInfo?.themeColor,
             }}>{resumeInfo?.email}</span>
           </div>
-        )}
+        )} 
       </div>
     </div>
   )

@@ -8,7 +8,8 @@
 }
 @import "@fontsource/roboto/400.css";  /* Regular weight */
 @import "@fontsource/roboto/500.css";  /* Medium weight (optional) */
-@import "@fontsource/roboto/700.css";  /* Bold weight (optional) */
+@import "@fontsource/roboto/700.css";
+
 
 body {
   font-family: 'Roboto', sans-serif;
@@ -19,7 +20,6 @@ body {
   font-family: 'Roboto', sans-serif;
   font-weight: 500; /* Medium weight for all elements */
 }
-
 
 /* Add this to your global CSS file */
 
@@ -39,7 +39,6 @@ body {
   display: inline-block !important;
 }
 
-
 .animate-wand {
   animation: wand-move 0.6s infinite;
 }
@@ -53,12 +52,18 @@ body {
   padding-left: 2em;
 }
 
+.typing-effect {
+  display: inline-block;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 @media print {
   * {
     -webkit-print-color-adjust: exact !important;
     print-color-adjust: exact !important;
   }
-  
+
   #no-print {
     display: none;
   }
@@ -87,7 +92,6 @@ body {
   }
 }
 
-
 @page{
   size: auto;
   margin: 0mm 0mm 0mm 0mm; /* top right bottom left */
@@ -99,7 +103,7 @@ body {
   --primary-foreground: #ffffff; /* white */
   --toaster-bg: #ffffff;   /* white */
   --toaster-text: #0d1b2a; /* navy */
-  --toaster-border: #0d1b2a; /* navy */
+  --toaster-border: #0d1b2a; /* navy */ --color-1: hsl(0 100% 63%); --color-2: hsl(270 100% 63%); --color-3: hsl(210 100% 63%); --color-4: hsl(195 100% 63%); --color-5: hsl(90 100% 63%);
 }
 
 /* DARK MODE */
@@ -125,5 +129,63 @@ button {
   padding: 10px;
   border-radius: 8px;
   transition: all 0.3s ease;
+}
+
+
+.animated-upgrade-button {
+  display: inline-flex;
+  align-items: center;
+  padding: 10px 20px;
+  border-radius: 12px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  color: white;
+  background: linear-gradient(135deg, #5A4192, #da984e);
+  position: relative;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  z-index: 1;
+}
+
+.animated-upgrade-button::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(270deg, #5A4192, #da984e, #5A4192);
+  background-size: 600% 600%;
+  z-index: -1;
+  border-radius: 12px; /* Match actual button radius */
+  filter: blur(6px); /* Reduced for precision */
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  animation: borderGlow 4s linear infinite;
+}
+
+
+.animated-upgrade-button:hover::before {
+  opacity: 1;
+}
+
+.animated-upgrade-button:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 10px rgba(218, 152, 78, 0.4);
+}
+
+@keyframes borderGlow {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+@keyframes spin-slow {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 4s linear infinite;
 }
 

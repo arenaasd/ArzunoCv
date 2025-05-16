@@ -1,4 +1,4 @@
-// Context/ResumeInfoContext.js
+'use client'
 import { createContext } from "react";
 
 const ResumeInfoContext = createContext(null);  // create a valid context object

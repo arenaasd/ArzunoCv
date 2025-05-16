@@ -6,7 +6,7 @@ const ExperiencePreview = ({resumeInfo}) => {
       <h2 
         className="text-center font-bold text-sm tracking-wide mb-1" 
         style={{color: resumeInfo?.themeColor}}
-      >
+      > 
         Experience
       </h2>
       

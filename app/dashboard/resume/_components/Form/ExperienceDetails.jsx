@@ -10,7 +10,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { toast } from 'sonner';
 
 const emptyField = {
-  title: '',
+  title: 'Fresher', // Default to "Fresher" for new entries
   companyName: '',
   city: '',
   state: '',
@@ -38,7 +38,7 @@ const ExperienceDetails = ({ enableNext }) => {
         }));
         setExperienceList(sanitized);
       } else {
-        // Set default empty field if no experience exists
+        // Set default empty field with "Fresher" as title if no experience exists
         setExperienceList([emptyField]);
       }
       setInitialized(true);
@@ -81,7 +81,8 @@ const ExperienceDetails = ({ enableNext }) => {
   };
 
   const addExperience = () => {
-    setExperienceList(prevList => [...prevList, { ...emptyField }]);
+    // When adding more experience, the user is clearly not a fresher anymore
+    setExperienceList(prevList => [...prevList, { ...emptyField, title: '' }]);
   };
 
   const removeExperience = (index) => {
@@ -90,16 +91,56 @@ const ExperienceDetails = ({ enableNext }) => {
         prevList.filter((_, i) => i !== index)
       );
     } else {
-      toast.error("You must have at least one experience entry");
+      // If removing the last entry, replace with the fresher default
+      setExperienceList([{ ...emptyField }]);
+      toast.info("Set as Fresher");
     }
   };
 
   const onSave = async () => {
     if (!experienceList || experienceList.length === 0) {
-      toast.error('No experience data to save.');
+      // If somehow there's no experience list, create one with "Fresher" as default
+      const fresherEntry = { ...emptyField };
+      setExperienceList([fresherEntry]);
+      toast.info('Saved as Fresher.');
       return;
     }
   
+    // For a single entry with minimal data, set as "Fresher"
+    if (experienceList.length === 1 && 
+        (!experienceList[0].companyName || !experienceList[0].startDate)) {
+      const updatedList = [{ 
+        ...experienceList[0],
+        title: 'Fresher',
+        companyName: experienceList[0].companyName || 'N/A',
+        city: experienceList[0].city || 'N/A',
+        state: experienceList[0].state || 'N/A',
+        startDate: experienceList[0].startDate || new Date().toISOString().split('T')[0],
+        summary: experienceList[0].summary || ''
+      }];
+      
+      setExperienceList(updatedList);
+      
+      setSaving(true);
+      try {
+        const data = {
+          data: {
+            experience: updatedList
+          }
+        };
+        
+        await GlobalApi.UpdateResumeDetails(params.resumeId, data);
+        toast.success('Saved as Fresher.');
+      } catch (err) {
+        console.error('Error updating resume:', err);
+        toast.error('Failed to save. Please try again.');
+      } finally {
+        setSaving(false);
+      }
+      return;
+    }
+  
+    // Normal validation for multiple entries or complete single entry
     const isValid = experienceList.every((exp) =>
       exp.title && exp.companyName && exp.city && exp.state && exp.startDate
     );
@@ -157,6 +198,7 @@ const ExperienceDetails = ({ enableNext }) => {
                   name="title" 
                   onChange={(e) => handleChange(e, index)}
                   className="text-sm"
+                  placeholder={index === 0 && experienceList.length === 1 ? "Fresher (if no experience)" : ""}
                 />
               </div>
               <div>

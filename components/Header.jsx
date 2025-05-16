@@ -5,18 +5,51 @@ import Image from 'next/image'
 import { UserButton, useUser } from '@clerk/nextjs'
 import Link from 'next/link'
 import { useTheme } from 'next-themes'
-import { Moon, Sun } from 'lucide-react'
+import { Moon, Sun, Rocket } from 'lucide-react'
 
 const Header = () => {
   const { user, isSignedIn } = useUser()
   const { theme, setTheme } = useTheme()
 
+  const currentPlan = user?.publicMetadata?.plan || 'basic' // Default to basic if undefined
+
   return (
-    <div id="no-print" className='flex justify-between items-center h-16 shadow-md  p-4'>
+    <div
+      id="no-print"
+      className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-16 shadow-md p-4 gap-4"
+    >
       <Link href="/">
-      <Image src="/main.png" alt="logo" width={70} height={70} />
+        <img src="/main.png" alt="logo" width={70} height={70} />
       </Link>
-      <div className="flex gap-3 items-center">
+
+      <div className="flex flex-wrap justify-center sm:justify-end gap-3 items-center">
+        {/* UPGRADE Button */}
+        {currentPlan === 'basic' ? (
+  <Link
+    href="/upgrade"
+    className="group relative inline-flex items-center justify-center overflow-hidden rounded-lg p-[2px] transition-transform hover:scale-105 focus:outline-none"
+    title="Upgrade to Pro"
+  >
+    <span className="relative animated-upgrade-button flex items-center gap-2">
+      <Rocket className="size-4" />
+      Upgrade
+    </span>
+  </Link>
+) : (
+  <Link
+    href="/upgrade"
+    className="group relative inline-flex items-center justify-center overflow-hidden rounded-lg p-[2px] transition-transform hover:scale-105 focus:outline-none"
+    title="You are Pro"
+  >
+    <span className="relative animated-upgrade-button flex items-center gap-2">
+      <Rocket className="size-4" />
+      Pro
+    </span>
+  </Link>
+)}
+
+
+        {/* Theme Toggle */}
         <Button
           variant="ghost"
           size="icon"
@@ -29,15 +62,15 @@ const Header = () => {
 
         {isSignedIn ? (
           <>
-            <Link href='/dashboard'>
-              <Button
-                className="dark:bg-white dark:text-black hover:bg-accent dark:hover:bg-gray-200"
-              >Dashboard</Button>
+            <Link href="/dashboard">
+              <Button className="dark:bg-white dark:text-black hover:bg-accent dark:hover:bg-gray-200">
+                Dashboard
+              </Button>
             </Link>
             <UserButton />
           </>
         ) : (
-          <Link href='/auth/sign-in'>
+          <Link href="/auth/sign-in">
             <Button>Get started</Button>
           </Link>
         )}

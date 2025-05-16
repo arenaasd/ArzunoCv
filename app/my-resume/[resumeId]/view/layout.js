@@ -4,6 +4,7 @@ export const metadata = {
   }
   
   export default function DownloadResumeLayout({ children }) {
-    return <>{children}</>
+    return <>
+    {children}</>
   }
   

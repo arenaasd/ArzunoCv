@@ -37,4 +37,4 @@ const SkillPreview = ({ resumeInfo }) => {
   )
 }
 
-export default SkillPreview
+export default SkillPreview 
