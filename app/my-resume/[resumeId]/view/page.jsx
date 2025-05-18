@@ -1,89 +1,85 @@
-'use client';
-import { Button } from '@/components/ui/button';
-import ResumeInfoContext from '@/Context/ResumeInfoContext';
-import GlobalApi from '@/Service/GlobalApi';
-import { useParams, notFound } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
-import useSWR from 'swr';
-import PreviewSection from '../../../dashboard/resume/_components/PreviewSection';
+'use client'
+import { Button } from '@/components/ui/button'
+import ResumeInfoContext from '@/Context/ResumeInfoContext'
+import GlobalApi from '@/Service/GlobalApi'
+import { useParams, notFound } from 'next/navigation'
+import React, { useState, useEffect } from 'react'
+import useSWR from 'swr'
+import PreviewSection from '../../../dashboard/resume/_components/PreviewSection'
 import MinimalistResume from "../../../dashboard/resume/_components/templetes/MinimalistResume"
-import ShareModal from '@/components/ShareModel';
+import ProfessionalResume from "../../../dashboard/resume/_components/templetes/ProfessionalResume"
+import ShareModal from '@/components/ShareModel'
 
-// Import any other template components you have
-// For example:
-// import MinimalistTemplate from '../../../dashboard/resume/_components/MinimalistTemplate';
-// import ModernTemplate from '../../../dashboard/resume/_components/ModernTemplate';
+const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 
-const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data);
-
-// Function to get the appropriate template component based on ID
 const getTemplateComponent = (templateId) => {
   switch (templateId) {
     case 1:
-      return <PreviewSection />;
+      return <PreviewSection />
     case 2:
       return <MinimalistResume />
-
-      // return <ModernTemplate />;
-      // Otherwise, fallback to default template:
+    case 3:
+      return <ProfessionalResume />
     default:
-      return <PreviewSection />;
+      return <PreviewSection />
   }
-};
+}
 
 const Page = () => {
-  const [isShareOpen, setIsShareOpen] = useState(false);
-  const [resumeInfo, setResumeInfo] = useState(null);
+  const [isShareOpen, setIsShareOpen] = useState(false)
+  const [resumeInfo, setResumeInfo] = useState(null)
   const [selectedTemplate, setSelectedTemplate] = useState({
     id: 1,
     title: 'Default',
     image: "/templates/templateDefault.pdf",
     description: "This is the default template. It is simple and clean."
-  });
-  const params = useParams();
+  })
 
-  const { data, error } = useSWR(params.resumeId, fetcher);
+  const params = useParams()
+  const { data, error } = useSWR(params.resumeId, fetcher)
 
   useEffect(() => {
-    console.log(selectedTemplate);
     if (data) {
-      setResumeInfo(data);
+      // Try to get saved selectedWorkType from localStorage
+      const localSelectedWorkType = localStorage.getItem('selectedWorkType')
+      
+      // Inject selectedWorkType from localStorage or use the data value if present,
+      // or fallback to 'experience' as a last resort
+      const resumeWithWorkType = {
+        ...data,
+        selectedWorkType: localSelectedWorkType || data.selectedWorkType || 'experience'
+      }
+
+      setResumeInfo(resumeWithWorkType)
     }
-  }, [data]);
+  }, [data])
 
   useEffect(() => {
-    // Load selected template from localStorage
-    const storedTemplate = localStorage.getItem('selectedTemplate');
+    const storedTemplate = localStorage.getItem('selectedTemplate')
     if (storedTemplate) {
       try {
-        setSelectedTemplate(JSON.parse(storedTemplate));
+        setSelectedTemplate(JSON.parse(storedTemplate))
       } catch (error) {
-        console.error('Error parsing stored template:', error);
+        console.error('Error parsing stored template:', error)
       }
-    } else {
-      // Default template if nothing is stored
-      setSelectedTemplate({
-        id: 1,
-        title: 'Default',
-        image: "/templates/templateDefault.pdf",
-        description: "This is the default template. It is simple and clean."
-      });
     }
-  }, []);
+  }, [])
 
-  if (error) notFound();
-  if (!resumeInfo) return (
-    <div className="flex items-center justify-center h-screen">
-      <div className="w-16 h-16 rounded-full animate-loader-gradient"></div>
-    </div>
-  );
+  if (error) notFound()
+  if (!resumeInfo) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <div className="w-16 h-16 rounded-full animate-loader-gradient"></div>
+      </div>
+    )
+  }
 
   const HandleDownload = () => {
-    window.print();
-  };
+    window.print()
+  }
 
-  const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
-  const shareTitle = 'Check out my resume!';
+  const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
+  const shareTitle = 'Check out my resume!'
 
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, selectedTemplate, setSelectedTemplate }}>
@@ -106,7 +102,7 @@ const Page = () => {
         title={shareTitle}
       />
     </ResumeInfoContext.Provider>
-  );
-};
+  )
+}
 
-export default Page;
+export default Page

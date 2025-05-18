@@ -4,7 +4,7 @@ import { useEffect, useContext } from "react";
 import Image from 'next/image';
 
 export default function MinimalistTemplate() {
-  const { resumeInfo } = useContext(ResumeInfoContext);
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
 
   const imageUrl = resumeInfo?.Image?.url
     ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
@@ -18,6 +18,27 @@ export default function MinimalistTemplate() {
     const year = date.getFullYear();
     return `${month} ${year}`;
   };
+  
+  // Load from localStorage on component mount
+  useEffect(() => {
+    const savedWorkType = localStorage.getItem('selectedWorkType');
+    if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
+      setResumeInfo(prev => ({
+        ...prev,
+        selectedWorkType: savedWorkType
+      }));
+    }
+  }, [resumeInfo, setResumeInfo]);
+
+  // Also save to localStorage whenever it changes
+  useEffect(() => {
+    if (resumeInfo?.selectedWorkType) {
+      localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType);
+    }
+  }, [resumeInfo?.selectedWorkType]);
+
+  // Use fallback if selectedWorkType isn't set
+  const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
   return (
     <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-sans">
@@ -112,83 +133,119 @@ export default function MinimalistTemplate() {
               </div>
             </div>
 
-            {/* Experience */}
+            {/* Experience OR Projects */}
             <div className="mb-10">
               <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-                <h2 className="text-xl font-bold tracking-wider">WORK EXPERIENCE</h2>
+                <h2 className="text-xl font-bold tracking-wider">
+                  {currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}
+                </h2>
               </div>
               <div className="mt-6 space-y-6">
-                {resumeInfo?.experience?.map((exp) => (
-                  <div key={exp.id} className="pl-6 relative">
-                    <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                    <div>
-                      <h3 className="text-lg text-black font-semibold">{exp.title}</h3>
-                      <div className="flex justify-between items-center text-sm text-gray-600">
-                        <p>{exp.companyName} | {exp.city}, {exp.state}</p>
-                        <p>{formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate)}</p>
+                {currentWorkType === 'projects' ? (
+                  // Projects rendering
+                  resumeInfo?.projects?.map((project) => (
+                    <div key={project.id} className="pl-6 relative">
+                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
+                      <div>
+                        <h3 className="text-lg text-black font-semibold">{project.title}</h3>
+                        {project.link && (
+                          <p className="text-sm text-blue-600 font-medium">
+                            <a href={project.link} target="_blank" rel="noopener noreferrer">
+                              {project.link}
+                            </a>
+                          </p>
+                        )}
+                        <p className="text-sm mt-1 leading-relaxed text-black">{project.description}</p>
+                        {project.techs && (
+                          <div className="mt-2 flex flex-wrap gap-2">
+                            {project.techs.split(',').map((tech, index) => (
+                              <span 
+                                key={index} 
+                                className="px-2 py-1 text-xs rounded-md text-white" 
+                                style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}
+                              >
+                                {tech.trim()}
+                              </span>
+                            ))}
+                          </div>
+                        )}
                       </div>
-                      <div
-                        className="text-sm mt-1 leading-relaxed experience-summary"
-                        dangerouslySetInnerHTML={{ __html: exp?.summary }}
-                      />
-                  </div>
-                  </div>
-                ))}
-            </div>
-          </div>
-
-          {/* Education */}
-          <div className="mb-10">
-            <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-              <h2 className="text-xl font-bold tracking-wider">EDUCATION</h2>
-            </div>
-            <div className="mt-6">
-              <table className="w-full border-collapse text-sm">
-                <thead>
-                  <tr>
-                    <th className="border text-black border-gray-300 py-2 px-2 text-left bg-gray-50">Institution</th>
-                    <th className="border text-black border-gray-300 py-2 px-2 text-left bg-gray-50">Period</th>
-                    <th className="border border-gray-300 text-black py-2 px-2 text-left bg-gray-50">Degree</th>
-                    <th className="border border-gray-300 py-2 px-2 text-black text-left bg-gray-50">Major</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {resumeInfo?.education?.map((edu) => (
-                    <tr key={edu.id}>
-                      <td className="border text-black border-gray-300 py-2 px-2 font-medium">{edu.universityOrCollegeName}</td>
-                      <td className="border border-gray-300 text-black py-2 px-2">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</td>
-                      <td className="border text-black border-gray-300 py-2 px-2">{edu.degree}</td>
-                      <td className="border text-black border-gray-300 py-2 px-2">{edu.major}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-              <div className="mt-4 space-y-4">
-                {resumeInfo?.education?.map((edu) => (
-                  <div key={`${edu.id}-desc`} className="pl-6 relative">
-                    <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                    <div>
-                      <h3 className="text-md text-black font-semibold">{edu.universityOrCollegeName}</h3>
-                      <p className="mt-1 text-black text-sm">{edu.description}</p>
                     </div>
-                  </div>
-                ))}
+                  ))
+                ) : (
+                  // Experience rendering
+                  resumeInfo?.experience?.map((exp) => (
+                    <div key={exp.id} className="pl-6 relative">
+                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
+                      <div>
+                        <h3 className="text-lg text-black font-semibold">{exp.title}</h3>
+                        <div className="flex justify-between items-center text-sm text-gray-600">
+                          <p>{exp.companyName} | {exp.city}, {exp.state}</p>
+                          <p>{formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate)}</p>
+                        </div>
+                        <div
+                          className="text-sm mt-1 leading-relaxed experience-summary"
+                          dangerouslySetInnerHTML={{ __html: exp?.summary }}
+                        />
+                      </div>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+
+            {/* Education */}
+            <div className="mb-10">
+              <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
+                <h2 className="text-xl font-bold tracking-wider">EDUCATION</h2>
+              </div>
+              <div className="mt-6">
+                <table className="w-full border-collapse text-sm">
+                  <thead>
+                    <tr>
+                      <th className="border text-black border-gray-300 py-2 px-2 text-left bg-gray-50">Institution</th>
+                      <th className="border text-black border-gray-300 py-2 px-2 text-left bg-gray-50">Period</th>
+                      <th className="border border-gray-300 text-black py-2 px-2 text-left bg-gray-50">Degree</th>
+                      <th className="border border-gray-300 py-2 px-2 text-black text-left bg-gray-50">Major</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {resumeInfo?.education?.map((edu) => (
+                      <tr key={edu.id}>
+                        <td className="border text-black border-gray-300 py-2 px-2 font-medium">{edu.universityOrCollegeName}</td>
+                        <td className="border border-gray-300 text-black py-2 px-2">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</td>
+                        <td className="border text-black border-gray-300 py-2 px-2">{edu.degree}</td>
+                        <td className="border text-black border-gray-300 py-2 px-2">{edu.major}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="mt-4 space-y-4">
+                  {resumeInfo?.education?.map((edu) => (
+                    <div key={`${edu.id}-desc`} className="pl-6 relative">
+                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
+                      <div>
+                        <h3 className="text-md text-black font-semibold">{edu.universityOrCollegeName}</h3>
+                        <p className="mt-1 text-black text-sm">{edu.description}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
               </div>
             </div>
           </div>
         </div>
-    </div>
-      </main >
+      </main>
 
-    {/* Custom styles */ }
-    < style jsx global > {`
+      {/* Custom styles */}
+      <style jsx global>{`
         .clip-path-slant {
           clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
         }
         .clip-path-skills {
           clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
         }
-      `}</style >
-    </div >
+      `}</style>
+    </div>
   );
 }

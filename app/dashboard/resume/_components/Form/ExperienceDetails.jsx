@@ -69,7 +69,7 @@ const ExperienceDetails = ({ enableNext }) => {
   const handleTextEditorChange = (value, index) => {
     // Ensure value is not null or undefined
     const sanitizedValue = value || '';
-    
+     
     setExperienceList(prevList => {
       const updated = [...prevList];
       updated[index] = { 
@@ -184,7 +184,7 @@ const ExperienceDetails = ({ enableNext }) => {
 
   return (
     <div>
-      <div className="p-3 sm:p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-6 sm:mt-8">
+      <div className="p-3 sm:p-5 shadow-lg rounded-lg border-t-[#0d1b2a] border-t-4 mt-2 sm:mt-8">
         <h2 className="font-bold text-lg">Experience</h2>
         <p className="text-sm sm:text-base text-gray-600">Add your previous job experience</p>
 

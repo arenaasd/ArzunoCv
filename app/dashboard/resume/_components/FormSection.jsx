@@ -14,7 +14,7 @@ import ThemeColor from '@/app/dashboard/resume/_components/ThemeColor'
 import ResumeInfoContext from '@/Context/ResumeInfoContext'
 import PreviewSection from './PreviewSection'
 import Image from 'next/image'
-import { useUser } from '@clerk/nextjs' 
+import { useUser } from '@clerk/nextjs'
 import {
   Dialog,
   DialogContent,
@@ -24,6 +24,7 @@ import {
 } from '@/components/ui/dialog'
 import MinimalistResumePreview from './templetes/MinimalistResume'
 import ProfessionalResume from './templetes/ProfessionalResume'
+import ProjectsDetails from './Form/ProjectsDetails'
 
 const templetes = [
   {
@@ -58,12 +59,15 @@ const FormSection = () => {
   const [dialogOPen, setDialogOPen] = useState(false)
   const [tempTemplate, setTempTemplate] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [isShowingProjects, setIsShowingProjects] = useState(false);
   const { selectedTemplate, setSelectedTemplate } = useContext(ResumeInfoContext)
   const router = useRouter()
-   const params = useParams()
-   const { user } = useUser()                     
+  const params = useParams()
+  const { user } = useUser()
 
-   const userPlan = user?.publicMetadata?.plan || 'basic'
+  const userPlan = user?.publicMetadata?.plan || 'basic'
+
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
 
 
   useEffect(() => {
@@ -101,6 +105,17 @@ const FormSection = () => {
     }
   }, [setSelectedTemplate])
 
+  useEffect(() => {
+    const savedWorkType = localStorage.getItem('selectedWorkType')
+    if (savedWorkType) {
+      setIsShowingProjects(savedWorkType === 'projects')
+      setResumeInfo(prev => ({
+        ...prev,
+        selectedWorkType: savedWorkType
+      }))
+    }
+  }, [setResumeInfo])
+
   const handleNext = () => {
     setActiveFormIndex(activeFormIndex + 1)
   }
@@ -108,9 +123,8 @@ const FormSection = () => {
   const handleTemplateSelect = (template) => {
     setTempTemplate(template)
     setDialogOPen(true)
-    // DON'T store here yet
   }
-  
+
   const handleConfirmSelection = () => {
     if (tempTemplate?.isPro && userPlan === 'basic') {
       setDialogOPen(false)
@@ -118,89 +132,120 @@ const FormSection = () => {
       return
     }
     setSelectedTemplate(tempTemplate)
-    // Store in localStorage only after confirmation
     const { component, ...serializableTemplate } = tempTemplate
     localStorage.setItem('selectedTemplate', JSON.stringify(serializableTemplate))
     setDialogOPen(false)
   }
-  
 
-  // Get the component to render; fallback to PreviewSection if none selected
+  const AddProjects = () => {
+    setIsShowingProjects(prev => {
+      const newVal = !prev
+      const newWorkType = newVal ? 'projects' : 'experience'
+
+      // Save to localStorage so it persists between pages
+      localStorage.setItem('selectedWorkType', newWorkType)
+
+      setResumeInfo({
+        ...resumeInfo,
+        selectedWorkType: newWorkType,
+      })
+      return newVal
+    })
+  }
+
   const SelectedComponent = selectedTemplate?.component || PreviewSection
 
   return (
-    <div>
-      <div className="flex justify-between items-center">
-        <div className="flex gap-2">
+    <div className="pb-16">
+      {/* Improved header layout for better mobile/desktop responsiveness */}
+      <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
+        <div className="flex items-center gap-2 w-full md:w-auto">
           <Link href={'/'}>
-            <Button>
-              <Home />
+            <Button size="sm" className="h-9">
+              <Home size={18} />
             </Button>
           </Link>
           <ThemeColor />
         </div>
-        <div className="flex gap-2">
-          {activeFormIndex > 1 && (
-            <Button size="sm" onClick={() => setActiveFormIndex(activeFormIndex - 1)}>
-              <ArrowLeft />
+        
+        <div className="flex flex-row items-center justify-between md:justify-end w-full gap-2">
+          <div className="flex items-center gap-2">
+            {activeFormIndex > 1 && (
+              <Button size="sm" className="h-9" onClick={() => setActiveFormIndex(activeFormIndex - 1)}>
+                <ArrowLeft size={18} />
+              </Button>
+            )}
+            <Button
+              className="flex gap-2 h-9"
+              disabled={!enableNext || activeFormIndex > 5}
+              onClick={handleNext}
+              size="sm"
+            >
+              Next <ArrowRight size={18} />
+            </Button>
+          </div>
+
+          {activeFormIndex === 3 && (
+            <Button onClick={AddProjects} variant="outline" size="sm" className="h-9 ml-2">
+              {isShowingProjects ? 'Back to Experience' : 'No Experience? Add Projects'}
             </Button>
           )}
-          <Button
-            className="flex gap-2"
-            disabled={!enableNext || activeFormIndex > 5}
-            onClick={handleNext}
-            size="sm"
-          >
-            Next <ArrowRight />
-          </Button>
         </div>
       </div>
 
       {activeFormIndex === 1 && (
-        <XScroll>
-          <div className="flex gap-4 mt-8">
-            {templetes.map((template) => {
-              const isSelected = selectedTemplate?.id === template.id
-              return (
-                <div
-                  key={template.id}
-                  className="relative group w-40 h-28 cursor-pointer shrink-0 overflow-hidden rounded-md shadow-md"
-                  onClick={() => handleTemplateSelect(template)}
-                >
-                  <Image
-                    src={template.image}
-                    alt={template.title}
-                    width={160}
-                    height={122}
-                    className="rounded-md object-cover w-full h-full"
-                  />
-                  <div className="absolute inset-0 flex items-center justify-center bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <h1 className="text-center bg-gradient-to-b from-[#5A4192] to-[#da984e] bg-clip-text text-transparent text-2xl font-bold typing-effect">
-                      {template.title}
-                    </h1>
+        <>
+          <XScroll>
+            <div className="flex gap-4 mt-8">
+              {templetes.map((template) => {
+                const isSelected = selectedTemplate?.id === template.id
+                return (
+                  <div
+                    key={template.id}
+                    className="relative group w-40 h-28 cursor-pointer shrink-0 overflow-hidden rounded-md shadow-md"
+                    onClick={() => handleTemplateSelect(template)}
+                  >
+                    <Image
+                      src={template.image}
+                      alt={template.title}
+                      width={160}
+                      height={122}
+                      className="rounded-md object-cover w-full h-full"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                      <h1 className="text-center bg-gradient-to-b from-[#5A4192] to-[#da984e] bg-clip-text text-transparent text-2xl font-bold typing-effect">
+                        {template.title}
+                      </h1>
+                    </div>
+                    {isSelected && (
+                      <div className="absolute top-1 right-1 bg-green-500 text-white rounded-full p-1 shadow">
+                        <Check size={16} />
+                      </div>
+                    )}
+                    {template.isPro && (
+                      <div className="absolute bottom-1 right-1 w-6 h-6">
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="#FFD700"
+                          className="w-full h-full"
+                        >
+                          <path d="M5 16L3 6l5 5 4-6 4 6 5-5-2 10H5zm14 2H5v2h14v-2z" />
+                        </svg>
+                      </div>
+                    )}
                   </div>
-                  {isSelected && (
-                    <div className="absolute top-1 right-1 bg-green-500 text-white rounded-full p-1 shadow">
-                      <Check size={16} />
-                    </div>
-                  )}
-                  {template.isPro && (
-                    <div className="absolute bottom-1 right-1 w-6 h-6">
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                        fill="#FFD700"
-                        className="w-full h-full"
-                      >
-                        <path d="M5 16L3 6l5 5 4-6 4 6 5-5-2 10H5zm14 2H5v2h14v-2z" />
-                      </svg>
-                    </div>
-                  )}
-                </div>
-              )
-            })}
+                )
+              })}
+            </div>
+          </XScroll>
+          
+          <div className="text-center mt-4 mb-6">
+            <p className="text-sm text-gray-500 font-medium italic">
+              More templates coming soon...
+            </p>
           </div>
-        </XScroll>
+        </>
       )}
 
       <Dialog open={dialogOPen} onOpenChange={setDialogOPen}>
@@ -236,7 +281,7 @@ const FormSection = () => {
 
       {activeFormIndex === 1 && <PersonalDetails enableNext={(e) => setEnableNext(e)} />}
       {activeFormIndex === 2 && <SummaryDetails enableNext={(e) => setEnableNext(e)} />}
-      {activeFormIndex === 3 && <ExperienceDetails enableNext={(e) => setEnableNext(e)} />}
+      {activeFormIndex === 3 && (isShowingProjects ? <ProjectsDetails enableNext={(e) => setEnableNext(e)} /> : <ExperienceDetails enableNext={(e) => setEnableNext(e)} />)}
       {activeFormIndex === 4 && <EducationDetails enableNext={(e) => setEnableNext(e)} />}
       {activeFormIndex === 5 && <SkillDetails enableNext={(e) => setEnableNext(e)} />}
     </div>

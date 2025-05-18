@@ -1,10 +1,31 @@
 'use client';
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import ResumeInfoContext from "@/Context/ResumeInfoContext";
 
 const ResumeUI = () => {
-    const { resumeInfo } = useContext(ResumeInfoContext);
+    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
     const themeColor = resumeInfo?.themeColor || '#1D4ED8';
+
+    // Load from localStorage on component mount
+    useEffect(() => {
+        const savedWorkType = localStorage.getItem('selectedWorkType');
+        if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
+            setResumeInfo(prev => ({
+                ...prev,
+                selectedWorkType: savedWorkType
+            }));
+        }
+    }, [resumeInfo, setResumeInfo]);
+
+    // Also save to localStorage whenever it changes
+    useEffect(() => {
+        if (resumeInfo?.selectedWorkType) {
+            localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType);
+        }
+    }, [resumeInfo?.selectedWorkType]);
+
+    // Use fallback if selectedWorkType isn't set
+    const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
     const formatDate = (date) => {
         if (!date) return '';
@@ -15,8 +36,7 @@ const ResumeUI = () => {
     };
 
     return (
-        <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 text-black font-sans">
-            {/* Header Section */}
+        <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-sans">
             <div className="border-b border-gray-300 pb-4 mb-6">
                 <h1 className="text-3xl font-bold">
                     {resumeInfo?.firstName} {resumeInfo?.lastName}
@@ -102,29 +122,70 @@ const ResumeUI = () => {
                         </div>
                     )}
 
-                    {/* Experience */}
-                    {resumeInfo?.experience?.length > 0 && (
+                    {/* Experience OR Projects based on currentWorkType */}
+                    {(
+                        currentWorkType === 'experience' ? 
+                        resumeInfo?.experience?.length > 0 : 
+                        resumeInfo?.projects?.length > 0
+                    ) && (
                         <div>
-                            <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>EXPERIENCE</h2>
-                            {resumeInfo.experience.map((exp, index) => (
-                                <div key={index} className="my-4">
-                                    <h2 className="text-sm font-bold tracking-wide">{exp.title}</h2>
+                            <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>
+                                {currentWorkType === 'projects' ? 'PROJECTS' : 'EXPERIENCE'}
+                            </h2>
 
-                                    <div className="text-xs font-medium flex flex-wrap my-1 justify-between">
-                                        <div>
-                                            {[exp.companyName, exp.city, exp.state].filter(Boolean).join(', ')}
-                                        </div>
-                                        <div className="text-xs font-medium whitespace-nowrap ml-2" style={{ color: themeColor }}>
-                                            {formatDate(exp.startDate)} – {!exp.endDate ? "Present" : formatDate(exp.endDate)}
-                                        </div>
+                            {currentWorkType === 'projects' ? (
+                                // Projects rendering
+                                resumeInfo?.projects?.map((project, index) => (
+                                    <div key={index} className="my-4">
+                                        <h2 className="text-sm font-bold tracking-wide">{project.title}</h2>
+                                        
+                                        {project.link && (
+                                            <div className="text-xs my-1">
+                                                <a href={project.link} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
+                                                    {project.link}
+                                                </a>
+                                            </div>
+                                        )}
+                                        
+                                        <p className="text-sm mt-1 leading-relaxed">{project.description}</p>
+                                        
+                                        {project.techs && (
+                                            <div className="mt-2 flex flex-wrap gap-1">
+                                                {project.techs.split(',').map((tech, idx) => (
+                                                    <span 
+                                                        key={idx} 
+                                                        className="px-2 py-0.5 text-xs rounded-md text-white" 
+                                                        style={{ backgroundColor: themeColor }}
+                                                    >
+                                                        {tech.trim()}
+                                                    </span>
+                                                ))}
+                                            </div>
+                                        )}
                                     </div>
+                                ))
+                            ) : (
+                                // Experience rendering
+                                resumeInfo?.experience?.map((exp, index) => (
+                                    <div key={index} className="my-4">
+                                        <h2 className="text-sm font-bold tracking-wide">{exp.title}</h2>
 
-                                    <div
-                                        className="text-sm mt-1 leading-relaxed experience-summary"
-                                        dangerouslySetInnerHTML={{ __html: exp?.summary }}
-                                    />
-                                </div>
-                            ))}
+                                        <div className="text-xs font-medium flex flex-wrap my-1 justify-between">
+                                            <div>
+                                                {[exp.companyName, exp.city, exp.state].filter(Boolean).join(', ')}
+                                            </div>
+                                            <div className="text-xs font-medium whitespace-nowrap ml-2" style={{ color: themeColor }}>
+                                                {formatDate(exp.startDate)} – {!exp.endDate ? "Present" : formatDate(exp.endDate)}
+                                            </div>
+                                        </div>
+
+                                        <div
+                                            className="text-sm mt-1 leading-relaxed experience-summary"
+                                            dangerouslySetInnerHTML={{ __html: exp?.summary }}
+                                        />
+                                    </div>
+                                ))
+                            )}
                         </div>
                     )}
                 </div>

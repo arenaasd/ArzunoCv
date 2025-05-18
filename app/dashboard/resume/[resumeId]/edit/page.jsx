@@ -52,13 +52,31 @@ const EditResume = () => {
       try {
         const res = await GlobalApi.GetResumeById(params.resumeId);
         if (!res.data.data) notFound();
-        setResumeInfo(res.data.data);
+        
+        // Get the localStorage selectedWorkType
+        const localSelectedWorkType = localStorage.getItem('selectedWorkType');
+        
+        // Combine the API data with the stored selectedWorkType
+        const resumeData = {
+          ...res.data.data,
+          selectedWorkType: localSelectedWorkType || res.data.data.selectedWorkType || 'experience'
+        };
+        
+        setResumeInfo(resumeData);
       } finally {
         setLoading(false);
       }
     };
     fetchResume();
   }, [params.resumeId]);
+
+  // This useEffect runs after every resumeInfo change
+  // It makes sure we save any changes to the selectedWorkType
+  useEffect(() => {
+    if (resumeInfo?.selectedWorkType) {
+      localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType);
+    }
+  }, [resumeInfo?.selectedWorkType]);
 
   useEffect(() => {
     const storedTemplate = localStorage.getItem('selectedTemplate');
