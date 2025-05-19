@@ -19,7 +19,7 @@ const Header = () => {
       className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-16 shadow-md p-4 gap-4"
     >
       <Link href="/">
-        <img src="/main.png" alt="logo" width={70} height={70} />
+        <img src="/main.png" alt="logo" width={90} height={90} />
       </Link>
 
       <div className="flex flex-wrap justify-center sm:justify-end gap-3 items-center">

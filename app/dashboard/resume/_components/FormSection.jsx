@@ -2,11 +2,14 @@
 import React, { useState, useEffect, useContext } from 'react'
 import PersonalDetails from './Form/PersonalDetails'
 import { Button } from '@/components/ui/button'
-import { ArrowLeft, ArrowRight, Home, Loader2, Check } from 'lucide-react'
+import { ArrowLeft, ArrowRight, Home, Loader2, Check, Plus, Trash2 } from 'lucide-react'
 import SummaryDetails from './Form/SummaryDetails'
 import ExperienceDetails from './Form/ExperienceDetails'
 import EducationDetails from './Form/EducationDetails'
 import SkillDetails from './Form/SkillDetails'
+import HobbyDetails from './Form/HobbiesDetails'
+import LanguageDetails from './Form/LanguageDetails'
+import CertificationDetails from './Form/CertificationDetails'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
 import XScroll from '@/components/ui/x-scroll'
@@ -21,19 +24,20 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
+  DialogFooter,
 } from '@/components/ui/dialog'
 import MinimalistResumePreview from './templetes/MinimalistResume'
 import ProfessionalResume from './templetes/ProfessionalResume'
 import ProjectsDetails from './Form/ProjectsDetails'
 
-const templetes = [
+const templates = [
   {
     id: 1,
     title: 'Default',
     image: '/templates/templateDefault.jpg',
     isPro: false,
     description: 'This is the default template. It is simple and clean.',
-    component: PreviewSection, // Reference, not JSX
+    component: PreviewSection,
   },
   {
     id: 2,
@@ -41,7 +45,7 @@ const templetes = [
     isPro: false,
     image: '/templates/Minimalist.jpg',
     description: 'This is the minimalist template. It is simple and clean.',
-    component: MinimalistResumePreview, // Reference, not JSX
+    component: MinimalistResumePreview,
   },
   {
     id: 3,
@@ -56,30 +60,33 @@ const templetes = [
 const FormSection = () => {
   const [activeFormIndex, setActiveFormIndex] = useState(1)
   const [enableNext, setEnableNext] = useState(false)
-  const [dialogOPen, setDialogOPen] = useState(false)
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [fieldDialogOpen, setFieldDialogOpen] = useState(false)
   const [tempTemplate, setTempTemplate] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [isShowingProjects, setIsShowingProjects] = useState(false);
-  const { selectedTemplate, setSelectedTemplate } = useContext(ResumeInfoContext)
+  const [isShowingProjects, setIsShowingProjects] = useState(false)
+  const [selectedExtraSections, setSelectedExtraSections] = useState([])
+
+  const { selectedTemplate, setSelectedTemplate, resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
   const router = useRouter()
   const params = useParams()
   const { user } = useUser()
-
   const userPlan = user?.publicMetadata?.plan || 'basic'
 
-  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
-
-
-  useEffect(() => {
-    if (activeFormIndex === 6) {
-      router.push('/my-resume/' + params.resumeId + '/view')
-    }
-  }, [activeFormIndex, params.resumeId, router])
+  const availableSections = ['hobbies', 'languages', 'certifications']
 
   useEffect(() => {
     const stored = localStorage.getItem('selectedTemplate')
     if (stored) {
-      setSelectedTemplate(JSON.parse(stored))
+      try {
+        const parsed = JSON.parse(stored)
+        const fullTemplate = templates.find((t) => t.id === parsed.id)
+        if (fullTemplate) {
+          setSelectedTemplate(fullTemplate)
+        }
+      } catch (error) {
+        console.error('Error parsing stored template', error)
+      }
     }
   }, [setSelectedTemplate])
 
@@ -89,21 +96,6 @@ const FormSection = () => {
       localStorage.setItem('selectedTemplate', JSON.stringify(serializableTemplate))
     }
   }, [selectedTemplate])
-
-  useEffect(() => {
-    const stored = localStorage.getItem('selectedTemplate')
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored)
-        const fullTemplate = templetes.find((t) => t.id === parsed.id)
-        if (fullTemplate) {
-          setSelectedTemplate(fullTemplate)
-        }
-      } catch (error) {
-        console.error('Error parsing stored template', error)
-      }
-    }
-  }, [setSelectedTemplate])
 
   useEffect(() => {
     const savedWorkType = localStorage.getItem('selectedWorkType')
@@ -116,35 +108,72 @@ const FormSection = () => {
     }
   }, [setResumeInfo])
 
+  useEffect(() => {
+    const storedSections = localStorage.getItem('selectedExtraSections')
+    if (storedSections) {
+      try {
+        setSelectedExtraSections(JSON.parse(storedSections))
+      } catch (error) {
+        console.error('Error parsing stored extra sections', error)
+      }
+    }
+  }, [])
+
   const handleNext = () => {
-    setActiveFormIndex(activeFormIndex + 1)
+    // Maximum index is 5 (fixed sections) + number of extra sections
+    const maxIndex = 5 + selectedExtraSections.length
+    if (activeFormIndex >= maxIndex) {
+      router.push('/my-resume/' + params.resumeId + '/view')
+    } else {
+      setActiveFormIndex(prev => prev + 1)
+    }
+  }
+
+  const handleRemoveField = (index) => {
+    const sectionIndex = index - 6 // Maps activeFormIndex (6,7,8) to selectedExtraSections index (0,1,2)
+    const updatedSections = selectedExtraSections.filter((_, i) => i !== sectionIndex)
+    setSelectedExtraSections(updatedSections)
+    localStorage.setItem('selectedExtraSections', JSON.stringify(updatedSections))
+    
+    // Clear the removed section's data from resumeInfo
+    const removedSection = selectedExtraSections[sectionIndex]
+    setResumeInfo(prev => ({
+      ...prev,
+      [removedSection]: []
+    }))
+
+    // Navigate based on remaining sections
+    if (updatedSections.length === 0) {
+      router.push('/my-resume/' + params.resumeId + '/view')
+    } else if (index > 6 + updatedSections.length) {
+      setActiveFormIndex(6 + updatedSections.length)
+    } else {
+      setActiveFormIndex(index)
+    }
   }
 
   const handleTemplateSelect = (template) => {
     setTempTemplate(template)
-    setDialogOPen(true)
+    setDialogOpen(true)
   }
 
   const handleConfirmSelection = () => {
     if (tempTemplate?.isPro && userPlan === 'basic') {
-      setDialogOPen(false)
+      setDialogOpen(false)
       router.push('/upgrade')
       return
     }
     setSelectedTemplate(tempTemplate)
     const { component, ...serializableTemplate } = tempTemplate
     localStorage.setItem('selectedTemplate', JSON.stringify(serializableTemplate))
-    setDialogOPen(false)
+    setDialogOpen(false)
   }
 
   const AddProjects = () => {
     setIsShowingProjects(prev => {
       const newVal = !prev
       const newWorkType = newVal ? 'projects' : 'experience'
-
-      // Save to localStorage so it persists between pages
       localStorage.setItem('selectedWorkType', newWorkType)
-
       setResumeInfo({
         ...resumeInfo,
         selectedWorkType: newWorkType,
@@ -153,43 +182,91 @@ const FormSection = () => {
     })
   }
 
-  const SelectedComponent = selectedTemplate?.component || PreviewSection
+  const handleSelectExtraSection = (section) => {
+    const updatedSections = [...selectedExtraSections]
+    if (!updatedSections.includes(section)) {
+      updatedSections.push(section)
+      setSelectedExtraSections(updatedSections)
+      localStorage.setItem('selectedExtraSections', JSON.stringify(updatedSections))
+    }
+    setFieldDialogOpen(false)
+    setActiveFormIndex(activeFormIndex)
+  }
+
+  const handleSkipForNow = () => {
+    router.push('/my-resume/' + params.resumeId + '/view')
+  }
+
+  const getRemainingExtraSections = () => {
+    return availableSections.filter(section => !selectedExtraSections.includes(section))
+  }
+
+  const extraSectionIcons = {
+    hobbies: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+        <path d="M2 17l10 5 10-5" />
+        <path d="M2 12l10 5 10-5" />
+      </svg>
+    ),
+    languages: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M5 8l6 6" />
+        <path d="M4 14h12" />
+        <rect x="2" y="6" width="16" height="12" rx="2" />
+        <path d="M22 10v8a2 2 0 01-2 2h-8" />
+        <path d="M18 12h-.01" />
+      </svg>
+    ),
+    certifications: (
+      <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="3" width="18" height="18" rx="2" />
+        <path d="M7 7h.01" />
+        <path d="M7 12h10" />
+        <path d="M7 17h10" />
+      </svg>
+    )
+  }
 
   return (
     <div className="pb-16">
-      {/* Improved header layout for better mobile/desktop responsiveness */}
       <div className="flex flex-col md:flex-row justify-between items-center gap-4 mb-4">
         <div className="flex items-center gap-2 w-full md:w-auto">
           <Link href={'/'}>
-            <Button size="sm" className="h-9">
-              <Home size={18} />
-            </Button>
+            <Button size="sm" className="h-9"><Home size={18} /></Button>
           </Link>
           <ThemeColor />
         </div>
-        
-        <div className="flex flex-row items-center justify-between md:justify-end w-full gap-2">
-          <div className="flex items-center gap-2">
-            {activeFormIndex > 1 && (
-              <Button size="sm" className="h-9" onClick={() => setActiveFormIndex(activeFormIndex - 1)}>
-                <ArrowLeft size={18} />
-              </Button>
-            )}
-            <Button
-              className="flex gap-2 h-9"
-              disabled={!enableNext || activeFormIndex > 5}
-              onClick={handleNext}
-              size="sm"
-            >
-              Next <ArrowRight size={18} />
-            </Button>
-          </div>
 
-          {activeFormIndex === 3 && (
-            <Button onClick={AddProjects} variant="outline" size="sm" className="h-9 ml-2">
+        <div className="flex items-center gap-2 w-full justify-end">
+          {activeFormIndex > 1 && (
+            <Button size="sm" className="h-9" onClick={() => setActiveFormIndex(prev => prev - 1)}>
+              <ArrowLeft size={18} />
+            </Button>
+          )}
+          {activeFormIndex === 4 && (
+            <Button onClick={AddProjects} variant="outline" size="sm" className="h-9">
               {isShowingProjects ? 'Back to Experience' : 'No Experience? Add Projects'}
             </Button>
           )}
+          {(activeFormIndex === 6 || (activeFormIndex === 7 && selectedExtraSections.length === 1) || (activeFormIndex === 8 && selectedExtraSections.length === 2)) && userPlan === 'pro' && getRemainingExtraSections().length > 0 && (
+            <Button 
+              onClick={() => setFieldDialogOpen(true)} 
+              variant="outline" 
+              size="sm" 
+              className="h-9"
+            >
+              <Plus size={16} className="mr-1" /> Add Extra Section
+            </Button>
+          )}
+          <Button
+            className="flex gap-2 h-9"
+            disabled={!enableNext}
+            onClick={handleNext}
+            size="sm"
+          >
+            Next <ArrowRight size={18} />
+          </Button>
         </div>
       </div>
 
@@ -197,7 +274,7 @@ const FormSection = () => {
         <>
           <XScroll>
             <div className="flex gap-4 mt-8">
-              {templetes.map((template) => {
+              {templates.map((template) => {
                 const isSelected = selectedTemplate?.id === template.id
                 return (
                   <div
@@ -213,7 +290,7 @@ const FormSection = () => {
                       className="rounded-md object-cover w-full h-full"
                     />
                     <div className="absolute inset-0 flex items-center justify-center bg-gray-700 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                      <h1 className="text-center bg-gradient-to-b from-[#5A4192] to-[#da984e] bg-clip-text text-transparent text-2xl font-bold typing-effect">
+                      <h1 className="text-center bg-gradient-to-b from-[#5A4192] to-[#da984e] bg-clip-text text-transparent text-2xl font-bold">
                         {template.title}
                       </h1>
                     </div>
@@ -224,12 +301,7 @@ const FormSection = () => {
                     )}
                     {template.isPro && (
                       <div className="absolute bottom-1 right-1 w-6 h-6">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          viewBox="0 0 24 24"
-                          fill="#FFD700"
-                          className="w-full h-full"
-                        >
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="#FFD700" className="w-full h-full">
                           <path d="M5 16L3 6l5 5 4-6 4 6 5-5-2 10H5zm14 2H5v2h14v-2z" />
                         </svg>
                       </div>
@@ -239,51 +311,136 @@ const FormSection = () => {
               })}
             </div>
           </XScroll>
-          
           <div className="text-center mt-4 mb-6">
-            <p className="text-sm text-gray-500 font-medium italic">
-              More templates coming soon...
-            </p>
+            <p className="text-sm text-gray-500 font-medium italic">More templates coming soon...</p>
           </div>
         </>
       )}
 
-      <Dialog open={dialogOPen} onOpenChange={setDialogOPen}>
+      <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent className="max-w-lg">
           <DialogHeader>
             <DialogTitle>{tempTemplate?.title}</DialogTitle>
-            <DialogDescription className="text-sm mt-1">{tempTemplate?.description}</DialogDescription>
+            <DialogDescription>{tempTemplate?.description}</DialogDescription>
           </DialogHeader>
           <div className="my-4">
-            <Image
-              src={tempTemplate?.image}
-              alt={tempTemplate?.title}
-              width={500}
-              height={300}
-              className="w-full h-auto rounded-md object-cover"
-            />
+            <Image src={tempTemplate?.image} alt={tempTemplate?.title} width={500} height={300} className="w-full h-auto rounded-md object-cover" />
           </div>
           <div className="flex justify-end gap-2">
-            <Button variant="outline" onClick={() => setDialogOPen(false)}>
-              Cancel
-            </Button>
-            <Button
-              onClick={() => {
-                handleConfirmSelection();
-              }}
-              className="flex items-center justify-center"
-            >
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>Cancel</Button>
+            <Button onClick={handleConfirmSelection}>
               {loading ? <Loader2 className="animate-spin" /> : 'Select'}
             </Button>
           </div>
         </DialogContent>
       </Dialog>
 
-      {activeFormIndex === 1 && <PersonalDetails enableNext={(e) => setEnableNext(e)} />}
-      {activeFormIndex === 2 && <SummaryDetails enableNext={(e) => setEnableNext(e)} />}
-      {activeFormIndex === 3 && (isShowingProjects ? <ProjectsDetails enableNext={(e) => setEnableNext(e)} /> : <ExperienceDetails enableNext={(e) => setEnableNext(e)} />)}
-      {activeFormIndex === 4 && <EducationDetails enableNext={(e) => setEnableNext(e)} />}
-      {activeFormIndex === 5 && <SkillDetails enableNext={(e) => setEnableNext(e)} />}
+      <Dialog open={fieldDialogOpen} onOpenChange={setFieldDialogOpen}>
+        <DialogContent className="max-w-md rounded-lg overflow-hidden border border-purple-100 shadow-xl">
+          <DialogHeader className="bg-gradient-to-r from-purple-50 to-orange-50 px-6 py-4">
+            <DialogTitle className="text-xl font-bold bg-gradient-to-r from-purple-600 to-orange-500 bg-clip-text text-transparent">
+              Add Extra Section
+            </DialogTitle>
+            <DialogDescription className="text-sm text-gray-600">
+              Enhance your resume with additional information
+            </DialogDescription>
+          </DialogHeader>
+
+          <div className="p-6 space-y-4">
+            {getRemainingExtraSections().map((field) => (
+              <div
+                key={field}
+                onClick={() => handleSelectExtraSection(field)}
+                className="flex items-center gap-3 border border-gray-200 hover:border-purple-300 rounded-lg px-4 py-3 cursor-pointer transition hover:bg-purple-50 group"
+              >
+                <div className="w-10 h-10 rounded-full bg-purple-100 group-hover:bg-purple-200 flex items-center justify-center">
+                  {extraSectionIcons[field]}
+                </div>
+                <div className="flex-1">
+                  <h3 className="capitalize font-medium text-gray-800 group-hover:text-purple-600">
+                    {field}
+                  </h3>
+                  <p className="text-xs text-gray-500">
+                    {field === 'hobbies' && "Show your personality through activities you enjoy"}
+                    {field === 'languages' && "Highlight languages you speak and proficiency levels"}
+                    {field === 'certifications' && "Showcase your professional certifications and badges"}
+                  </p>
+                </div>
+                <div className="w-6 h-6 flex-shrink-0">
+                  <svg xmlns="http://www.w3.org/2000/svg" className="w-6 h-6 text-gray-400 group-hover:text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                    <path d="M9 18l6-6-6-6" />
+                  </svg>
+                </div>
+              </div>
+            ))}
+            {getRemainingExtraSections().length === 0 && (
+              <div className="text-center py-6">
+                <p className="text-gray-500">No more sections available to add.</p>
+              </div>
+            )}
+          </div>
+
+          <DialogFooter className="px-6 py-4 bg-gray-50 border-t">
+            <Button
+              variant="outline"
+              onClick={() => setFieldDialogOpen(false)}
+              className="mr-2 border-gray-300"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={handleSkipForNow}
+              className="border-gray-300"
+            >
+              Skip to View
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+
+      {(activeFormIndex === 6 || activeFormIndex === 7 || activeFormIndex === 8) && selectedExtraSections[activeFormIndex - 6] && (
+        <div className="flex justify-end mb-4">
+          <Button
+            variant="destructive"
+            size="sm"
+            onClick={() => handleRemoveField(activeFormIndex)}
+            className="h-9"
+          >
+            <Trash2 size={16} className="mr-2" />
+            Remove Field
+          </Button>
+        </div>
+      )}
+
+      {activeFormIndex === 1 && <PersonalDetails enableNext={setEnableNext} />}
+      {activeFormIndex === 2 && <SummaryDetails enableNext={setEnableNext} />}
+      {activeFormIndex === 3 && (isShowingProjects ? <ProjectsDetails enableNext={setEnableNext} /> : <ExperienceDetails enableNext={setEnableNext} />)}
+      {activeFormIndex === 4 && <EducationDetails enableNext={setEnableNext} />}
+      {activeFormIndex === 5 && <SkillDetails enableNext={setEnableNext} />}
+
+      {activeFormIndex === 6 && selectedExtraSections[0] && (
+        <>
+          {selectedExtraSections[0] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[0] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[0] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
+        </>
+      )}
+      
+      {activeFormIndex === 7 && selectedExtraSections[1] && (
+        <>
+          {selectedExtraSections[1] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[1] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[1] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
+        </>
+      )}
+      
+      {activeFormIndex === 8 && selectedExtraSections[2] && (
+        <>
+          {selectedExtraSections[2] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[2] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[2] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
+        </>
+      )}
     </div>
   )
 }

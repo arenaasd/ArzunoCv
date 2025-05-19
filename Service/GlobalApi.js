@@ -16,7 +16,7 @@ const GetResumeById = (id) => axiosClient.get(`/user-resumes/${id}`+"?populate=*
 const DeleteResumeById = (id) => axiosClient.delete(`/user-resumes/${id}`)
 const getAllResumes = () => axiosClient.get('/user-resumes?populate=*');
 
-
+ 
 export default{
     CreateNewResume,
     getUserResumes,
