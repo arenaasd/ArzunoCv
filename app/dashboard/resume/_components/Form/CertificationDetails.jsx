@@ -13,7 +13,7 @@ const emptyCertification = {
   issuer: '',
   date: '',
   url: ''
-};
+}; 
 
 const CertificationDetails = ({ enableNext }) => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
