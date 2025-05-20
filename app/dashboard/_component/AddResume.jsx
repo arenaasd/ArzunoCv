@@ -32,7 +32,6 @@ const addResume = () => {
 
     setLoading(true)
     try {
-      // Check the number of existing resumes
       const response = await GlobalApi.getUserResumes(user.primaryEmailAddress.emailAddress)
       const resumeCount = response.data.data.length
 
