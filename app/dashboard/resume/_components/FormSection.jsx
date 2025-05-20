@@ -120,12 +120,40 @@ const FormSection = () => {
   }, [])
 
   const handleNext = () => {
-    // Maximum index is 5 (fixed sections) + number of extra sections
-    const maxIndex = 5 + selectedExtraSections.length
-    if (activeFormIndex >= maxIndex) {
-      router.push('/my-resume/' + params.resumeId + '/view')
-    } else {
+    // Fixed navigation logic
+    const baseFormCount = 5 // Personal, Summary, Experience, Education, Skills
+    
+    if (activeFormIndex < baseFormCount) {
+      // If still in base forms, just go to next form
       setActiveFormIndex(prev => prev + 1)
+    } 
+    else if (activeFormIndex === baseFormCount) {
+      // From Skills (index 5) to either first extra section or view page
+      if (selectedExtraSections.length > 0) {
+        setActiveFormIndex(6)
+      } else {
+        router.push('/my-resume/' + params.resumeId + '/view')
+      }
+    }
+    else if (activeFormIndex === 6) {
+      // From first extra section to either second extra section or view page
+      if (selectedExtraSections.length > 1) {
+        setActiveFormIndex(7)
+      } else {
+        router.push('/my-resume/' + params.resumeId + '/view')
+      }
+    }
+    else if (activeFormIndex === 7) {
+      // From second extra section to either third extra section or view page
+      if (selectedExtraSections.length > 2) {
+        setActiveFormIndex(8)
+      } else {
+        router.push('/my-resume/' + params.resumeId + '/view')
+      }
+    }
+    else {
+      // From third extra section to view page
+      router.push('/my-resume/' + params.resumeId + '/view')
     }
   }
 
@@ -142,13 +170,14 @@ const FormSection = () => {
       [removedSection]: []
     }))
 
-    // Navigate based on remaining sections
-    if (updatedSections.length === 0) {
-      router.push('/my-resume/' + params.resumeId + '/view')
-    } else if (index > 6 + updatedSections.length) {
-      setActiveFormIndex(6 + updatedSections.length)
-    } else {
-      setActiveFormIndex(index)
+    // After removing, stay on the same page number but show the correct section
+    // If there's no section to show at this index, redirect to view page
+    if (index > 5 + updatedSections.length) {
+      if (updatedSections.length === 0) {
+        router.push('/my-resume/' + params.resumeId + '/view')
+      } else {
+        setActiveFormIndex(5 + updatedSections.length)
+      }
     }
   }
 
@@ -190,7 +219,6 @@ const FormSection = () => {
       localStorage.setItem('selectedExtraSections', JSON.stringify(updatedSections))
     }
     setFieldDialogOpen(false)
-    setActiveFormIndex(activeFormIndex)
   }
 
   const handleSkipForNow = () => {
@@ -199,6 +227,29 @@ const FormSection = () => {
 
   const getRemainingExtraSections = () => {
     return availableSections.filter(section => !selectedExtraSections.includes(section))
+  }
+
+  // Function to check if we should show the "Add Extra Section" button
+  const shouldShowAddSectionButton = () => {
+    // Only show if user is Pro and there are remaining sections to add
+    if (userPlan !== 'pro' || getRemainingExtraSections().length === 0) {
+      return false
+    }
+
+    // Show on the Skills page (5) if no extra sections are added yet
+    if (activeFormIndex === 5 && selectedExtraSections.length === 0) {
+      return true
+    }
+    
+    // Show on the last extra section page if there are more sections available to add
+    // and we haven't reached the maximum of 3 extra sections
+    if (activeFormIndex >= 6 && 
+        activeFormIndex === 5 + selectedExtraSections.length && 
+        selectedExtraSections.length < 3) {
+      return true
+    }
+
+    return false
   }
 
   const extraSectionIcons = {
@@ -249,7 +300,7 @@ const FormSection = () => {
               {isShowingProjects ? 'Back to Experience' : 'No Experience? Add Projects'}
             </Button>
           )}
-          {(activeFormIndex === 6 || (activeFormIndex === 7 && selectedExtraSections.length === 1) || (activeFormIndex === 8 && selectedExtraSections.length === 2)) && userPlan === 'pro' && getRemainingExtraSections().length > 0 && (
+          {shouldShowAddSectionButton() && (
             <Button 
               onClick={() => setFieldDialogOpen(true)} 
               variant="outline" 
