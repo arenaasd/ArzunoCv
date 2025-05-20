@@ -1,4 +1,5 @@
 'use client'
+
 import { Loader2, PlusSquare } from 'lucide-react'
 import React, { useState } from 'react'
 import {
@@ -7,16 +8,16 @@ import {
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog"
-import { v4 as uuidv4 } from 'uuid';
+} from '@/components/ui/dialog'
+import { v4 as uuidv4 } from 'uuid'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { useUser } from '@clerk/nextjs';
-import GlobalApi from '@/Service/GlobalApi';
-import { useRouter } from 'next/navigation';
+import { useUser } from '@clerk/nextjs'
+import GlobalApi from '@/Service/GlobalApi'
+import { useRouter } from 'next/navigation'
 import { toast } from 'sonner'
 
-const addResume = () => {
+const AddResumeCard = () => {
   const [resumeTitle, setResumeTitle] = useState('')
   const [dialogOpen, setDialogOpen] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -32,18 +33,19 @@ const addResume = () => {
 
     setLoading(true)
     try {
+      const plan = user?.publicMetadata?.plan || 'basic'
+
       const response = await GlobalApi.getUserResumes(user.primaryEmailAddress.emailAddress)
       const resumeCount = response.data.data.length
 
-      if (resumeCount >= 2) {
-        toast.error('You can only make 2 resumes, delete one to continue.')
+      if (plan !== 'pro' && resumeCount >= 2) {
+        toast.error('Free users can create only 2 resumes. Upgrade to Pro to create more.')
         router.push('/upgrade')
         setDialogOpen(false)
         setLoading(false)
         return
       }
 
-      // Proceed with creating a new resume
       const uuid = uuidv4()
       const data = {
         data: {
@@ -78,6 +80,7 @@ const addResume = () => {
       >
         <PlusSquare />
       </div>
+
       <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
         <DialogContent>
           <DialogHeader>
@@ -112,4 +115,4 @@ const addResume = () => {
   )
 }
 
-export default addResume
+export default AddResumeCard
