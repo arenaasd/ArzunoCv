@@ -57,31 +57,38 @@ const PreviewSection = () => {
     return selectedExtraSections.map((section, index) => {
       switch(section) {
         case 'certifications':
-          return <CertificatePreview key={`cert-${index}`} />
+          return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
         case 'languages':
-          return <LanguagePreview key={`lang-${index}`} />
+          return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
         case 'hobbies':
-          return <HobbiesPreview key={`hobby-${index}`} />
+          return <HobbiesPreview key={`hobby-${index}`} resumeInfo={resumeInfo} />
         default:
           return null
       }
     })
   }
 
+  // Only render components if resumeInfo is available
+  if (!resumeInfo) {
+    return <div>Loading resume information...</div>
+  }
+
+  console.log("Selected extra sections:", selectedExtraSections);
+
   return (
     <div className="preview-section">
-      <PersonalDetailsPreview />
-      <SummaryPreview />
+      <PersonalDetailsPreview resumeInfo={resumeInfo} />
+      <SummaryPreview resumeInfo={resumeInfo} />
       
-      <SkillPreview />
+      <SkillPreview resumeInfo={resumeInfo} />
  
       {currentWorkType === 'projects' ? (
-        <ProjectsPreview />
+        <ProjectsPreview resumeInfo={resumeInfo} />
       ) : (
-        <ExperiencePreview />
+        <ExperiencePreview resumeInfo={resumeInfo} />
       )}
 
-      <EducationalPreview />
+      <EducationalPreview resumeInfo={resumeInfo} />
       
       {/* Render all extra sections based on selectedExtraSections */}
       {renderExtraSections()}

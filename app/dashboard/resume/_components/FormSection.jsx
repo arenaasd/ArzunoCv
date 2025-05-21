@@ -320,7 +320,7 @@ const FormSection = () => {
               <ArrowLeft size={18} />
             </Button>
           )}
-          {activeFormIndex === 4 && (
+          {activeFormIndex === 3 && (
             <Button onClick={AddProjects} variant="outline" size="sm" className="h-9">
               {isShowingProjects ? 'Back to Experience' : 'No Experience? Add Projects'}
             </Button>
