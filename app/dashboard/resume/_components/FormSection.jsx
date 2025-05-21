@@ -65,7 +65,6 @@ const FormSection = () => {
   const [tempTemplate, setTempTemplate] = useState(null)
   const [loading, setLoading] = useState(false)
   const [isShowingProjects, setIsShowingProjects] = useState(false)
-  const [selectedExtraSections, setSelectedExtraSections] = useState([])
 
   const { selectedTemplate, setSelectedTemplate, resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
   const router = useRouter()
@@ -73,8 +72,12 @@ const FormSection = () => {
   const { user } = useUser()
   const userPlan = user?.publicMetadata?.plan || 'basic'
 
+  // Get the selected extra sections from the context
+  const selectedExtraSections = resumeInfo?.selectedExtraSections || []
+  
   const availableSections = ['hobbies', 'languages', 'certifications']
 
+  // Load template from localStorage on mount
   useEffect(() => {
     const stored = localStorage.getItem('selectedTemplate')
     if (stored) {
@@ -90,6 +93,7 @@ const FormSection = () => {
     }
   }, [setSelectedTemplate])
 
+  // Save template to localStorage when it changes
   useEffect(() => {
     if (selectedTemplate) {
       const { component, ...serializableTemplate } = selectedTemplate
@@ -97,7 +101,9 @@ const FormSection = () => {
     }
   }, [selectedTemplate])
 
+  // Load work type and extra sections from localStorage on mount
   useEffect(() => {
+    // Load work type
     const savedWorkType = localStorage.getItem('selectedWorkType')
     if (savedWorkType) {
       setIsShowingProjects(savedWorkType === 'projects')
@@ -106,18 +112,21 @@ const FormSection = () => {
         selectedWorkType: savedWorkType
       }))
     }
-  }, [setResumeInfo])
-
-  useEffect(() => {
+    
+    // Load extra sections
     const storedSections = localStorage.getItem('selectedExtraSections')
     if (storedSections) {
       try {
-        setSelectedExtraSections(JSON.parse(storedSections))
+        const parsedSections = JSON.parse(storedSections)
+        setResumeInfo(prev => ({
+          ...prev,
+          selectedExtraSections: parsedSections
+        }))
       } catch (error) {
         console.error('Error parsing stored extra sections', error)
       }
     }
-  }, [])
+  }, [setResumeInfo])
 
   const handleNext = () => {
     // Fixed navigation logic
@@ -159,19 +168,23 @@ const FormSection = () => {
 
   const handleRemoveField = (index) => {
     const sectionIndex = index - 6 // Maps activeFormIndex (6,7,8) to selectedExtraSections index (0,1,2)
-    const updatedSections = selectedExtraSections.filter((_, i) => i !== sectionIndex)
-    setSelectedExtraSections(updatedSections)
-    localStorage.setItem('selectedExtraSections', JSON.stringify(updatedSections))
-    
-    // Clear the removed section's data from resumeInfo
     const removedSection = selectedExtraSections[sectionIndex]
+    
+    // Create updated sections array without the removed section
+    const updatedSections = selectedExtraSections.filter((_, i) => i !== sectionIndex)
+    
+    // Update context with new sections array
     setResumeInfo(prev => ({
       ...prev,
+      selectedExtraSections: updatedSections,
+      // Clear the removed section's data
       [removedSection]: []
     }))
-
-    // After removing, stay on the same page number but show the correct section
-    // If there's no section to show at this index, redirect to view page
+    
+    // Also update localStorage
+    localStorage.setItem('selectedExtraSections', JSON.stringify(updatedSections))
+    
+    // Handle navigation after removing a section
     if (index > 5 + updatedSections.length) {
       if (updatedSections.length === 0) {
         router.push('/my-resume/' + params.resumeId + '/view')
@@ -199,25 +212,37 @@ const FormSection = () => {
   }
 
   const AddProjects = () => {
-    setIsShowingProjects(prev => {
-      const newVal = !prev
-      const newWorkType = newVal ? 'projects' : 'experience'
-      localStorage.setItem('selectedWorkType', newWorkType)
-      setResumeInfo({
-        ...resumeInfo,
-        selectedWorkType: newWorkType,
-      })
-      return newVal
-    })
+    const newVal = !isShowingProjects
+    const newWorkType = newVal ? 'projects' : 'experience'
+    
+    // Update state
+    setIsShowingProjects(newVal)
+    
+    // Update context
+    setResumeInfo(prev => ({
+      ...prev,
+      selectedWorkType: newWorkType,
+    }))
+    
+    // Update localStorage
+    localStorage.setItem('selectedWorkType', newWorkType)
   }
 
   const handleSelectExtraSection = (section) => {
-    const updatedSections = [...selectedExtraSections]
-    if (!updatedSections.includes(section)) {
-      updatedSections.push(section)
-      setSelectedExtraSections(updatedSections)
+    // Only add the section if it's not already included
+    if (!selectedExtraSections.includes(section)) {
+      const updatedSections = [...selectedExtraSections, section]
+      
+      // Update context
+      setResumeInfo(prev => ({
+        ...prev,
+        selectedExtraSections: updatedSections
+      }))
+      
+      // Update localStorage
       localStorage.setItem('selectedExtraSections', JSON.stringify(updatedSections))
     }
+    
     setFieldDialogOpen(false)
   }
 

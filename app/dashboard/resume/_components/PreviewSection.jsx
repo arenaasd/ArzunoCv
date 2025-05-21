@@ -7,6 +7,9 @@ import ExperiencePreview from './preview/ExperiencePreview'
 import EducationalPreview from './preview/EducationalPreview'
 import SkillPreview from './preview/SkillPreview'
 import ProjectsPreview from './preview/ProjectsPreview'
+import CertificatePreview from './preview/CertificatePreview'
+import LanguagePreview from './preview/LanguagePreview'
+import HobbiesPreview from './preview/HobbiesPreview' 
 
 const PreviewSection = () => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
@@ -20,7 +23,21 @@ const PreviewSection = () => {
         selectedWorkType: savedWorkType
       }))
     }
-  }, [resumeInfo, setResumeInfo])
+
+    // Load selectedExtraSections from localStorage
+    const storedSections = localStorage.getItem('selectedExtraSections')
+    if (storedSections && resumeInfo) {
+      try {
+        const parsedSections = JSON.parse(storedSections)
+        setResumeInfo(prev => ({
+          ...prev,
+          selectedExtraSections: parsedSections
+        }))
+      } catch (error) {
+        console.error('Error parsing stored extra sections', error)
+      }
+    }
+  }, [setResumeInfo])
 
   // Also save to localStorage whenever it changes
   useEffect(() => {
@@ -31,6 +48,25 @@ const PreviewSection = () => {
 
   // Use fallback if selectedWorkType isn't set
   const currentWorkType = resumeInfo?.selectedWorkType || 'experience'
+  
+  // Get the selected extra sections
+  const selectedExtraSections = resumeInfo?.selectedExtraSections || []
+
+  // Helper function to render extra section components
+  const renderExtraSections = () => {
+    return selectedExtraSections.map((section, index) => {
+      switch(section) {
+        case 'certifications':
+          return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
+        case 'languages':
+          return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
+        case 'hobbies':
+          return <HobbiesPreview key={`hobby-${index}`} resumeInfo={resumeInfo} />
+        default:
+          return null
+      }
+    })
+  }
 
   return (
     <div
@@ -48,6 +84,9 @@ const PreviewSection = () => {
 
       <EducationalPreview resumeInfo={resumeInfo} />
       <SkillPreview resumeInfo={resumeInfo} />
+      
+      {/* Render all extra sections based on selectedExtraSections */}
+      {renderExtraSections()}
     </div>
   )
 }
