@@ -1,5 +1,4 @@
 'use client'
-
 import ResumeInfoContext from "@/Context/ResumeInfoContext";
 import { useEffect, useContext } from "react";
 import Image from 'next/image';
@@ -38,7 +37,8 @@ export default function MinimalistTemplate() {
     }
   }, [resumeInfo?.selectedWorkType]);
 
-  const currentWorkType = resumeInfo?.selectedWorkWorkType || 'experience';
+  // Use fallback if selectedWorkType isn't set
+  const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
   return (
     <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-sans">
@@ -92,24 +92,54 @@ export default function MinimalistTemplate() {
                 <div className="absolute -left-6 -right-6 bg-white clip-path-skills">
                   <h2 className="font-bold py-2 px-4 text-xl tracking-wider" style={{ color: resumeInfo?.themeColor || '#375672' }}>SKILLS</h2>
                 </div>
-                <div className="space-y-4 mt-6">
-                  {resumeInfo?.skills?.map((skill) => (
-                    <div key={skill.id}>
-                      <p className="mb-2">{skill.name}</p>
-                      <div className="w-full bg-gray-300 print:block h-2 rounded-full">
-                        <div className="h-2 rounded-full"
-                          style={{
-                            width: skill?.rating * 20 + '%',
-                            backgroundColor: "#ffffff",
-                            WebkitPrintColorAdjust: 'exact',
-                            printColorAdjust: 'exact'
-                          }}></div>
-                      </div>
+                <div className="h-10"></div>
+              </div>
+
+              <div className="space-y-4 mt-6">
+                {resumeInfo?.skills?.map((skill) => (
+                  <div key={skill.id}>
+                    <p className="mb-2">{skill.name}</p>
+                    <div className="w-full bg-gray-300 print:block h-2 rounded-full">
+                      <div className="h-2 rounded-full"
+                        style={{
+                          width: skill?.rating * 20 + '%',
+                          backgroundColor: "#ffffff",
+                          WebkitPrintColorAdjust: 'exact',
+                          printColorAdjust: 'exact'
+                        }}></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* LANGUAGES */}
+            {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
+              <div className="mb-8">
+                <div className="relative">
+                  <div className="absolute -left-6 -right-6 bg-white clip-path-skills">
+                    <h2 className="font-bold py-2 px-4 text-xl tracking-wider" style={{ color: resumeInfo?.themeColor || '#375672' }}>LANGUAGES</h2>
+                  </div>
+                  <div className="h-10"></div>
+                </div>
+                <div className="mt-6 space-y-2">
+                  {resumeInfo?.languages?.map((lang, index) => (
+                    <div key={index} className="flex items-center justify-between">
+                      <span className="text-xs font-medium">{lang.title}</span>
+                      <span 
+                        className="text-[10px] px-2 py-[2px] rounded-full border" 
+                        style={{
+                          borderColor: resumeInfo?.themeColor || '#375672',
+                          color: resumeInfo?.themeColor || '#375672'
+                        }}
+                      >
+                        {lang.level}
+                      </span>
                     </div>
                   ))}
                 </div>
               </div>
-            </div>
+            )}
           </div>
 
           {/* Right column */}
@@ -156,9 +186,9 @@ export default function MinimalistTemplate() {
                         {project.techs && (
                           <div className="mt-2 flex flex-wrap gap-2">
                             {project.techs.split(',').map((tech, index) => (
-                              <span
-                                key={index}
-                                className="px-2 py-1 text-xs rounded-md text-white"
+                              <span 
+                                key={index} 
+                                className="px-2 py-1 text-xs rounded-md text-white" 
                                 style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}
                               >
                                 {tech.trim()}
@@ -220,78 +250,72 @@ export default function MinimalistTemplate() {
                   {resumeInfo?.education?.map((edu) => (
                     <div key={`${edu.id}-desc`} className="pl-6 relative">
                       <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                      <div className="mt-2 text-black" dangerouslySetInnerHTML={{ __html: edu.description }} />
+                      <div>
+                        <h3 className="text-md text-black font-semibold">{edu.universityOrCollegeName}</h3>
+                        <p className="mt-1 text-black text-sm">{edu.description}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             </div>
 
-            {/* EXTRA SECTIONS: only if selected */}
-            {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
-              <div className="mb-10">
-                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-                  <h2 className="text-xl font-bold tracking-wider">LANGUAGES</h2>
-                </div>
-                <div className="mt-6 space-y-4">
-                  {resumeInfo?.languages?.map((lang, index) => (
-                    <div key={index} className="pl-6 relative">
-                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                      <div>
-                        <h3 className="text-lg text-black font-semibold">{lang.title}</h3>
-                        <p className="text-sm text-gray-600">{lang.level}</p>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            )}
-
+            {/* EXTRA SECTIONS: Certificates and Hobbies */}
             {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
-              <div className="mb-10">
-                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-                  <h2 className="text-xl font-bold tracking-wider">CERTIFICATIONS</h2>
-                </div>
-                <div className="mt-6 space-y-4">
-                  {resumeInfo?.certificates?.map((cert) => (
-                    <div key={cert.id} className="pl-6 relative">
-                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                      <div>
-                        <h3 className="text-lg text-black font-semibold">{cert.title}</h3>
-                        <p className="text-sm text-gray-600">{cert.issuer}</p>
-                        <p className="text-sm text-gray-600">{formatDate(cert.date)}</p>
-                        {cert.url && (
-                          <p className="text-sm">
-                            <a
-                              href={cert.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="text-blue-600 underline"
-                            >
-                              View Certificate
-                            </a>
-                          </p>
-                        )}
+              <div className="my-6">
+                <h2 
+                  className="text-center font-bold text-sm tracking-wide mb-1" 
+                  style={{ color: resumeInfo?.themeColor || '#375672' }}
+                >
+                  Certifications
+                </h2>
+                <hr 
+                  className="border-[1px]" 
+                  style={{ borderColor: resumeInfo?.themeColor || '#375672' }} 
+                />
+                {resumeInfo?.certificates?.map((cert, index) => (
+                  <div className="my-4" key={index}>
+                    <h2 className="text-sm font-bold tracking-wide">
+                      {cert?.title}
+                    </h2>
+                    <div className="text-xs font-medium flex flex-wrap my-1 justify-between">
+                      <div>{cert?.issuer}</div>
+                      <div className="text-xs font-medium whitespace-nowrap ml-2">
+                        {formatDate(cert?.date)}
                       </div>
                     </div>
-                  ))}
-                </div>
+                    {cert?.url && (
+                      <a 
+                        href={cert.url} 
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        className="text-xs text-blue-600 underline mt-1 inline-block"
+                      >
+                        View Certificate
+                      </a>
+                    )}
+                  </div>
+                ))}
               </div>
             )}
 
             {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
-              <div className="mb-10">
-                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-                  <h2 className="text-xl font-bold tracking-wider">HOBBIES</h2>
-                </div>
-                <div className="mt-6 space-y-4">
-                  {resumeInfo?.hobbies?.map((hobby) => (
-                    <div key={hobby.id} className="pl-6 relative">
-                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                      <div>
-                        <h3 className="text-lg text-black font-semibold">{hobby.title}</h3>
-                        <p className="text-sm mt-1 leading-relaxed text-black">{hobby.description}</p>
-                      </div>
+              <div className="my-6">
+                <h2 
+                  className="text-center font-bold text-sm tracking-wide mb-1" 
+                  style={{ color: resumeInfo?.themeColor || '#375672' }}
+                >
+                  Hobbies
+                </h2>
+                <hr 
+                  className="border-[1px]" 
+                  style={{ borderColor: resumeInfo?.themeColor || '#375672' }} 
+                />
+                <div className="mt-4 space-y-4">
+                  {resumeInfo?.hobbies?.map((hobby, index) => (
+                    <div className="my-4" key={index}>
+                      <h2 className="text-sm font-bold tracking-wide">{hobby.title}</h2>
+                      <p className="text-xs mt-1">{hobby.description}</p>
                     </div>
                   ))}
                 </div>
@@ -301,6 +325,16 @@ export default function MinimalistTemplate() {
           </div>
         </div>
       </main>
+
+      {/* Custom styles */}
+      <style jsx global>{`
+        .clip-path-slant {
+          clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
+        }
+        .clip-path-skills {
+          clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
+        }
+      `}</style>
     </div>
   );
 }
