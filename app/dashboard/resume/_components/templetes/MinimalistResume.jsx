@@ -265,7 +265,7 @@ export default function MinimalistTemplate() {
               <div className="my-6">
                 <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
                 <h2 className="text-xl font-bold tracking-wider">
-                  {currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}
+                Certifications
                 </h2>
               </div>
                 {resumeInfo?.certificates?.map((cert, index) => (
@@ -298,8 +298,8 @@ export default function MinimalistTemplate() {
               <div className="my-6">
                 <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
                 <h2 className="text-xl font-bold tracking-wider">
-                  {currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}
-                </h2>
+                Hobbies
+                  </h2>
               </div>
                 <div className="mt-4 space-y-4">
                   {resumeInfo?.hobbies?.map((hobby, index) => (
