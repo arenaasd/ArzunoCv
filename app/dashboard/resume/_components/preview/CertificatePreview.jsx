@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 
 const CertificatePreview = () => {
   const { resumeInfo } = useContext(ResumeInfoContext)
-    const hobbies = resumeInfo?.hobbies || []
+    const cert = resumeInfo?.hobbies || []
   return (
     <div className='my-6'>
       <h2 

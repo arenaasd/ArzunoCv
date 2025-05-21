@@ -38,7 +38,7 @@ const CertificationDetails = ({ enableNext }) => {
     if (initialized) {
       setResumeInfo(prev => ({
         ...prev,
-        certifications: certificationList
+        certificates: certificationList
       }));
     }
   }, [certificationList, initialized, setResumeInfo]);
