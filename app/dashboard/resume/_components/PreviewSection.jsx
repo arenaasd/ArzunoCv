@@ -37,7 +37,7 @@ const PreviewSection = () => {
         console.error('Error parsing stored extra sections', error)
       }
     }
-  }, [setResumeInfo])
+  }, [setResumeInfo, resumeInfo])
 
   // Also save to localStorage whenever it changes
   useEffect(() => {
@@ -57,11 +57,11 @@ const PreviewSection = () => {
     return selectedExtraSections.map((section, index) => {
       switch(section) {
         case 'certifications':
-          return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
+          return <CertificatePreview key={`cert-${index}`} />
         case 'languages':
-          return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
+          return <LanguagePreview key={`lang-${index}`} />
         case 'hobbies':
-          return <HobbiesPreview key={`hobby-${index}`} resumeInfo={resumeInfo} />
+          return <HobbiesPreview key={`hobby-${index}`} />
         default:
           return null
       }
@@ -70,25 +70,28 @@ const PreviewSection = () => {
 
   // Only render components if resumeInfo is available
   if (!resumeInfo) {
-    return <div>Loading resume information...</div>
+    return (
+      <div className="text-center py-10">
+        Loading resume information...
+      </div>
+    )
   }
 
   console.log("Selected extra sections:", selectedExtraSections);
 
   return (
-    <div className="preview-section">
-      <PersonalDetailsPreview resumeInfo={resumeInfo} />
-      <SummaryPreview resumeInfo={resumeInfo} />
+    <div className="space-y-8 print:space-y-6">
+      <PersonalDetailsPreview />
+      <SummaryPreview />
       
-      <SkillPreview resumeInfo={resumeInfo} />
- 
       {currentWorkType === 'projects' ? (
-        <ProjectsPreview resumeInfo={resumeInfo} />
+        <ProjectsPreview />
       ) : (
-        <ExperiencePreview resumeInfo={resumeInfo} />
+        <ExperiencePreview />
       )}
 
-      <EducationalPreview resumeInfo={resumeInfo} />
+      <EducationalPreview />
+      <SkillPreview />
       
       {/* Render all extra sections based on selectedExtraSections */}
       {renderExtraSections()}
