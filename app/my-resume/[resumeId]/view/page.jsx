@@ -15,13 +15,13 @@ const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 const getTemplateComponent = (templateId) => {
   switch (templateId) {
     case 1:
-      return <PreviewSection />
-    case 2:
       return <MinimalistResume />
-    case 3:
+    case 2:
       return <ProfessionalResume />
+    case 3:
+      return <MinimalistResume /> // Fallback or third template
     default:
-      return <PreviewSection />
+      return <MinimalistResume /> // Default template
   }
 }
 
@@ -68,8 +68,8 @@ const Page = () => {
   if (error) notFound()
   if (!resumeInfo) {
     return (
-      <div className="flex items-center justify-center h-screen">
-        <div className="w-16 h-16 rounded-full animate-loader-gradient"></div>
+      <div className="flex justify-center items-center h-screen">
+        <p>Loading resume...</p>
       </div>
     )
   }
@@ -82,26 +82,28 @@ const Page = () => {
   const shareTitle = 'Check out my resume!'
 
   return (
-    <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, selectedTemplate, setSelectedTemplate }}>
-      <div id="no-print" className="my-10 mx-5 md:mx-20 lg:mx-36">
-        <h2 className="text-center text-2xl font-medium">Your Resume is ready to download and share!</h2>
-        <div className="flex flex-col sm:flex-row justify-center sm:justify-between gap-4 sm:px-44 my-10">
+    <div className="container mx-auto px-4 py-8">
+      <div className="flex flex-col items-center mb-6">
+        <h1 className="text-2xl font-bold mb-4">Your Resume is ready to download and share!</h1>
+        <div className="flex flex-col sm:flex-row gap-4">
           <Button onClick={HandleDownload} className="w-full sm:w-auto">Download</Button>
           <Button onClick={() => setIsShareOpen(true)} className="w-full sm:w-auto">Share</Button>
         </div>
       </div>
 
-      <div id="print-area" className="my-10 mx-10 md:mx-20 lg:mx-36">
-        {getTemplateComponent(selectedTemplate?.id)}
-      </div>
+      <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
+        <div id="resume-preview" className="bg-white shadow-lg rounded-lg p-6 mb-8">
+          {getTemplateComponent(selectedTemplate?.id)}
+        </div>
+      </ResumeInfoContext.Provider>
 
-      <ShareModal
-        isOpen={isShareOpen}
+      <ShareModal 
+        isOpen={isShareOpen} 
         onClose={() => setIsShareOpen(false)}
         shareUrl={shareUrl}
         title={shareTitle}
       />
-    </ResumeInfoContext.Provider>
+    </div>
   )
 }
 

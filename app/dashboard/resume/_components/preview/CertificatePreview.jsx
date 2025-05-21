@@ -1,4 +1,4 @@
-import React from 'react'
+import React from 'react';
 
 const CertificatePreview = ({ resumeInfo }) => {
   return (
@@ -29,21 +29,19 @@ const CertificatePreview = ({ resumeInfo }) => {
           </div>
 
           {cert?.url && (
-            <p className="text-xs mt-1 leading-relaxed break-all">
-              <a 
-                href={cert.url} 
-                target="_blank" 
-                rel="noopener noreferrer" 
-                className="text-blue-600 underline"
-              >
-                {cert.url}
-              </a>
-            </p>
+            <a 
+              href={cert.url} 
+              target="_blank" 
+              rel="noopener noreferrer" 
+              className="text-xs text-blue-600 underline mt-1 inline-block"
+            >
+              View Certificate
+            </a>
           )}
         </div>
       ))}
     </div>
-  )
-}
+  );
+};
 
-export default CertificatePreview
+export default CertificatePreview;

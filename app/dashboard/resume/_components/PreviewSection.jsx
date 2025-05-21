@@ -57,11 +57,11 @@ const PreviewSection = () => {
     return selectedExtraSections.map((section, index) => {
       switch(section) {
         case 'certifications':
-          return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
+          return <CertificatePreview key={`cert-${index}`} />
         case 'languages':
-          return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
+          return <LanguagePreview key={`lang-${index}`} />
         case 'hobbies':
-          return <HobbiesPreview key={`hobby-${index}`} resumeInfo={resumeInfo} />
+          return <HobbiesPreview key={`hobby-${index}`} />
         default:
           return null
       }
@@ -69,21 +69,19 @@ const PreviewSection = () => {
   }
 
   return (
-    <div
-      className='shadow-lg h-full p-4 md:p-8 lg:p-14 border-t-[12px]'
-      style={{ borderColor: resumeInfo?.themeColor }}
-    >
-      <PersonalDetailsPreview resumeInfo={resumeInfo} />
-      <SummaryPreview resumeInfo={resumeInfo} />
+    <div className="preview-section">
+      <PersonalDetailsPreview />
+      <SummaryPreview />
+      
+      <SkillPreview />
  
       {currentWorkType === 'projects' ? (
-        <ProjectsPreview resumeInfo={resumeInfo} />
+        <ProjectsPreview />
       ) : (
-        <ExperiencePreview resumeInfo={resumeInfo} />
+        <ExperiencePreview />
       )}
 
-      <EducationalPreview resumeInfo={resumeInfo} />
-      <SkillPreview resumeInfo={resumeInfo} />
+      <EducationalPreview />
       
       {/* Render all extra sections based on selectedExtraSections */}
       {renderExtraSections()}

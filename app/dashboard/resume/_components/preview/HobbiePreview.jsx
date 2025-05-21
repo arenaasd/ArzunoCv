@@ -25,9 +25,9 @@ const HobbiePreview = () => {
           <div key={index}>
             <h3 className="text-xs font-semibold">{hobby.title}</h3>
             {hobby.description && (
-              <p className="text-[10px] text-gray-600 mt-1">{hobby.description}</p>
+              <p className="text-xs font-medium mt-1">{hobby.description}</p>
             )}
-          </div>
+          </div> 
         ))}
       </div>
     </div>
