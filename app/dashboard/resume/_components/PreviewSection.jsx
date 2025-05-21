@@ -14,7 +14,6 @@ import HobbiesPreview from './preview/HobbiePreview'
 const PreviewSection = () => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
 
-  // Load from localStorage on component mount
   useEffect(() => {
     const savedWorkType = localStorage.getItem('selectedWorkType')
     if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
@@ -24,7 +23,6 @@ const PreviewSection = () => {
       }))
     }
 
-    // Load selectedExtraSections from localStorage
     const storedSections = localStorage.getItem('selectedExtraSections')
     if (storedSections && resumeInfo) {
       try {
@@ -39,35 +37,24 @@ const PreviewSection = () => {
     }
   }, [setResumeInfo, resumeInfo])
 
-  // Also save to localStorage whenever it changes
   useEffect(() => {
     if (resumeInfo?.selectedWorkType) {
       localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType)
     }
   }, [resumeInfo?.selectedWorkType])
 
-  // Only render components if resumeInfo is available
   if (!resumeInfo) {
-    return (
-      <div className="text-center py-10">
-        Loading resume information...
-      </div>
-    )
+    return <div>Loading resume information...</div>
   }
 
-  // Use fallback if selectedWorkType isn't set
   const currentWorkType = resumeInfo.selectedWorkType || 'experience'
-  
-  // Get the selected extra sections
   const selectedExtraSections = resumeInfo.selectedExtraSections || []
 
-  console.log("Selected extra sections:", selectedExtraSections);
-
   return (
-    <div className="space-y-8 print:space-y-6">
+    <div>
       <PersonalDetailsPreview resumeInfo={resumeInfo} />
       <SummaryPreview resumeInfo={resumeInfo} />
-      
+
       {currentWorkType === 'projects' ? (
         <ProjectsPreview resumeInfo={resumeInfo} />
       ) : (
@@ -76,10 +63,9 @@ const PreviewSection = () => {
 
       <EducationalPreview resumeInfo={resumeInfo} />
       <SkillPreview resumeInfo={resumeInfo} />
-      
-      {/* Render all extra sections based on selectedExtraSections */}
+
       {selectedExtraSections.map((section, index) => {
-        switch(section) {
+        switch (section) {
           case 'certifications':
             return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
           case 'languages':
