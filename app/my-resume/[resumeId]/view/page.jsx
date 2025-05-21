@@ -12,16 +12,16 @@ import ShareModal from '@/components/ShareModel'
 
 const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 
-const getTemplateComponent = (templateId) => {
+const getTemplateComponent = (templateId, resumeInfo) => {
   switch (templateId) {
     case 1:
-      return <MinimalistResume />
+      return <MinimalistResume resumeInfo={resumeInfo} />
     case 2:
-      return <ProfessionalResume />
+      return <ProfessionalResume resumeInfo={resumeInfo} />
     case 3:
-      return <MinimalistResume /> // Fallback or third template
+      return <MinimalistResume resumeInfo={resumeInfo} /> // Fallback or third template
     default:
-      return <MinimalistResume /> // Default template
+      return <MinimalistResume resumeInfo={resumeInfo} /> // Default template
   }
 }
 
@@ -43,14 +43,27 @@ const Page = () => {
       // Try to get saved selectedWorkType from localStorage
       const localSelectedWorkType = localStorage.getItem('selectedWorkType')
       
-      // Inject selectedWorkType from localStorage or use the data value if present,
-      // or fallback to 'experience' as a last resort
-      const resumeWithWorkType = {
+      // Try to get saved selectedExtraSections from localStorage
+      let extraSections = []
+      try {
+        const storedSections = localStorage.getItem('selectedExtraSections')
+        if (storedSections) {
+          extraSections = JSON.parse(storedSections)
+        }
+      } catch (error) {
+        console.error('Error parsing stored extra sections', error)
+      }
+      
+      // Inject selectedWorkType and selectedExtraSections from localStorage or use the data values if present,
+      // or fallback to defaults as a last resort
+      const resumeWithSettings = {
         ...data,
-        selectedWorkType: localSelectedWorkType || data.selectedWorkType || 'experience'
+        selectedWorkType: localSelectedWorkType || data.selectedWorkType || 'experience',
+        selectedExtraSections: extraSections.length > 0 ? extraSections : (data.selectedExtraSections || [])
       }
 
-      setResumeInfo(resumeWithWorkType)
+      console.log("Resume with settings:", resumeWithSettings)
+      setResumeInfo(resumeWithSettings)
     }
   }, [data])
 
@@ -93,7 +106,7 @@ const Page = () => {
 
       <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
         <div id="resume-preview" className="bg-white shadow-lg rounded-lg p-6 mb-8">
-          {getTemplateComponent(selectedTemplate?.id)}
+          {getTemplateComponent(selectedTemplate?.id, resumeInfo)}
         </div>
       </ResumeInfoContext.Provider>
 
