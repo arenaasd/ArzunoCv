@@ -1,4 +1,5 @@
 'use client'
+
 import ResumeInfoContext from "@/Context/ResumeInfoContext";
 import { useEffect, useContext } from "react";
 import Image from 'next/image';
@@ -37,7 +38,6 @@ export default function MinimalistTemplate() {
     }
   }, [resumeInfo?.selectedWorkType]);
 
-  // Use fallback if selectedWorkType isn't set
   const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
   return (
@@ -92,24 +92,22 @@ export default function MinimalistTemplate() {
                 <div className="absolute -left-6 -right-6 bg-white clip-path-skills">
                   <h2 className="font-bold py-2 px-4 text-xl tracking-wider" style={{ color: resumeInfo?.themeColor || '#375672' }}>SKILLS</h2>
                 </div>
-                <div className="h-10"></div>
-              </div>
-
-              <div className="space-y-4 mt-6">
-                {resumeInfo?.skills?.map((skill) => (
-                  <div key={skill.id}>
-                    <p className="mb-2">{skill.name}</p>
-                    <div className="w-full bg-gray-300 print:block h-2 rounded-full">
-                      <div className="h-2 rounded-full"
-                        style={{
-                          width: skill?.rating * 20 + '%',
-                          backgroundColor: "#ffffff",
-                          WebkitPrintColorAdjust: 'exact',
-                          printColorAdjust: 'exact'
-                        }}></div>
+                <div className="space-y-4 mt-6">
+                  {resumeInfo?.skills?.map((skill) => (
+                    <div key={skill.id}>
+                      <p className="mb-2">{skill.name}</p>
+                      <div className="w-full bg-gray-300 print:block h-2 rounded-full">
+                        <div className="h-2 rounded-full"
+                          style={{
+                            width: skill?.rating * 20 + '%',
+                            backgroundColor: "#ffffff",
+                            WebkitPrintColorAdjust: 'exact',
+                            printColorAdjust: 'exact'
+                          }}></div>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
@@ -142,7 +140,6 @@ export default function MinimalistTemplate() {
               </div>
               <div className="mt-6 space-y-6">
                 {currentWorkType === 'projects' ? (
-                  // Projects rendering
                   resumeInfo?.projects?.map((project) => (
                     <div key={project.id} className="pl-6 relative">
                       <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
@@ -159,9 +156,9 @@ export default function MinimalistTemplate() {
                         {project.techs && (
                           <div className="mt-2 flex flex-wrap gap-2">
                             {project.techs.split(',').map((tech, index) => (
-                              <span 
-                                key={index} 
-                                className="px-2 py-1 text-xs rounded-md text-white" 
+                              <span
+                                key={index}
+                                className="px-2 py-1 text-xs rounded-md text-white"
                                 style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}
                               >
                                 {tech.trim()}
@@ -173,7 +170,6 @@ export default function MinimalistTemplate() {
                     </div>
                   ))
                 ) : (
-                  // Experience rendering
                   resumeInfo?.experience?.map((exp) => (
                     <div key={exp.id} className="pl-6 relative">
                       <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
@@ -224,28 +220,62 @@ export default function MinimalistTemplate() {
                   {resumeInfo?.education?.map((edu) => (
                     <div key={`${edu.id}-desc`} className="pl-6 relative">
                       <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
-                      <div>
-                        <h3 className="text-md text-black font-semibold">{edu.universityOrCollegeName}</h3>
-                        <p className="mt-1 text-black text-sm">{edu.description}</p>
-                      </div>
+                      <div className="mt-2 text-black" dangerouslySetInnerHTML={{ __html: edu.description }} />
                     </div>
                   ))}
                 </div>
               </div>
             </div>
+
+            {/* EXTRA SECTIONS: only if selected */}
+            {resumeInfo?.selectedExtraSections?.includes('hobbies') && (
+              <div className="mb-10">
+                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
+                  <h2 className="text-xl font-bold tracking-wider">HOBBIES</h2>
+                </div>
+                <div className="mt-6 space-y-3 text-black">
+                  {resumeInfo?.hobbies?.map((hobby) => (
+                    <div key={hobby.id}>
+                      <h3 className="font-semibold">{hobby.title}</h3>
+                      <p>{hobby.description}</p>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {resumeInfo?.selectedExtraSections?.includes('certificates') && (
+              <div className="mb-10">
+                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
+                  <h2 className="text-xl font-bold tracking-wider">CERTIFICATES</h2>
+                </div>
+                <div className="mt-6 space-y-3 text-black">
+                  {resumeInfo?.certificates?.map((cert) => (
+                    <div key={cert.id}>
+                      <h3 className="font-semibold">{cert.title}</h3>
+                      <p>Issuer: {cert.issuer}</p>
+                      <p>Date: {formatDate(cert.date)}</p>
+                      {cert.url && (
+                        <p>
+                          <a
+                            href={cert.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-blue-600 underline"
+                          >
+                            View Certificate
+                          </a>
+                        </p>
+                      )}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
           </div>
         </div>
       </main>
-
-      {/* Custom styles */}
-      <style jsx global>{`
-        .clip-path-slant {
-          clip-path: polygon(0 0, 100% 0, 85% 100%, 0% 100%);
-        }
-        .clip-path-skills {
-          clip-path: polygon(0 0, 100% 0, 80% 100%, 0% 100%);
-        }
-      `}</style>
     </div>
   );
 }

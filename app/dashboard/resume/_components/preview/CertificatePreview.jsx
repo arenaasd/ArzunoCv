@@ -18,7 +18,7 @@ const CertificatePreview = () => {
         style={{ borderColor: resumeInfo?.themeColor }} 
       />
 
-      {resumeInfo?.certifications?.map((cert, index) => (
+      {resumeInfo?.certificates?.map((cert, index) => (
         <div className="my-4" key={index}>
           <h2 className="text-sm font-bold tracking-wide">
             {cert?.title}

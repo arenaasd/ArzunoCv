@@ -56,7 +56,7 @@ const PreviewSection = () => {
   const renderExtraSections = () => {
     return selectedExtraSections.map((section, index) => {
       switch(section) {
-        case 'certifications':
+        case 'certifications': 
           return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
         case 'languages':
           return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
