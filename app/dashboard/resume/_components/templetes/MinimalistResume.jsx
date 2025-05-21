@@ -38,7 +38,7 @@ export default function MinimalistTemplate() {
     }
   }, [resumeInfo?.selectedWorkType]);
 
-  const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
+  const currentWorkType = resumeInfo?.selectedWorkWorkType || 'experience';
 
   return (
     <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-sans">
@@ -228,45 +228,70 @@ export default function MinimalistTemplate() {
             </div>
 
             {/* EXTRA SECTIONS: only if selected */}
-            {resumeInfo?.selectedExtraSections?.includes('hobbies') && (
+            {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
               <div className="mb-10">
                 <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-                  <h2 className="text-xl font-bold tracking-wider">HOBBIES</h2>
+                  <h2 className="text-xl font-bold tracking-wider">LANGUAGES</h2>
                 </div>
-                <div className="mt-6 space-y-3 text-black">
-                  {resumeInfo?.hobbies?.map((hobby) => (
-                    <div key={hobby.id}>
-                      <h3 className="font-semibold">{hobby.title}</h3>
-                      <p>{hobby.description}</p>
+                <div className="mt-6 space-y-4">
+                  {resumeInfo?.languages?.map((lang, index) => (
+                    <div key={index} className="pl-6 relative">
+                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
+                      <div>
+                        <h3 className="text-lg text-black font-semibold">{lang.title}</h3>
+                        <p className="text-sm text-gray-600">{lang.level}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
               </div>
             )}
 
-            {resumeInfo?.selectedExtraSections?.includes('certificates') && (
+            {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
               <div className="mb-10">
                 <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
-                  <h2 className="text-xl font-bold tracking-wider">CERTIFICATES</h2>
+                  <h2 className="text-xl font-bold tracking-wider">CERTIFICATIONS</h2>
                 </div>
-                <div className="mt-6 space-y-3 text-black">
+                <div className="mt-6 space-y-4">
                   {resumeInfo?.certificates?.map((cert) => (
-                    <div key={cert.id}>
-                      <h3 className="font-semibold">{cert.title}</h3>
-                      <p>Issuer: {cert.issuer}</p>
-                      <p>Date: {formatDate(cert.date)}</p>
-                      {cert.url && (
-                        <p>
-                          <a
-                            href={cert.url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-blue-600 underline"
-                          >
-                            View Certificate
-                          </a>
-                        </p>
-                      )}
+                    <div key={cert.id} className="pl-6 relative">
+                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
+                      <div>
+                        <h3 className="text-lg text-black font-semibold">{cert.title}</h3>
+                        <p className="text-sm text-gray-600">{cert.issuer}</p>
+                        <p className="text-sm text-gray-600">{formatDate(cert.date)}</p>
+                        {cert.url && (
+                          <p className="text-sm">
+                            <a
+                              href={cert.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-blue-600 underline"
+                            >
+                              View Certificate
+                            </a>
+                          </p>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
+              <div className="mb-10">
+                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
+                  <h2 className="text-xl font-bold tracking-wider">HOBBIES</h2>
+                </div>
+                <div className="mt-6 space-y-4">
+                  {resumeInfo?.hobbies?.map((hobby) => (
+                    <div key={hobby.id} className="pl-6 relative">
+                      <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
+                      <div>
+                        <h3 className="text-lg text-black font-semibold">{hobby.title}</h3>
+                        <p className="text-sm mt-1 leading-relaxed text-black">{hobby.description}</p>
+                      </div>
                     </div>
                   ))}
                 </div>
