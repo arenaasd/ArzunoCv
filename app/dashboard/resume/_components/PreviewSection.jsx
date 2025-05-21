@@ -9,7 +9,7 @@ import SkillPreview from './preview/SkillPreview'
 import ProjectsPreview from './preview/ProjectsPreview'
 import CertificatePreview from './preview/CertificatePreview'
 import LanguagePreview from './preview/LanguagePreview'
-import HobbiesPreview from './preview/HobbiesPreview' 
+import HobbiesPreview from './preview/HobbiePreview' 
 
 const PreviewSection = () => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
