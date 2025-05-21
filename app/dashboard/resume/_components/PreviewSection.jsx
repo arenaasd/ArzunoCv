@@ -1,6 +1,5 @@
 'use client'
-
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useContext, useEffect } from 'react'
 import ResumeInfoContext from '@/Context/ResumeInfoContext'
 import PersonalDetailsPreview from './preview/PersonalDetailsPreview'
 import SummaryPreview from './preview/SummaryPreview'
@@ -10,64 +9,79 @@ import SkillPreview from './preview/SkillPreview'
 import ProjectsPreview from './preview/ProjectsPreview'
 import CertificatePreview from './preview/CertificatePreview'
 import LanguagePreview from './preview/LanguagePreview'
-import HobbiesPreview from './preview/HobbiePreview'
+import HobbiesPreview from './preview/HobbiePreview' 
 
 const PreviewSection = () => {
   const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext)
-  const [hasLoaded, setHasLoaded] = useState(false)
 
+  // Load from localStorage on component mount
   useEffect(() => {
-    if (!resumeInfo) return
-
     const savedWorkType = localStorage.getItem('selectedWorkType')
+    if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
+      setResumeInfo(prev => ({
+        ...prev,
+        selectedWorkType: savedWorkType
+      }))
+    }
+
+    // Load selectedExtraSections from localStorage
     const storedSections = localStorage.getItem('selectedExtraSections')
-
-    setResumeInfo(prev => {
-      let updated = { ...prev }
-
-      if (savedWorkType && savedWorkType !== prev.selectedWorkType) {
-        updated.selectedWorkType = savedWorkType
+    if (storedSections && resumeInfo) {
+      try {
+        const parsedSections = JSON.parse(storedSections)
+        setResumeInfo(prev => ({
+          ...prev,
+          selectedExtraSections: parsedSections
+        }))
+      } catch (error) {
+        console.error('Error parsing stored extra sections', error)
       }
+    }
+  }, [setResumeInfo])
 
-      if (storedSections) {
-        try {
-          updated.selectedExtraSections = JSON.parse(storedSections)
-        } catch (error) {
-          console.error('Error parsing extra sections:', error)
-        }
-      }
-
-      return updated
-    })
-
-    setHasLoaded(true)
-  }, [resumeInfo, setResumeInfo])
-
+  // Also save to localStorage whenever it changes
   useEffect(() => {
     if (resumeInfo?.selectedWorkType) {
       localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType)
     }
+  }, [resumeInfo?.selectedWorkType])
 
-    if (resumeInfo?.selectedExtraSections) {
-      localStorage.setItem(
-        'selectedExtraSections',
-        JSON.stringify(resumeInfo.selectedExtraSections)
-      )
-    }
-  }, [resumeInfo?.selectedWorkType, resumeInfo?.selectedExtraSections])
+  // Use fallback if selectedWorkType isn't set
+  const currentWorkType = resumeInfo?.selectedWorkType || 'experience'
+  
+  // Get the selected extra sections
+  const selectedExtraSections = resumeInfo?.selectedExtraSections || []
 
-  if (!resumeInfo || !hasLoaded) {
+  // Helper function to render extra section components
+  const renderExtraSections = () => {
+    return selectedExtraSections.map((section, index) => {
+      switch(section) {
+        case 'certifications':
+          return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
+        case 'languages':
+          return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
+        case 'hobbies':
+          return <HobbiesPreview key={`hobby-${index}`} resumeInfo={resumeInfo} />
+        default:
+          return null
+      }
+    })
+  }
+
+  // Only render components if resumeInfo is available
+  if (!resumeInfo) {
     return <div>Loading resume information...</div>
   }
 
-  const currentWorkType = resumeInfo.selectedWorkType || 'experience'
-  const selectedExtraSections = resumeInfo.selectedExtraSections || []
+  console.log("Selected extra sections:", selectedExtraSections);
 
   return (
-    <div>
+    <div className="preview-section">
       <PersonalDetailsPreview resumeInfo={resumeInfo} />
       <SummaryPreview resumeInfo={resumeInfo} />
-
+      
+      <SkillPreview resumeInfo={resumeInfo} />
+ 
       {currentWorkType === 'projects' ? (
         <ProjectsPreview resumeInfo={resumeInfo} />
       ) : (
@@ -75,20 +89,9 @@ const PreviewSection = () => {
       )}
 
       <EducationalPreview resumeInfo={resumeInfo} />
-      <SkillPreview resumeInfo={resumeInfo} />
-
-      {selectedExtraSections.map((section, index) => {
-        switch (section) {
-          case 'certifications':
-            return <CertificatePreview key={`cert-${index}`} resumeInfo={resumeInfo} />
-          case 'languages':
-            return <LanguagePreview key={`lang-${index}`} resumeInfo={resumeInfo} />
-          case 'hobbies':
-            return <HobbiesPreview key={`hobby-${index}`} resumeInfo={resumeInfo} />
-          default:
-            return null
-        }
-      })}
+      
+      {/* Render all extra sections based on selectedExtraSections */}
+      {renderExtraSections()}
     </div>
   )
 }
