@@ -80,7 +80,6 @@ const PreviewSection = () => {
       <PersonalDetailsPreview resumeInfo={resumeInfo} />
       <SummaryPreview resumeInfo={resumeInfo} />
       
-      <SkillPreview resumeInfo={resumeInfo} />
  
       {currentWorkType === 'projects' ? (
         <ProjectsPreview resumeInfo={resumeInfo} />
@@ -89,6 +88,7 @@ const PreviewSection = () => {
       )}
 
       <EducationalPreview resumeInfo={resumeInfo} />
+      <SkillPreview resumeInfo={resumeInfo} />
       
       {/* Render all extra sections based on selectedExtraSections */}
       {renderExtraSections()}

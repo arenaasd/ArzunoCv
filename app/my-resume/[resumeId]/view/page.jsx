@@ -68,9 +68,12 @@ const Page = () => {
   if (error) notFound()
   if (!resumeInfo) {
     return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
+      <div className="flex items-center justify-center h-screen bg-white">
+      <div className="relative w-24 h-24">
+        <div className="absolute inset-0 rounded-full border-4 border-purple-600 border-t-transparent animate-spin"></div>
+        <div className="absolute inset-2 rounded-full border-4 border-yellow-400 border-t-transparent animate-spin delay-[0.5s]"></div>
       </div>
+    </div>
     )
   }
 

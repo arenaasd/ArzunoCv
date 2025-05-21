@@ -1,4 +1,5 @@
-import React from 'react';
+import ResumeInfoContext from '@/Context/ResumeInfoContext';
+import React, { useContext } from 'react';
 
 const CertificatePreview = () => {
   const { resumeInfo } = useContext(ResumeInfoContext)
