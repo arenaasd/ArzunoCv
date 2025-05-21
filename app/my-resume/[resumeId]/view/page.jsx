@@ -42,7 +42,7 @@ const Page = () => {
     if (data) {
       // Try to get saved selectedWorkType from localStorage
       const localSelectedWorkType = localStorage.getItem('selectedWorkType')
-      
+
       // Inject selectedWorkType from localStorage or use the data value if present,
       // or fallback to 'experience' as a last resort
       const resumeWithWorkType = {
@@ -83,12 +83,10 @@ const Page = () => {
 
   return (
     <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, selectedTemplate, setSelectedTemplate }}>
-      <div className="container mx-auto py-5 print:hidden">
-        <div className="text-center mb-5">
-          <h2 className="text-2xl font-bold mb-2">Your Resume is ready to download and share!</h2>
-        </div>
 
-        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
+      <div id="no-print" className="my-10 mx-5 md:mx-20 lg:mx-36">
+        <h2 className="text-center text-2xl font-medium">Your Resume is ready to download and share!</h2>
+        <div className="flex flex-col sm:flex-row justify-center sm:justify-between gap-4 sm:px-44 my-10">
           <Button onClick={HandleDownload} className="w-full sm:w-auto">Download</Button>
           <Button onClick={() => setIsShareOpen(true)} className="w-full sm:w-auto">Share</Button>
         </div>
@@ -96,12 +94,12 @@ const Page = () => {
 
       <div className="bg-white rounded-md p-5">
         <div id="resume-container" className="mx-auto max-w-[1000px]">
-         {getTemplateComponent(selectedTemplate?.id, resumeInfo)}
+          {getTemplateComponent(selectedTemplate?.id, resumeInfo)}
         </div>
       </div>
 
-      <ShareModal 
-        isOpen={isShareOpen} 
+      <ShareModal
+        isOpen={isShareOpen}
         closeModal={() => setIsShareOpen(false)}
         shareUrl={shareUrl}
         title={shareTitle}

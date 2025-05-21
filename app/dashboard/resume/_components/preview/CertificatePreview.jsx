@@ -1,6 +1,8 @@
 import React from 'react';
 
-const CertificatePreview = ({ resumeInfo }) => {
+const CertificatePreview = () => {
+  const { resumeInfo } = useContext(ResumeInfoContext)
+    const hobbies = resumeInfo?.hobbies || []
   return (
     <div className='my-6'>
       <h2 
