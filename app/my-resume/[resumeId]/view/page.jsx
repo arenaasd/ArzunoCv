@@ -12,14 +12,14 @@ import ShareModal from '@/components/ShareModel'
 
 const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 
-const getTemplateComponent = (templateId) => {
+const getTemplateComponent = (templateId, resumeInfo) => {
   switch (templateId) {
     case 1:
       return <PreviewSection />
     case 2:
-      return <MinimalistResume />
+      return <MinimalistResume resumeInfo={resumeInfo} />
     case 3:
-      return <ProfessionalResume />
+      return <ProfessionalResume resumeInfo={resumeInfo} />
     default:
       return <PreviewSection />
   }
@@ -96,7 +96,7 @@ const Page = () => {
 
       <div className="bg-white rounded-md p-5">
         <div id="resume-container" className="mx-auto max-w-[1000px]">
-          {getTemplateComponent(selectedTemplate?.id)}
+          {getTemplateComponent(selectedTemplate?.id, resumeInfo)}
         </div>
       </div>
 
