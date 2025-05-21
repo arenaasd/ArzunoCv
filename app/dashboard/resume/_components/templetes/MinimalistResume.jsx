@@ -129,8 +129,8 @@ export default function MinimalistTemplate() {
                       <span 
                         className="text-[10px] px-2 py-[2px] rounded-full border" 
                         style={{
-                          borderColor: resumeInfo?.themeColor || '#375672',
-                          color: resumeInfo?.themeColor || '#375672'
+                          borderColor: resumeInfo?.themeColor || '#fffff',
+                          color: resumeInfo?.themeColor || '#fffff'
                         }}
                       >
                         {lang.level}
@@ -263,16 +263,11 @@ export default function MinimalistTemplate() {
             {/* EXTRA SECTIONS: Certificates and Hobbies */}
             {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
               <div className="my-6">
-                <h2 
-                  className="text-center font-bold text-sm tracking-wide mb-1" 
-                  style={{ color: resumeInfo?.themeColor || '#375672' }}
-                >
-                  Certifications
+                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
+                <h2 className="text-xl font-bold tracking-wider">
+                  {currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}
                 </h2>
-                <hr 
-                  className="border-[1px]" 
-                  style={{ borderColor: resumeInfo?.themeColor || '#375672' }} 
-                />
+              </div>
                 {resumeInfo?.certificates?.map((cert, index) => (
                   <div className="my-4" key={index}>
                     <h2 className="text-sm font-bold tracking-wide">
@@ -301,16 +296,11 @@ export default function MinimalistTemplate() {
 
             {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
               <div className="my-6">
-                <h2 
-                  className="text-center font-bold text-sm tracking-wide mb-1" 
-                  style={{ color: resumeInfo?.themeColor || '#375672' }}
-                >
-                  Hobbies
+                <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
+                <h2 className="text-xl font-bold tracking-wider">
+                  {currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}
                 </h2>
-                <hr 
-                  className="border-[1px]" 
-                  style={{ borderColor: resumeInfo?.themeColor || '#375672' }} 
-                />
+              </div>
                 <div className="mt-4 space-y-4">
                   {resumeInfo?.hobbies?.map((hobby, index) => (
                     <div className="my-4" key={index}>
