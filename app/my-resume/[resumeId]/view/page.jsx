@@ -3,7 +3,7 @@ import { Button } from '@/components/ui/button'
 import ResumeInfoContext from '@/Context/ResumeInfoContext'
 import GlobalApi from '@/Service/GlobalApi'
 import { useParams, notFound } from 'next/navigation'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import useSWR from 'swr'
 import PreviewSection from '../../../dashboard/resume/_components/PreviewSection'
 import MinimalistResume from "../../../dashboard/resume/_components/templetes/MinimalistResume"
@@ -12,16 +12,16 @@ import ShareModal from '@/components/ShareModel'
 
 const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 
-const getTemplateComponent = (templateId, resumeInfo) => {
+const getTemplateComponent = (templateId) => {
   switch (templateId) {
     case 1:
-      return <MinimalistResume resumeInfo={resumeInfo} />
+      return <PreviewSection />
     case 2:
-      return <ProfessionalResume resumeInfo={resumeInfo} />
+      return <MinimalistResume />
     case 3:
-      return <MinimalistResume resumeInfo={resumeInfo} /> // Fallback or third template
+      return <ProfessionalResume />
     default:
-      return <MinimalistResume resumeInfo={resumeInfo} /> // Default template
+      return <PreviewSection />
   }
 }
 
@@ -43,27 +43,14 @@ const Page = () => {
       // Try to get saved selectedWorkType from localStorage
       const localSelectedWorkType = localStorage.getItem('selectedWorkType')
       
-      // Try to get saved selectedExtraSections from localStorage
-      let extraSections = []
-      try {
-        const storedSections = localStorage.getItem('selectedExtraSections')
-        if (storedSections) {
-          extraSections = JSON.parse(storedSections)
-        }
-      } catch (error) {
-        console.error('Error parsing stored extra sections', error)
-      }
-      
-      // Inject selectedWorkType and selectedExtraSections from localStorage or use the data values if present,
-      // or fallback to defaults as a last resort
-      const resumeWithSettings = {
+      // Inject selectedWorkType from localStorage or use the data value if present,
+      // or fallback to 'experience' as a last resort
+      const resumeWithWorkType = {
         ...data,
-        selectedWorkType: localSelectedWorkType || data.selectedWorkType || 'experience',
-        selectedExtraSections: extraSections.length > 0 ? extraSections : (data.selectedExtraSections || [])
+        selectedWorkType: localSelectedWorkType || data.selectedWorkType || 'experience'
       }
 
-      console.log("Resume with settings:", resumeWithSettings)
-      setResumeInfo(resumeWithSettings)
+      setResumeInfo(resumeWithWorkType)
     }
   }, [data])
 
@@ -82,7 +69,7 @@ const Page = () => {
   if (!resumeInfo) {
     return (
       <div className="flex justify-center items-center h-screen">
-        <p>Loading resume...</p>
+        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-900"></div>
       </div>
     )
   }
@@ -95,28 +82,31 @@ const Page = () => {
   const shareTitle = 'Check out my resume!'
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="flex flex-col items-center mb-6">
-        <h1 className="text-2xl font-bold mb-4">Your Resume is ready to download and share!</h1>
-        <div className="flex flex-col sm:flex-row gap-4">
+    <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo, selectedTemplate, setSelectedTemplate }}>
+      <div className="container mx-auto py-5 print:hidden">
+        <div className="text-center mb-5">
+          <h2 className="text-2xl font-bold mb-2">Your Resume is ready to download and share!</h2>
+        </div>
+
+        <div className="flex flex-col sm:flex-row gap-3 justify-center mb-5">
           <Button onClick={HandleDownload} className="w-full sm:w-auto">Download</Button>
           <Button onClick={() => setIsShareOpen(true)} className="w-full sm:w-auto">Share</Button>
         </div>
       </div>
 
-      <ResumeInfoContext.Provider value={{ resumeInfo, setResumeInfo }}>
-        <div id="resume-preview" className="bg-white shadow-lg rounded-lg p-6 mb-8">
-          {getTemplateComponent(selectedTemplate?.id, resumeInfo)}
+      <div className="bg-white rounded-md p-5">
+        <div id="resume-container" className="mx-auto max-w-[1000px]">
+          {getTemplateComponent(selectedTemplate?.id)}
         </div>
-      </ResumeInfoContext.Provider>
+      </div>
 
       <ShareModal 
         isOpen={isShareOpen} 
-        onClose={() => setIsShareOpen(false)}
+        closeModal={() => setIsShareOpen(false)}
         shareUrl={shareUrl}
         title={shareTitle}
       />
-    </div>
+    </ResumeInfoContext.Provider>
   )
 }
 
