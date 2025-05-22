@@ -28,6 +28,7 @@ import {
 } from '@/components/ui/dialog'
 import MinimalistResumePreview from './templetes/MinimalistResume'
 import ProfessionalResume from './templetes/ProfessionalResume'
+import SleekResume from './templetes/SleekResume'
 import ProjectsDetails from './Form/ProjectsDetails'
 
 const templates = [
@@ -54,7 +55,14 @@ const templates = [
     image: '/templates/Professional.jpg',
     description: 'This is the professional template. It is simple and clean.',
     component: ProfessionalResume,
-  }
+  },
+  {
+      id: 4,
+      title: 'Sleek',
+      image: "/templates/sleek.jpg",
+      description: "This is the Sleek template. It offers a modern and polished design.",
+      component: SleekResume
+  },
 ]
 
 const FormSection = () => {
