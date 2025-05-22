@@ -18,7 +18,7 @@ export default function MinimalistTemplate() {
     const year = date.getFullYear();
     return `${month} ${year}`;
   };
-  
+
   // Load from localStorage on component mount
   useEffect(() => {
     const savedWorkType = localStorage.getItem('selectedWorkType');
@@ -126,8 +126,8 @@ export default function MinimalistTemplate() {
                   {resumeInfo?.languages?.map((lang, index) => (
                     <div key={index} className="flex items-center justify-between">
                       <span className="text-xs font-medium">{lang.title}</span>
-                      <span 
-                        className="text-[10px] px-2 py-[2px] rounded-full border" 
+                      <span
+                        className="text-[10px] px-2 py-[2px] rounded-full border"
                         style={{
                           borderColor: '#ffffff',
                           color: '#ffffff'
@@ -195,20 +195,23 @@ export default function MinimalistTemplate() {
                       <div className="absolute left-0 top-1.5 w-3 h-3 rounded-full" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}></div>
                       <div>
                         <h3 className="text-lg text-black font-semibold">{project.title}</h3>
-                        {project.link && (
-                          <p className="text-sm text-blue-600 font-medium">
-                            <a href={project.link} target="_blank" rel="noopener noreferrer">
-                              {project.link}
-                            </a>
-                          </p>
+                        {project?.link && (
+                          <a
+                            href={project.link}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-xs text-blue-600 underline mt-1 inline-block"
+                          >
+                            View Project
+                          </a>
                         )}
                         <p className="text-sm mt-1 leading-relaxed text-black">{project.description}</p>
                         {project.techs && (
                           <div className="mt-2 flex flex-wrap gap-2">
                             {project.techs.split(',').map((tech, index) => (
-                              <span 
-                                key={index} 
-                                className="px-2 py-1 text-xs rounded-md text-white" 
+                              <span
+                                key={index}
+                                className="px-2 py-1 text-xs rounded-md text-white"
                                 style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}
                               >
                                 {tech.trim()}
@@ -297,10 +300,10 @@ export default function MinimalistTemplate() {
                           <p className="whitespace-nowrap ml-2">{formatDate(cert?.date)}</p>
                         </div>
                         {cert?.url && (
-                          <a 
-                            href={cert.url} 
-                            target="_blank" 
-                            rel="noopener noreferrer" 
+                          <a
+                            href={cert.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
                             className="text-sm text-blue-600 font-medium mt-1 inline-block hover:underline"
                           >
                             View Certificate
