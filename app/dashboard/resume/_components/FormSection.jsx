@@ -498,7 +498,7 @@ const FormSection = () => {
         <>
           {selectedExtraSections[0] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
           {selectedExtraSections[0] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
-          {selectedExtraSections[0] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[0] === 'certificates' && <CertificationDetails enableNext={setEnableNext} />}
         </>
       )}
       
@@ -506,7 +506,7 @@ const FormSection = () => {
         <>
           {selectedExtraSections[1] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
           {selectedExtraSections[1] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
-          {selectedExtraSections[1] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[1] === 'certificates' && <CertificationDetails enableNext={setEnableNext} />}
         </>
       )}
       
@@ -514,7 +514,7 @@ const FormSection = () => {
         <>
           {selectedExtraSections[2] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
           {selectedExtraSections[2] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
-          {selectedExtraSections[2] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[2] === 'certificates' && <CertificationDetails enableNext={setEnableNext} />}
         </>
       )}
     </div>
