@@ -186,7 +186,7 @@ const PersonalDetails = ({ enableNext }) => {
             ))}
           </div>
 
-          {selectedTemplate?.id === 2 && (
+          {selectedTemplate?.id === 2 || selectedTemplate?.id === 4 && (
             <div className="mt-4">
               <label className="text-sm">Profile Image</label>
               <label

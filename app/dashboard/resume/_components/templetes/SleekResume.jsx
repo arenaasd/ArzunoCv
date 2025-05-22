@@ -1,96 +1,115 @@
 'use client'
+import ResumeInfoContext from "@/Context/ResumeInfoContext";
 import { useEffect, useContext } from "react";
 import Image from 'next/image';
 
 export default function JeremyTorresResume() {
-  return (
-    <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-arial">
-      <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
-        <div className="w-full flex items-center mb-5">
-          <Image
-            src="https://via.placeholder.com/100"
-            alt="Dummy Profile Picture"
-            width={100}
-            height={100}
-            className="rounded-full mr-5"
-          />
-          <div className="flex-grow">
-            <h1 className="m-0 text-2xl text-green-500">DIGITAL MARKETING</h1>
-            <h1 className="m-0 text-2xl text-green-500">JEREMY TORRES</h1>
-            <div className="flex flex-wrap gap-2 mt-2">
-              <span className="bg-green-500 text-black py-1 px-3 rounded-full text-sm">0123456789</span>
-              <span className="bg-green-500 text-black py-1 px-3 rounded-full text-sm">jeremy@abc.com</span>
-              <span className="bg-green-500 text-black py-1 px-3 rounded-full text-sm">London, England</span>
+    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+
+    const imageUrl = resumeInfo?.Image?.url
+        ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
+        : "https://via.placeholder.com/100";
+
+    // Format date function
+    const formatDate = (dateString) => {
+        if (!dateString) return '';
+        const date = new Date(dateString);
+        const month = date.toLocaleString('default', { month: 'short' });
+        const year = date.getFullYear();
+        return `${month} ${year}`;
+    };
+
+    // Load from localStorage on component mount
+    useEffect(() => {
+        const savedWorkType = localStorage.getItem('selectedWorkType');
+        if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
+            setResumeInfo(prev => ({
+                ...prev,
+                selectedWorkType: savedWorkType
+            }));
+        }
+    }, [resumeInfo, setResumeInfo]);
+
+    // Also save to localStorage whenever it changes
+    useEffect(() => {
+        if (resumeInfo?.selectedWorkType) {
+            localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType);
+        }
+    }, [resumeInfo?.selectedWorkType]);
+
+    // Use fallback if selectedWorkType isn't set
+    const currentWorkType = resumeInfo?.selectedWorkType ? resumeInfo.selectedWorkType : 'experience';
+
+    return (
+        <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-arial">
+            <div className="max-w-4xl mx-auto shadow-lg text-white" style={{ backgroundColor: '#2b2b2b' }}>        <div className="w-full flex items-center mb-5">
+                <Image
+                    src={imageUrl}
+                    alt="Profile Picture"
+                    width={100}
+                    height={100}
+                    className="rounded-full mr-5"
+                />
+                <div className="flex-grow">
+                    <h1 className="m-0 text-2xl" style={{ color: resumeInfo?.themeColor }}>{resumeInfo?.jobTitle.toUpperCase()}</h1>
+                    <h1 className="m-0 text-2xl" style={{ color: resumeInfo?.themeColor }}>{resumeInfo?.firstName.toUpperCase()} {resumeInfo?.lastName.toUpperCase()}</h1>
+                    <div className="flex flex-wrap gap-2 mt-2">
+                        <span className="text-black py-1 px-3 rounded-full text-sm" style={{ backgroundColor: resumeInfo?.themeColor }}>{resumeInfo?.phone}</span>
+                        <span className="text-black py-1 px-3 rounded-full text-sm" style={{ backgroundColor: resumeInfo?.themeColor }}>{resumeInfo?.email}</span>
+                        <span className="text-black py-1 px-3 rounded-full text-sm" style={{ backgroundColor: resumeInfo?.themeColor }}>{resumeInfo?.address}</span>
+                    </div>
+                    <p className="mt-2 text-sm">{resumeInfo?.summary}</p>
+                </div>
             </div>
-            <p className="mt-2 text-sm">
-              SUMMARY: A progressive & persistent person who wants to bring your company a permanent source of customers. Besides, with good communication skills and large network, I strongly believe that I can achieve every goal of sales.
-            </p>
-          </div>
-        </div>
 
-        <div className="flex-1 min-w-[300px]">
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">WORK EXPERIENCE</div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Support writing product advertising articles via facebook channel, forums, …</li>
-              <li>Introduce, advice products, answer questions of customers by phone and email</li>
-            </ul>
-          </div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Contact then understanding customer needs & wants</li>
-              <li>Drafting contracts and quotations</li>
-              <li>Cooperate with superiors to negotiate contracts about terms & conditions</li>
-              <li>Work with other staff on the warehouse problems</li>
-            </ul>
-          </div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Selling directly at the store to foreigners and Vietnamese</li>
-              <li>Promote products through media publications: banner, poster, flyer …</li>
-              <li>Report the daily sales volume</li>
-            </ul>
-          </div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Support writing product advertising articles via facebook channel, forums, …</li>
-              <li>Introduce, advice products, answer questions of customers by phone and email</li>
-            </ul>
-          </div>
-        </div>
+                <div className="flex-1 min-w-[300px]">
+                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>WORK EXPERIENCE</div>
+                    <div className="mb-5">
+                        <h3 className="m-0 text-base">{resumeInfo?.experience[0]?.companyName} • {resumeInfo?.experience[0]?.title}</h3>
+                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[0]?.startDate)} - {formatDate(resumeInfo?.experience[0]?.endDate)} | {resumeInfo?.experience[0]?.city}</p>
+                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[0]?.summary }} />
+                    </div>
+                    <div className="mb-5">
+                        <h3 className="m-0 text-base">{resumeInfo?.experience[1]?.companyName} • {resumeInfo?.experience[1]?.title}</h3>
+                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[1]?.startDate)} - {formatDate(resumeInfo?.experience[1]?.endDate)} | {resumeInfo?.experience[1]?.city}</p>
+                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[1]?.summary }} />
+                    </div>
+                    <div className="mb-5">
+                        <h3 className="m-0 text-base">{resumeInfo?.experience[2]?.companyName} • {resumeInfo?.experience[2]?.title}</h3>
+                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[2]?.startDate)} - {formatDate(resumeInfo?.experience[2]?.endDate)} | {resumeInfo?.experience[2]?.city}</p>
+                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[2]?.summary }} />
+                    </div>
+                    <div className="mb-5">
+                        <h3 className="m-0 text-base">{resumeInfo?.experience[3]?.companyName} • {resumeInfo?.experience[3]?.title}</h3>
+                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[3]?.startDate)} - {formatDate(resumeInfo?.experience[3]?.endDate)} | {resumeInfo?.experience[3]?.city}</p>
+                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[3]?.summary }} />
+                    </div>
+                </div>
 
-        <div className="flex-1 min-w-[300px]">
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">EDUCATION</div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV UNIVERSITY</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022</p>
-            <p className="m-1 text-sm text-gray-400">Major: Business Administration</p>
-            <p className="m-1 text-sm text-gray-400">Good - GPA 8.0</p>
-          </div>
+                <div className="flex-1 min-w-[300px]">
+                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>EDUCATION</div>
+                    <div className="mb-5">
+                        <h3 className="m-0 text-base">{resumeInfo?.education[0]?.universityOrCollegeName}</h3>
+                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.education[0]?.startDate)} - {formatDate(resumeInfo?.education[0]?.endDate)}</p>
+                        <p className="m-1 text-sm text-gray-400">Major: {resumeInfo?.education[0]?.major}</p>
+                        <p className="m-1 text-sm text-gray-400">{resumeInfo?.education[0]?.description}</p>
+                    </div>
 
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">SKILLS</div>
-          <div className="mb-5">
-            <p className="m-1 text-sm">Advanced skill: Planning, Presentation</p>
-            <p className="m-1 text-sm">Tools: Microsoft Office, Photoshop</p>
-          </div>
+                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>SKILLS</div>
+                    <div className="mb-5">
+                        <p className="m-1 text-sm">{resumeInfo?.skills[0]?.name}</p>
+                        <p className="m-1 text-sm">{resumeInfo?.skills[1]?.name}</p>
+                    </div>
 
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">HOBBIES AND HABITS</div>
-          <div className="mb-5">
-            <p className="m-1 text-sm">Habit: Morning reading</p>
-            <p className="m-1 text-sm">Hobbies: Badminton, Traveling</p>
-          </div>
-        </div>
-      </div>
+                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>HOBBIES AND HABITS</div>
+                    <div className="mb-5">
+                        <p className="m-1 text-sm">{resumeInfo?.hobbies[0]?.title}: {resumeInfo?.hobbies[0]?.description}</p>
+                        <p className="m-1 text-sm">{resumeInfo?.hobbies[1]?.title}: {resumeInfo?.hobbies[1]?.description}</p>
+                    </div>
+                </div>
+            </div>
 
-      <style jsx global>{`
+            <style jsx global>{`
         .font-arial {
           font-family: Arial, sans-serif;
         }
@@ -100,6 +119,6 @@ export default function JeremyTorresResume() {
           padding: 0;
         }
       `}</style>
-    </div>
-  );
+        </div>
+    );
 }
