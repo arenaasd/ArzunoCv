@@ -281,7 +281,7 @@ export default function MinimalistTemplate() {
             </div>
 
             {/* CERTIFICATES */}
-            {resumeInfo?.selectedExtraSections?.includes('certifications') && resumeInfo?.certificates?.length > 0 && (
+            {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
               <div className="mb-10">
                 <div className="text-white py-2 px-4 relative -mx-6 clip-path-slant" style={{ backgroundColor: resumeInfo?.themeColor || '#375672' }}>
                   <h2 className="text-xl font-bold tracking-wider">CERTIFICATIONS</h2>
