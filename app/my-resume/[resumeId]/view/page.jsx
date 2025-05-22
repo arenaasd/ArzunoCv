@@ -1,14 +1,16 @@
 'use client'
+
 import { Button } from '@/components/ui/button'
 import ResumeInfoContext from '@/Context/ResumeInfoContext'
 import GlobalApi from '@/Service/GlobalApi'
 import { useParams, notFound } from 'next/navigation'
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect } from 'react'
 import useSWR from 'swr'
 import PreviewSection from '../../../dashboard/resume/_components/PreviewSection'
 import MinimalistResume from "../../../dashboard/resume/_components/templetes/MinimalistResume"
 import ProfessionalResume from "../../../dashboard/resume/_components/templetes/ProfessionalResume"
 import ShareModal from '@/components/ShareModel'
+import html2pdf from 'html2pdf.js'
 
 const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 
@@ -88,8 +90,20 @@ const Page = () => {
     )
   }
 
+  // This function converts the resume container div into PDF
   const HandleDownload = () => {
-    window.print()
+    const element = document.getElementById('resume-container')
+    if (!element) return
+
+    const opt = {
+      margin:       0.5,
+      filename:     `${resumeInfo.firstName || 'resume'}_${resumeInfo.lastName || ''}.pdf`,
+      image:        { type: 'jpeg', quality: 0.98 },
+      html2canvas:  { scale: 2, useCORS: true },
+      jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+    }
+
+    html2pdf().set(opt).from(element).save()
   }
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
