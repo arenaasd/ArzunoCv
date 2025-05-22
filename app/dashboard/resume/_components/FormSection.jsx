@@ -294,7 +294,7 @@ const FormSection = () => {
         <path d="M18 12h-.01" />
       </svg>
     ),
-    certificates: (
+    certifications: (
       <svg xmlns="http://www.w3.org/2000/svg" className="w-5 h-5 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
         <rect x="3" y="3" width="18" height="18" rx="2" />
         <path d="M7 7h.01" />
@@ -439,7 +439,7 @@ const FormSection = () => {
                   <p className="text-xs text-gray-500">
                     {field === 'hobbies' && "Show your personality through activities you enjoy"}
                     {field === 'languages' && "Highlight languages you speak and proficiency levels"}
-                    {field === 'certificates' && "Showcase your professional certifications and badges"}
+                    {field === 'certifications' && "Showcase your professional certifications and badges"}
                   </p>
                 </div>
                 <div className="w-6 h-6 flex-shrink-0">
@@ -498,7 +498,7 @@ const FormSection = () => {
         <>
           {selectedExtraSections[0] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
           {selectedExtraSections[0] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
-          {selectedExtraSections[0] === 'certificates' && <CertificationDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[0] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
         </>
       )}
       
@@ -506,7 +506,7 @@ const FormSection = () => {
         <>
           {selectedExtraSections[1] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
           {selectedExtraSections[1] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
-          {selectedExtraSections[1] === 'certificates' && <CertificationDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[1] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
         </>
       )}
       
@@ -514,7 +514,7 @@ const FormSection = () => {
         <>
           {selectedExtraSections[2] === 'hobbies' && <HobbyDetails enableNext={setEnableNext} />}
           {selectedExtraSections[2] === 'languages' && <LanguageDetails enableNext={setEnableNext} />}
-          {selectedExtraSections[2] === 'certificates' && <CertificationDetails enableNext={setEnableNext} />}
+          {selectedExtraSections[2] === 'certifications' && <CertificationDetails enableNext={setEnableNext} />}
         </>
       )}
     </div>
