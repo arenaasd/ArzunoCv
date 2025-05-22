@@ -173,7 +173,6 @@ const ResumeUI = () => {
                                     resumeInfo?.projects?.map((project, index) => (
                                         <div key={index} className="my-4">
                                             <h2 className="text-sm font-bold tracking-wide">{project.title}</h2>
-
                                             {project?.link && (
                                                 <a
                                                     href={project.link}
@@ -184,7 +183,6 @@ const ResumeUI = () => {
                                                     View Project
                                                 </a>
                                             )}
-
                                             <p className="text-sm mt-1 leading-relaxed">{project.description}</p>
 
                                             {project.techs && (
