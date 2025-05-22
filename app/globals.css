@@ -1,10 +1,6 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-*{
-  transform: scale(0.9); /* Try adjusting this to fit all content */
-}
-
 @keyframes wand-move {
   0% { transform: translateX(0); }
   50% { transform: translateX(-5px); }

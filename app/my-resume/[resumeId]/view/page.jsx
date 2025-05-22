@@ -26,17 +26,6 @@ const getTemplateComponent = (templateId) => {
 }
 
 const Page = () => {
-  const [isPdfReady, setIsPdfReady] = useState(false)
-
-
-  useEffect(() => {
-    const script = document.createElement('script')
-    script.src = 'https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js'
-    script.async = true
-    script.onload = () => setIsPdfReady(true)  // ✅ Mark as ready
-    document.body.appendChild(script)
-  }, [])
-
   const [isShareOpen, setIsShareOpen] = useState(false)
   const [resumeInfo, setResumeInfo] = useState(null)
   const [selectedTemplate, setSelectedTemplate] = useState({
@@ -54,7 +43,7 @@ const Page = () => {
       // Get saved data from localStorage
       const localSelectedWorkType = localStorage.getItem('selectedWorkType')
       const localSelectedExtraSections = localStorage.getItem('selectedExtraSections')
-
+      
       let parsedExtraSections = []
       if (localSelectedExtraSections) {
         try {
@@ -100,29 +89,8 @@ const Page = () => {
   }
 
   const HandleDownload = () => {
-    if (!isPdfReady) {
-      alert('Please wait, preparing download...')
-      return
-    }
-
-    const element = document.getElementById('resume-container')
-    if (!element || !window.html2pdf) {
-      console.error('html2pdf or element not found')
-      return
-    }
-
-    const opt = {
-      margin: 0,
-      filename: 'resume.pdf',
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' },
-      pagebreak: { mode: ['avoid-all', 'css', 'legacy'] }
-    }
-
-    window.html2pdf().set(opt).from(element).save()
+    window.print()
   }
-
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
   const shareTitle = 'Check out my resume!'
@@ -132,13 +100,7 @@ const Page = () => {
       <div id="no-print" className="my-10 mx-5 md:mx-20 lg:mx-36">
         <h2 className="text-center text-2xl font-medium">Your Resume is ready to download and share!</h2>
         <div className="flex flex-col sm:flex-row justify-center sm:justify-between gap-4 sm:px-44 my-10">
-          <Button
-            onClick={HandleDownload}
-            disabled={!isPdfReady}
-            className="w-full sm:w-auto"
-          >
-            {isPdfReady ? 'Download' : 'Preparing...'}
-          </Button>
+          <Button onClick={HandleDownload} className="w-full sm:w-auto">Download</Button>
           <Button onClick={() => setIsShareOpen(true)} className="w-full sm:w-auto">Share</Button>
         </div>
       </div>
