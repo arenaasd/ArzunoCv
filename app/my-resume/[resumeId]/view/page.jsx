@@ -1,16 +1,16 @@
 'use client'
-
-import React, { useState, useEffect } from 'react'
 import { Button } from '@/components/ui/button'
 import ResumeInfoContext from '@/Context/ResumeInfoContext'
 import GlobalApi from '@/Service/GlobalApi'
 import { useParams, notFound } from 'next/navigation'
+import React, { useState, useEffect, useContext } from 'react'
 import useSWR from 'swr'
 import PreviewSection from '../../../dashboard/resume/_components/PreviewSection'
 import MinimalistResume from "../../../dashboard/resume/_components/templetes/MinimalistResume"
 import ProfessionalResume from "../../../dashboard/resume/_components/templetes/ProfessionalResume"
+import SleekResume from '../../../dashboard/resume/_components/templetes/SleekResume'
 import ShareModal from '@/components/ShareModel'
-import html2pdf from 'html2pdf.js'
+
 
 const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
 
@@ -22,6 +22,8 @@ const getTemplateComponent = (templateId) => {
       return <MinimalistResume />
     case 3:
       return <ProfessionalResume />
+      case 4:
+        return <SleekResume />
     default:
       return <PreviewSection />
   }
@@ -36,7 +38,6 @@ const Page = () => {
     image: "/templates/templateDefault.pdf",
     description: "This is the default template. It is simple and clean."
   })
-  const [isGeneratingPdf, setIsGeneratingPdf] = useState(false)
 
   const params = useParams()
   const { data, error } = useSWR(params.resumeId, fetcher)
@@ -91,28 +92,8 @@ const Page = () => {
     )
   }
 
-  // Async download handler using html2pdf
-  const HandleDownload = async () => {
-    const element = document.getElementById('resume-container')
-    if (!element) return
-
-    setIsGeneratingPdf(true)
-
-    const opt = {
-      margin: 0.5,
-      filename: `${resumeInfo.firstName || 'resume'}_${resumeInfo.lastName || ''}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true },
-      jsPDF: { unit: 'in', format: 'a4', orientation: 'portrait' }
-    }
-
-    try {
-      await html2pdf().set(opt).from(element).save()
-    } catch (error) {
-      console.error('PDF generation failed', error)
-    } finally {
-      setIsGeneratingPdf(false)
-    }
+  const HandleDownload = () => {
+    window.print()
   }
 
   const shareUrl = typeof window !== 'undefined' ? window.location.href : ''
@@ -123,9 +104,7 @@ const Page = () => {
       <div id="no-print" className="my-10 mx-5 md:mx-20 lg:mx-36">
         <h2 className="text-center text-2xl font-medium">Your Resume is ready to download and share!</h2>
         <div className="flex flex-col sm:flex-row justify-center sm:justify-between gap-4 sm:px-44 my-10">
-          <Button onClick={HandleDownload} className="w-full sm:w-auto" disabled={isGeneratingPdf}>
-            {isGeneratingPdf ? 'Generating PDF...' : 'Download'}
-          </Button>
+          <Button onClick={HandleDownload} className="w-full sm:w-auto">Download</Button>
           <Button onClick={() => setIsShareOpen(true)} className="w-full sm:w-auto">Share</Button>
         </div>
       </div>

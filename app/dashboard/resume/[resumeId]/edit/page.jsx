@@ -7,6 +7,7 @@ import GlobalApi from '@/Service/GlobalApi';
 import PreviewSection from '../../_components/PreviewSection';
 import MinimalistResumePreview from '../../_components/templetes/MinimalistResume';
 import ProfessionalResume from '../../_components/templetes/ProfessionalResume';
+import SleekResume from '../../_components/templetes/SleekResume';
 
 const templates = [
   {
@@ -29,6 +30,13 @@ const templates = [
     image: "/templates/Professional.jpg",
     description: "Professional template for formal resumes.",
     component: ProfessionalResume
+  },
+  {
+    id: 4,
+    title: 'Sleek',
+    image: "/templates/sleek.jpg",
+    description: "This is the Sleek template. It offers a modern and polished design.",
+    component: SleekResume
   }
 ];
 
