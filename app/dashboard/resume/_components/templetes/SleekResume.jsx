@@ -1,115 +1,120 @@
 'use client'
-import ResumeInfoContext from "@/Context/ResumeInfoContext";
-import { useEffect, useContext } from "react";
+import { useContext } from "react";
 import Image from 'next/image';
+import { ResumeInfoContext } from '@/context/ResumeInfoContext';
 
 export default function JeremyTorresResume() {
-    const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+  const { resumeInfo } = useContext(ResumeInfoContext);
 
-    const imageUrl = resumeInfo?.Image?.url
-        ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
-        : "https://via.placeholder.com/100";
+  const {
+    firstName,
+    lastName,
+    jobTitle,
+    phone,
+    email,
+    address,
+    summary,
+    experience,
+    education,
+    skills,
+    projects,
+    themeColor,
+    currentWorkType,
+    certificates,
+    languages,
+    hobbies,
+    selectedExtraSections
+  } = resumeInfo;
 
-    // Format date function
-    const formatDate = (dateString) => {
-        if (!dateString) return '';
-        const date = new Date(dateString);
-        const month = date.toLocaleString('default', { month: 'short' });
-        const year = date.getFullYear();
-        return `${month} ${year}`;
-    };
-
-    // Load from localStorage on component mount
-    useEffect(() => {
-        const savedWorkType = localStorage.getItem('selectedWorkType');
-        if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
-            setResumeInfo(prev => ({
-                ...prev,
-                selectedWorkType: savedWorkType
-            }));
-        }
-    }, [resumeInfo, setResumeInfo]);
-
-    // Also save to localStorage whenever it changes
-    useEffect(() => {
-        if (resumeInfo?.selectedWorkType) {
-            localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType);
-        }
-    }, [resumeInfo?.selectedWorkType]);
-
-    // Use fallback if selectedWorkType isn't set
-    const currentWorkType = resumeInfo?.selectedWorkType ? resumeInfo.selectedWorkType : 'experience';
-
-    return (
-        <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-arial">
-            <div className="max-w-4xl mx-auto shadow-lg text-white" style={{ backgroundColor: '#2b2b2b' }}>        <div className="w-full flex items-center mb-5">
-                <Image
-                    src={imageUrl}
-                    alt="Profile Picture"
-                    width={100}
-                    height={100}
-                    className="rounded-full mr-5"
-                />
-                <div className="flex-grow">
-                    <h1 className="m-0 text-2xl" style={{ color: resumeInfo?.themeColor }}>{resumeInfo?.jobTitle.toUpperCase()}</h1>
-                    <h1 className="m-0 text-2xl" style={{ color: resumeInfo?.themeColor }}>{resumeInfo?.firstName.toUpperCase()} {resumeInfo?.lastName.toUpperCase()}</h1>
-                    <div className="flex flex-wrap gap-2 mt-2">
-                        <span className="text-black py-1 px-3 rounded-full text-sm" style={{ backgroundColor: resumeInfo?.themeColor }}>{resumeInfo?.phone}</span>
-                        <span className="text-black py-1 px-3 rounded-full text-sm" style={{ backgroundColor: resumeInfo?.themeColor }}>{resumeInfo?.email}</span>
-                        <span className="text-black py-1 px-3 rounded-full text-sm" style={{ backgroundColor: resumeInfo?.themeColor }}>{resumeInfo?.address}</span>
-                    </div>
-                    <p className="mt-2 text-sm">{resumeInfo?.summary}</p>
-                </div>
+  return (
+    <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-arial">
+      <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
+        <div className="w-full flex items-center mb-5">
+          <Image
+            src="https://via.placeholder.com/100"
+            alt="Profile Picture"
+            width={100}
+            height={100}
+            className="rounded-full mr-5"
+          />
+          <div className="flex-grow">
+            <h1 className="m-0 text-2xl" style={{ color: themeColor }}>{`${firstName} ${lastName}`}</h1>
+            <h2 className="m-0 text-lg text-gray-300">{jobTitle}</h2>
+            <div className="flex flex-wrap gap-2 mt-2">
+              <span className="py-1 px-3 rounded-full text-sm" style={{ backgroundColor: themeColor, color: 'black' }}>{phone}</span>
+              <span className="py-1 px-3 rounded-full text-sm" style={{ backgroundColor: themeColor, color: 'black' }}>{email}</span>
+              <span className="py-1 px-3 rounded-full text-sm" style={{ backgroundColor: themeColor, color: 'black' }}>{address}</span>
             </div>
+          </div>
+        </div>
 
-                <div className="flex-1 min-w-[300px]">
-                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>WORK EXPERIENCE</div>
-                    <div className="mb-5">
-                        <h3 className="m-0 text-base">{resumeInfo?.experience[0]?.companyName} • {resumeInfo?.experience[0]?.title}</h3>
-                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[0]?.startDate)} - {formatDate(resumeInfo?.experience[0]?.endDate)} | {resumeInfo?.experience[0]?.city}</p>
-                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[0]?.summary }} />
-                    </div>
-                    <div className="mb-5">
-                        <h3 className="m-0 text-base">{resumeInfo?.experience[1]?.companyName} • {resumeInfo?.experience[1]?.title}</h3>
-                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[1]?.startDate)} - {formatDate(resumeInfo?.experience[1]?.endDate)} | {resumeInfo?.experience[1]?.city}</p>
-                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[1]?.summary }} />
-                    </div>
-                    <div className="mb-5">
-                        <h3 className="m-0 text-base">{resumeInfo?.experience[2]?.companyName} • {resumeInfo?.experience[2]?.title}</h3>
-                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[2]?.startDate)} - {formatDate(resumeInfo?.experience[2]?.endDate)} | {resumeInfo?.experience[2]?.city}</p>
-                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[2]?.summary }} />
-                    </div>
-                    <div className="mb-5">
-                        <h3 className="m-0 text-base">{resumeInfo?.experience[3]?.companyName} • {resumeInfo?.experience[3]?.title}</h3>
-                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.experience[3]?.startDate)} - {formatDate(resumeInfo?.experience[3]?.endDate)} | {resumeInfo?.experience[3]?.city}</p>
-                        <div dangerouslySetInnerHTML={{ __html: resumeInfo?.experience[3]?.summary }} />
-                    </div>
-                </div>
+        <div className="w-full">
+          <p className="text-sm mb-5"><span className="font-bold" style={{ color: themeColor }}>SUMMARY:</span> {summary}</p>
+        </div>
 
-                <div className="flex-1 min-w-[300px]">
-                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>EDUCATION</div>
-                    <div className="mb-5">
-                        <h3 className="m-0 text-base">{resumeInfo?.education[0]?.universityOrCollegeName}</h3>
-                        <p className="m-1 text-sm" style={{ color: resumeInfo?.themeColor }}>{formatDate(resumeInfo?.education[0]?.startDate)} - {formatDate(resumeInfo?.education[0]?.endDate)}</p>
-                        <p className="m-1 text-sm text-gray-400">Major: {resumeInfo?.education[0]?.major}</p>
-                        <p className="m-1 text-sm text-gray-400">{resumeInfo?.education[0]?.description}</p>
-                    </div>
-
-                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>SKILLS</div>
-                    <div className="mb-5">
-                        <p className="m-1 text-sm">{resumeInfo?.skills[0]?.name}</p>
-                        <p className="m-1 text-sm">{resumeInfo?.skills[1]?.name}</p>
-                    </div>
-
-                    <div className="text-lg border-b-2 mb-3" style={{ color: resumeInfo?.themeColor, borderColor: resumeInfo?.themeColor }}>HOBBIES AND HABITS</div>
-                    <div className="mb-5">
-                        <p className="m-1 text-sm">{resumeInfo?.hobbies[0]?.title}: {resumeInfo?.hobbies[0]?.description}</p>
-                        <p className="m-1 text-sm">{resumeInfo?.hobbies[1]?.title}: {resumeInfo?.hobbies[1]?.description}</p>
-                    </div>
-                </div>
+        <div className="flex-1 min-w-[300px]">
+          <div className="text-lg border-b-2 mb-3 font-bold" style={{ color: themeColor, borderColor: themeColor }}>{currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}</div>
+          {(currentWorkType === 'projects' ? projects : experience).map((item, idx) => (
+            <div className="mb-5" key={idx}>
+              <h3 className="m-0 text-base font-semibold">{item.companyName || item.title} • {item.title}</h3>
+              <p className="m-1 text-sm" style={{ color: themeColor }}>{item.startDate} - {item.endDate} | {item.city}, {item.state}</p>
+              <p className="m-1 pl-5 text-sm text-gray-300">{item.summary}</p>
             </div>
+          ))}
+        </div>
 
-            <style jsx global>{`
+        <div className="flex-1 min-w-[300px]">
+          <div className="text-lg border-b-2 mb-3 font-bold" style={{ color: themeColor, borderColor: themeColor }}>EDUCATION</div>
+          {education.map((edu, idx) => (
+            <div className="mb-5" key={idx}>
+              <h3 className="m-0 text-base font-semibold">{edu.universityOrCollegeName}</h3>
+              <p className="m-1 text-sm" style={{ color: themeColor }}>{edu.startDate} - {edu.endDate}</p>
+              <p className="m-1 text-sm text-gray-400">Major: {edu.major}</p>
+              <p className="m-1 text-sm text-gray-400">{edu.description}</p>
+            </div>
+          ))}
+
+          <div className="text-lg border-b-2 mb-3 font-bold" style={{ color: themeColor, borderColor: themeColor }}>SKILLS</div>
+          <div className="mb-5 flex flex-wrap gap-2">
+            {skills.map(skill => (
+              <span className="bg-gray-800 px-3 py-1 rounded-full text-sm" key={skill.id}>{skill.name}</span>
+            ))}
+          </div>
+
+          {selectedExtraSections?.includes('certificates') && certificates?.length > 0 && (
+            <>
+              <div className="text-lg border-b-2 mb-3 font-bold" style={{ color: themeColor, borderColor: themeColor }}>CERTIFICATES</div>
+              {certificates.map((cert, idx) => (
+                <div className="mb-5" key={idx}>
+                  <h3 className="m-0 text-base font-semibold">{cert.title}</h3>
+                  <p className="m-1 text-sm" style={{ color: themeColor }}>{cert.date}</p>
+                  <p className="m-1 text-sm text-gray-400">{cert.issuer}</p>
+                </div>
+              ))}
+            </>
+          )}
+
+          {selectedExtraSections?.includes('languages') && languages?.length > 0 && (
+            <>
+              <div className="text-lg border-b-2 mb-3 font-bold" style={{ color: themeColor, borderColor: themeColor }}>LANGUAGES</div>
+              {languages.map((lang, idx) => (
+                <p className="m-1 text-sm" key={idx}>{lang.language}</p>
+              ))}
+            </>
+          )}
+
+          {selectedExtraSections?.includes('hobbies') && hobbies?.length > 0 && (
+            <>
+              <div className="text-lg border-b-2 mb-3 font-bold" style={{ color: themeColor, borderColor: themeColor }}>HOBBIES</div>
+              {hobbies.map((hobby, idx) => (
+                <p className="m-1 text-sm" key={idx}>{hobby.hobby}</p>
+              ))}
+            </>
+          )}
+        </div>
+      </div>
+
+      <style jsx global>{`
         .font-arial {
           font-family: Arial, sans-serif;
         }
@@ -119,6 +124,6 @@ export default function JeremyTorresResume() {
           padding: 0;
         }
       `}</style>
-        </div>
-    );
+    </div>
+  );
 }
