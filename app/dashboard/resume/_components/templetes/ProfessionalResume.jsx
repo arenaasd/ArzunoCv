@@ -110,6 +110,41 @@ const ResumeUI = () => {
                             ))}
                         </div>
                     )}
+
+                    {/* Languages */}
+                    {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
+                        <div>
+                            <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>LANGUAGES</h2>
+                            <div className="space-y-2">
+                                {resumeInfo.languages.map((lang, index) => (
+                                    <div key={index} className="flex justify-between items-center">
+                                        <span className="text-sm font-medium">{lang.title}</span>
+                                        <span
+                                            className="text-xs px-2 py-1 rounded-full text-white"
+                                            style={{ backgroundColor: themeColor }}
+                                        >
+                                            {lang.level}
+                                        </span>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
+
+                    {/* Hobbies */}
+                    {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
+                        <div>
+                            <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>HOBBIES</h2>
+                            <div className="space-y-3">
+                                {resumeInfo.hobbies.map((hobby, index) => (
+                                    <div key={index}>
+                                        <h3 className="text-sm font-bold tracking-wide">{hobby.title}</h3>
+                                        <p className="text-sm mt-1 leading-relaxed">{hobby.description}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Right Column */}
@@ -124,68 +159,99 @@ const ResumeUI = () => {
 
                     {/* Experience OR Projects based on currentWorkType */}
                     {(
-                        currentWorkType === 'experience' ? 
-                        resumeInfo?.experience?.length > 0 : 
-                        resumeInfo?.projects?.length > 0
+                        currentWorkType === 'experience' ?
+                            resumeInfo?.experience?.length > 0 :
+                            resumeInfo?.projects?.length > 0
                     ) && (
-                        <div>
-                            <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>
-                                {currentWorkType === 'projects' ? 'PROJECTS' : 'EXPERIENCE'}
-                            </h2>
+                            <div>
+                                <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>
+                                    {currentWorkType === 'projects' ? 'PROJECTS' : 'EXPERIENCE'}
+                                </h2>
 
-                            {currentWorkType === 'projects' ? (
-                                // Projects rendering
-                                resumeInfo?.projects?.map((project, index) => (
-                                    <div key={index} className="my-4">
-                                        <h2 className="text-sm font-bold tracking-wide">{project.title}</h2>
-                                        
-                                        {project.link && (
-                                            <div className="text-xs my-1">
-                                                <a href={project.link} className="text-blue-600 font-medium" target="_blank" rel="noopener noreferrer">
-                                                    {project.link}
+                                {currentWorkType === 'projects' ? (
+                                    // Projects rendering
+                                    resumeInfo?.projects?.map((project, index) => (
+                                        <div key={index} className="my-4">
+                                            <h2 className="text-sm font-bold tracking-wide">{project.title}</h2>
+
+                                            {project?.link && (
+                                                <a
+                                                    href={project.link}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                    className="text-xs text-blue-600 underline mt-1 inline-block"
+                                                >
+                                                    View Project
                                                 </a>
-                                            </div>
-                                        )}
-                                        
-                                        <p className="text-sm mt-1 leading-relaxed">{project.description}</p>
-                                        
-                                        {project.techs && (
-                                            <div className="mt-2 flex flex-wrap gap-1">
-                                                {project.techs.split(',').map((tech, idx) => (
-                                                    <span 
-                                                        key={idx} 
-                                                        className="px-2 py-0.5 text-xs rounded-md text-white" 
-                                                        style={{ backgroundColor: themeColor }}
-                                                    >
-                                                        {tech.trim()}
-                                                    </span>
-                                                ))}
-                                            </div>
-                                        )}
-                                    </div>
-                                ))
-                            ) : (
-                                // Experience rendering
-                                resumeInfo?.experience?.map((exp, index) => (
-                                    <div key={index} className="my-4">
-                                        <h2 className="text-sm font-bold tracking-wide">{exp.title}</h2>
+                                            )}
 
-                                        <div className="text-xs font-medium flex flex-wrap my-1 justify-between">
-                                            <div>
-                                                {[exp.companyName, exp.city, exp.state].filter(Boolean).join(', ')}
-                                            </div>
-                                            <div className="text-xs font-medium whitespace-nowrap ml-2" style={{ color: themeColor }}>
-                                                {formatDate(exp.startDate)} – {!exp.endDate ? "Present" : formatDate(exp.endDate)}
-                                            </div>
+                                            <p className="text-sm mt-1 leading-relaxed">{project.description}</p>
+
+                                            {project.techs && (
+                                                <div className="mt-2 flex flex-wrap gap-1">
+                                                    {project.techs.split(',').map((tech, idx) => (
+                                                        <span
+                                                            key={idx}
+                                                            className="px-2 py-0.5 text-xs rounded-md text-white"
+                                                            style={{ backgroundColor: themeColor }}
+                                                        >
+                                                            {tech.trim()}
+                                                        </span>
+                                                    ))}
+                                                </div>
+                                            )}
                                         </div>
+                                    ))
+                                ) : (
+                                    // Experience rendering
+                                    resumeInfo?.experience?.map((exp, index) => (
+                                        <div key={index} className="my-4">
+                                            <h2 className="text-sm font-bold tracking-wide">{exp.title}</h2>
 
-                                        <div
-                                            className="text-sm mt-1 leading-relaxed experience-summary"
-                                            dangerouslySetInnerHTML={{ __html: exp?.summary }}
-                                        />
+                                            <div className="text-xs font-medium flex flex-wrap my-1 justify-between">
+                                                <div>
+                                                    {[exp.companyName, exp.city, exp.state].filter(Boolean).join(', ')}
+                                                </div>
+                                                <div className="text-xs font-medium whitespace-nowrap ml-2" style={{ color: themeColor }}>
+                                                    {formatDate(exp.startDate)} – {!exp.endDate ? "Present" : formatDate(exp.endDate)}
+                                                </div>
+                                            </div>
+
+                                            <div
+                                                className="text-sm mt-1 leading-relaxed experience-summary"
+                                                dangerouslySetInnerHTML={{ __html: exp?.summary }}
+                                            />
+                                        </div>
+                                    ))
+                                )}
+                            </div>
+                        )}
+
+                    {/* Certificates */}
+                    {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
+                        <div>
+                            <h2 className="text-xl font-bold mb-3" style={{ color: themeColor }}>CERTIFICATIONS</h2>
+                            {resumeInfo.certificates.map((cert, index) => (
+                                <div key={index} className="my-4">
+                                    <h3 className="text-sm font-bold tracking-wide">{cert.title}</h3>
+                                    <div className="flex justify-between items-center text-xs font-medium my-1">
+                                        <div>{cert.issuer}</div>
+                                        <div className="whitespace-nowrap ml-2" style={{ color: themeColor }}>
+                                            {formatDate(cert.date)}
+                                        </div>
                                     </div>
-                                ))
-                            )}
+                                    {cert.url && (
+                                        <a
+                                            href={cert.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-sm text-blue-600 font-medium hover:underline"
+                                        >
+                                            View Certificate
+                                        </a>
+                                    )}
+                                </div>
+                            ))}
                         </div>
                     )}
                 </div>
