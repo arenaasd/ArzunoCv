@@ -4,7 +4,7 @@ import Image from 'next/image';
 import { ResumeInfoContext } from '@/Context/ResumeInfoContext';
 
 export default function JeremyTorresResume() {
-  const { resumeInfo } = useContext(ResumeInfoContext);
+    const { resumeInfo } = useContext(ResumeInfoContext) || {};
 
   const {
     firstName,
