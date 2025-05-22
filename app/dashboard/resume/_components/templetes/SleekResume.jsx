@@ -1,7 +1,7 @@
 'use client'
 import { useContext } from "react";
 import Image from 'next/image';
-import { ResumeInfoContext } from '@/context/ResumeInfoContext';
+import { ResumeInfoContext } from '@/Context/ResumeInfoContext';
 
 export default function JeremyTorresResume() {
   const { resumeInfo } = useContext(ResumeInfoContext);
