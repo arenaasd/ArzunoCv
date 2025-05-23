@@ -26,17 +26,17 @@ export default function JeremyTorresResume() {
           <div className="flex-grow">
             <p className="font-bold text-lg">{resumeInfo?.jobTitle}</p>
             <span className="text-3xl font-bold">
-              {resumeInfo?.firstName}{resumeInfo?.lastName}
+              {resumeInfo?.firstName} {resumeInfo?.lastName}
             </span>
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className="text-black py-1 px-3 rounded-full text-sm" style={{
-                color: resumeInfo?.themeColor
+              <span className="text-white py-1 px-3 rounded-full text-sm" style={{
+                backgroundColor: resumeInfo?.themeColor
               }}>{resumeInfo?.phone}</span>
-              <span className=" text-black py-1 px-3 rounded-full text-sm" style={{
-                color: resumeInfo?.themeColor
+              <span className=" text-white py-1 px-3 rounded-full text-sm" style={{
+                backgroundColor: resumeInfo?.themeColor
               }}>{resumeInfo?.email}</span>
-              <span className=" text-black py-1 px-3 rounded-full text-sm" style={{
-                color: resumeInfo?.themeColor
+              <span className=" text-white py-1 px-3 rounded-full text-sm" style={{
+                backgroundColor: resumeInfo?.themeColor
               }}>{resumeInfo?.address}</span>
             </div>
             <p className="mt-2 text-sm">
@@ -101,17 +101,16 @@ export default function JeremyTorresResume() {
             ))
           )}
           {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
-            <div className="mb-8">
+            <div className="mb-5">
               <div className="relative">
-                <div className="text-lg border-b-2  mb-3" style={{
+                <div className="text-lg border-b-2" style={{
                   borderColor: resumeInfo?.themeColor,
                   color: resumeInfo?.themeColor
                 }}>
                   LANGUAGES
                 </div>
-                <div className="h-10"></div>
               </div>
-              <div className="mt-6 space-y-2">
+              <div className="mt-2 space-y-2">
                 {resumeInfo?.languages?.map((lang, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <span className="text-xs font-medium">{lang.title}</span>
@@ -132,7 +131,10 @@ export default function JeremyTorresResume() {
         </div>
 
         <div className="flex-1 min-w-[300px]">
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">EDUCATION</div>
+          <div className=" text-lg border-b-2 mb-3" style={{
+            color: resumeInfo?.themeColor,
+            borderColor: resumeInfo?.themeColor
+          }}>EDUCATION</div>
           {resumeInfo?.education?.map((edu) => (
             <div className="mb-5">
               <h3 className="m-0 text-base">{edu.universityOrCollegeName}</h3>
@@ -151,14 +153,19 @@ export default function JeremyTorresResume() {
             <p className="m-1 text-sm">Tools: Microsoft Office, Photoshop</p>
           </div>
 
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">HOBBIES</div>
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
-            resumeInfo?.hobbies?.map((hobby, index) => (
-              <div className="mb-5">
-                <p className="m-1 text-sm">{hobby.title}</p>
-                <p className="m-1 text-sm">{hobby.description}</p>
-              </div>
-            ))
+            <div className="mb-8">
+              <div className=" text-lg border-b-2  mb-3" style={{
+                color: resumeInfo?.themeColor,
+                borderColor: resumeInfo?.themeColor
+              }}>HOBBIES</div>
+              {resumeInfo?.hobbies?.map((hobby, index) => (
+                <div className="mb-5">
+                  <p className="m-1 text-sm">{hobby.title}</p>
+                  <p className="m-1 text-sm">{hobby.description}</p>
+                </div>
+              ))}
+            </div>
           )}
         </div>
       </div>
