@@ -215,7 +215,9 @@ export default function JeremyTorresResume() {
                     )}
                   </div>
                   <p className="text-sm">
-                    Issued by: <span className="text-white">{cert.issuer}</span> • <span className="text-white">{cert.date}</span>
+                    Issued by: <span className="" style={{
+                      color: resumeInfo?.themeColor
+                    }}>{cert.issuer}</span> • <span className="text-white">{cert.date}</span>
                   </p>
                 </div>
               ))}
