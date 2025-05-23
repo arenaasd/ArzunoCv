@@ -141,7 +141,6 @@ export default function MinimalistTemplate() {
               </div>
             )}
 
-            {/* HOBBIES - Moved to left column for better layout */}
             {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
               <div className="mb-8">
                 <div className="relative">
