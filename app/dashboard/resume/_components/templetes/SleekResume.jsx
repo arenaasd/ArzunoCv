@@ -176,7 +176,7 @@ export default function JeremyTorresResume() {
 
 
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
-            <div className="mb-8">
+            <div className="mt-4">
               <div className=" text-lg border-b-2  mb-3" style={{
                 color: resumeInfo?.themeColor,
                 borderColor: resumeInfo?.themeColor
@@ -185,6 +185,38 @@ export default function JeremyTorresResume() {
                 <div className="mb-5">
                   <p className="m-1 text-sm">{hobby.title}</p>
                   <p className="m-1 text-sm">{hobby.description}</p>
+                </div>
+              ))}
+            </div>
+          )}
+
+
+          {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
+            <div className="mt-4">
+              <div className="text-lg border-b-2 mb-3" style={{
+                color: resumeInfo?.themeColor,
+                borderColor: resumeInfo?.themeColor
+              }}>
+                CERTIFICATES
+              </div>
+              {resumeInfo.certificates.map((cert) => (
+                <div key={cert.id} className="mb-5">
+                  <div className="flex items-center justify-between">
+                    <h3 className="text-base font-medium">{cert.title}</h3>
+                    {cert.url && (
+                      <a
+                        href={cert.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="text-xs text-blue-500 underline hover:text-blue-300"
+                      >
+                        View Certificate
+                      </a>
+                    )}
+                  </div>
+                  <p className="text-sm">
+                    Issued by: <span className="text-white">{cert.issuer}</span> • <span className="text-white">{cert.date}</span>
+                  </p>
                 </div>
               ))}
             </div>
