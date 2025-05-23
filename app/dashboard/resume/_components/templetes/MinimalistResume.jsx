@@ -266,7 +266,7 @@ export default function MinimalistTemplate() {
                         <td className="border text-black border-gray-300 py-2 px-2">{edu.major}</td>
                       </tr>
                     ))}
-                  </tbody>500
+                  </tbody>
                 </table>
                 <div className="mt-4 space-y-4">
                   {resumeInfo?.education?.map((edu) => (
