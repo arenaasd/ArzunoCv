@@ -109,7 +109,7 @@ const Page = () => {
         </div>
       </div>
 
-      <div className="bg-white rounded-md p-5">
+      <div className="bg-white rounded-md">
         <div id="resume-container" className="mx-auto max-w-[1000px]">
           {getTemplateComponent(selectedTemplate?.id)}
         </div>
