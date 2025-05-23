@@ -16,13 +16,15 @@ export default function JeremyTorresResume() {
     <div className="shadow-lg bg-[#2b2b2b] h-full p-4 md:p-8 lg:p-14 font-arial">
       <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
         <div className="w-full flex items-center mb-5">
-          <Image
-            src={imageUrl}
-            alt="Dummy Profile Picture"
-            width={100}
-            height={100}
-            className="rounded-full mr-5"
-          />
+          {imageUrl && (
+            <Image
+              src={imageUrl}
+              alt="Profile Picture"
+              width={100}
+              height={100}
+              className="rounded-full mr-5"
+            />
+          )}
           <div className="flex-grow">
             <p className="font-bold text-lg">{resumeInfo?.jobTitle}</p>
             <span className="text-3xl font-bold">
@@ -110,19 +112,21 @@ export default function JeremyTorresResume() {
                   LANGUAGES
                 </div>
               </div>
-              <div className="mt-2 space-y-2">
+              <div className="mt-4 space-y-2">
                 {resumeInfo?.languages?.map((lang, index) => (
                   <div key={index} className="flex items-center justify-between">
                     <span className="text-xs font-medium">{lang.title}</span>
                     <span
-                      className="text-[10px] px-2 py-[2px] rounded-full border"
+                      className="text-[10px] px-2 py-[2px] rounded-full border text-center inline-block"
                       style={{
+                        minWidth: '60px', // You can tweak this width
                         borderColor: '#ffffff',
                         color: resumeInfo?.themeColor
                       }}
                     >
                       {lang.level}
                     </span>
+
                   </div>
                 ))}
               </div>
@@ -136,22 +140,40 @@ export default function JeremyTorresResume() {
             borderColor: resumeInfo?.themeColor
           }}>EDUCATION</div>
           {resumeInfo?.education?.map((edu) => (
-            <div className="mb-5">
+            <div key={edu.id} className="mb-5">
               <h3 className="m-0 text-base">{edu.universityOrCollegeName}</h3>
               <p className="m-1 text-sm" style={{
                 color: resumeInfo?.themeColor
               }}>{edu.startDate} - {edu.endDate}</p>
-              <p className="m-1 text-sm text-gray-400">Major: {edu.major}</p>
-              <p className="m-1 text-sm text-gray-400">Degree - {edu.degree}</p>
-              <p className="mt-1 text-black text-sm">{edu.description}</p>
+              <p className="m-1 text-sm text-white">Major: {edu.major}</p>
+              <p className="m-1 text-sm text-white">Degree - {edu.degree}</p>
+              <p className="text-sm mt-1 leading-relaxed">{edu.description}</p>
             </div>
           ))}
 
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">SKILLS</div>
-          <div className="mb-5">
-            <p className="m-1 text-sm">Advanced skill: Planning, Presentation</p>
-            <p className="m-1 text-sm">Tools: Microsoft Office, Photoshop</p>
+          <div className=" text-lg border-b-2 mb-3" style={{
+            color: resumeInfo?.themeColor,
+            borderColor: resumeInfo?.themeColor
+          }}>SKILLS</div>
+          <div className="grid grid-cols-2 gap-4">
+            {resumeInfo?.skills?.map((skill) => (
+              <div key={skill.id}>
+                <p className="mb-2">{skill.name}</p>
+                <div className="w-full bg-gray-300 print:block h-2 rounded-full">
+                  <div
+                    className="h-2 rounded-full"
+                    style={{
+                      width: skill?.rating * 20 + '%',
+                      backgroundColor: "#ffffff",
+                      WebkitPrintColorAdjust: 'exact',
+                      printColorAdjust: 'exact'
+                    }}
+                  />
+                </div>
+              </div>
+            ))}
           </div>
+
 
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
             <div className="mb-8">
