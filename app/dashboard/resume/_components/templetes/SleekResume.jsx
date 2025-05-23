@@ -1,80 +1,116 @@
 'use client'
 import { useEffect, useContext } from "react";
 import Image from 'next/image';
+import ResumeInfoContext from "@/Context/ResumeInfoContext";
 
 export default function JeremyTorresResume() {
+  const { resumeInfo, setResumeInfo } = useContext(ResumeInfoContext);
+
+  const imageUrl = resumeInfo?.Image?.url
+    ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
+    : null;
   return (
-    <div className="shadow-lg h-full p-4 md:p-8 lg:p-14 font-arial">
+    <div className="shadow-lg bg-[#2b2b2b] h-full p-4 md:p-8 lg:p-14 font-arial">
       <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
         <div className="w-full flex items-center mb-5">
           <Image
-            src="https://via.placeholder.com/100"
+            src={imageUrl}
             alt="Dummy Profile Picture"
             width={100}
             height={100}
             className="rounded-full mr-5"
           />
           <div className="flex-grow">
-            <h1 className="m-0 text-2xl text-green-500">DIGITAL MARKETING</h1>
-            <h1 className="m-0 text-2xl text-green-500">JEREMY TORRES</h1>
+            <p className="font-bold text-lg">{resumeInfo?.jobTitle}</p>
+            <span className="text-3xl font-bold text-gray-500">
+              {resumeInfo?.firstName?.[0]}{resumeInfo?.lastName?.[0]}
+            </span>
             <div className="flex flex-wrap gap-2 mt-2">
-              <span className="bg-green-500 text-black py-1 px-3 rounded-full text-sm">0123456789</span>
-              <span className="bg-green-500 text-black py-1 px-3 rounded-full text-sm">jeremy@abc.com</span>
-              <span className="bg-green-500 text-black py-1 px-3 rounded-full text-sm">London, England</span>
+              <span className="text-black py-1 px-3 rounded-full text-sm" style={{
+                color: resumeInfo?.themeColor
+              }}>{resumeInfo?.phone}</span>
+              <span className=" text-black py-1 px-3 rounded-full text-sm" style={{
+                color: resumeInfo?.themeColor
+              }}>{resumeInfo?.email}</span>
+              <span className=" text-black py-1 px-3 rounded-full text-sm" style={{
+                color: resumeInfo?.themeColor
+              }}>{resumeInfo?.address}</span>
             </div>
             <p className="mt-2 text-sm">
-              SUMMARY: A progressive & persistent person who wants to bring your company a permanent source of customers. Besides, with good communication skills and large network, I strongly believe that I can achieve every goal of sales.
+              SUMMARY: {resumeInfo?.summary}
             </p>
           </div>
         </div>
 
         <div className="flex-1 min-w-[300px]">
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">WORK EXPERIENCE</div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Support writing product advertising articles via facebook channel, forums, …</li>
-              <li>Introduce, advice products, answer questions of customers by phone and email</li>
-            </ul>
+          <div className="text-lg border-b-2 border-green-500 mb-3" style={{
+                color: resumeInfo?.themeColor
+              }}>
+            {currentWorkType === 'projects' ? 'PROJECTS' : 'WORK EXPERIENCE'}
           </div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Contact then understanding customer needs & wants</li>
-              <li>Drafting contracts and quotations</li>
-              <li>Cooperate with superiors to negotiate contracts about terms & conditions</li>
-              <li>Work with other staff on the warehouse problems</li>
-            </ul>
-          </div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Selling directly at the store to foreigners and Vietnamese</li>
-              <li>Promote products through media publications: banner, poster, flyer …</li>
-              <li>Report the daily sales volume</li>
-            </ul>
-          </div>
-          <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV COMPANY • Sale Assistant</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022 | London</p>
-            <ul className="m-1 pl-5 text-sm">
-              <li>Support writing product advertising articles via facebook channel, forums, …</li>
-              <li>Introduce, advice products, answer questions of customers by phone and email</li>
-            </ul>
-          </div>
+          {currentWorkType === 'projects' ? (
+            resumeInfo?.projects?.map((project) => (
+              <div key={project.id} className="mb-5">
+                <div className="flex items-center justify-between">
+                <h3 className="m-0 text-base">{project.title}</h3>
+                {project?.link && (
+                  <a
+                    href={project.link}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-xs text-blue-600 underline mt-1 inline-block"
+                  >
+                    View Project
+                  </a>
+                )}
+                </div>
+                {project.techs && (
+                  <div className="mt-2 flex flex-wrap gap-2">
+                    {project.techs.split(',').map((tech, index) => (
+                      <span
+                        key={index}
+                        className="px-2 py-1 text-xs rounded-md text-white"
+                        style={{ backgroundColor: resumeInfo?.themeColor }}
+                      >
+                        {tech.trim()}
+                      </span>
+                    ))}
+                  </div>
+                )}
+                <div className="text-sm mt-1 leading-relaxed experience-summary">
+                  {project.description}
+                </div>
+              </div>
+            ))
+          ) : (
+            resumeInfo?.experience?.map((exp) => (
+              <div key={exp.id} className="mb-5">
+                <h3 className="m-0 text-base">{exp.companyName} • {exp.title}</h3>
+                <p className="m-1 text-sm" style={{
+                  color: resumeInfo?.themeColor,
+                }}>{exp.startDate} - {exp.endDate} | {exp.city} | {exp.state}</p>
+                <div
+                  className="text-sm mt-1 leading-relaxed experience-summary"
+                  dangerouslySetInnerHTML={{ __html: exp?.summary }}
+                />
+              </div>
+            ))
+          )}
         </div>
 
         <div className="flex-1 min-w-[300px]">
           <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">EDUCATION</div>
+          {resumeInfo?.education?.map((edu)=> (
           <div className="mb-5">
-            <h3 className="m-0 text-base">TOPCV UNIVERSITY</h3>
-            <p className="m-1 text-sm text-green-500">03/2018 - 08/2022</p>
-            <p className="m-1 text-sm text-gray-400">Major: Business Administration</p>
-            <p className="m-1 text-sm text-gray-400">Good - GPA 8.0</p>
+            <h3 className="m-0 text-base">{edu.universityOrCollegeName}</h3>
+            <p className="m-1 text-sm" style={{
+                color: resumeInfo?.themeColor
+              }}>{edu.startDate} - {edu.endDate}</p>
+            <p className="m-1 text-sm text-gray-400">Major: {edu.major}</p>
+            <p className="m-1 text-sm text-gray-400">Degree - {edu.degree}</p>
+            <p className="mt-1 text-black text-sm">{edu.description}</p>
           </div>
+          ))}
 
           <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">SKILLS</div>
           <div className="mb-5">
@@ -82,7 +118,7 @@ export default function JeremyTorresResume() {
             <p className="m-1 text-sm">Tools: Microsoft Office, Photoshop</p>
           </div>
 
-          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">HOBBIES AND HABITS</div>
+          <div className="text-green-500 text-lg border-b-2 border-green-500 mb-3">HOBBIES</div>
           <div className="mb-5">
             <p className="m-1 text-sm">Habit: Morning reading</p>
             <p className="m-1 text-sm">Hobbies: Badminton, Traveling</p>
@@ -94,12 +130,7 @@ export default function JeremyTorresResume() {
         .font-arial {
           font-family: Arial, sans-serif;
         }
-        body {
-          background-color: #2b2b2b;
-          margin: 0;
-          padding: 0;
-        }
       `}</style>
-    </div>
+    </div >
   );
 }
