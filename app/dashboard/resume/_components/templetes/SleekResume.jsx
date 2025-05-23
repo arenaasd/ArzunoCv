@@ -9,6 +9,31 @@ export default function JeremyTorresResume() {
   const imageUrl = resumeInfo?.Image?.url
     ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
     : null;
+  const formatDate = (dateString) => {
+    if (!dateString) return '';
+    const date = new Date(dateString);
+    const month = date.toLocaleString('default', { month: 'short' });
+    const year = date.getFullYear();
+    return `${month} ${year}`;
+  };
+
+  useEffect(() => {
+    const savedWorkType = localStorage.getItem('selectedWorkType');
+    if (savedWorkType && resumeInfo && resumeInfo.selectedWorkType !== savedWorkType) {
+      setResumeInfo(prev => ({
+        ...prev,
+        selectedWorkType: savedWorkType
+      }));
+    }
+  }, [resumeInfo, setResumeInfo]);
+
+  // Also save to localStorage whenever it changes
+  useEffect(() => {
+    if (resumeInfo?.selectedWorkType) {
+      localStorage.setItem('selectedWorkType', resumeInfo.selectedWorkType);
+    }
+  }, [resumeInfo?.selectedWorkType]);
+
 
   const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
@@ -94,7 +119,7 @@ export default function JeremyTorresResume() {
                 <h3 className="m-0 text-base">{exp.companyName} • {exp.title}</h3>
                 <p className="m-1 text-sm" style={{
                   color: resumeInfo?.themeColor,
-                }}>{exp.startDate} - {exp.endDate} | {exp.city} | {exp.state}</p>
+                }}>{formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate)} | {exp.city} | {exp.state}</p>
                 <div
                   className="text-sm mt-1 leading-relaxed experience-summary"
                   dangerouslySetInnerHTML={{ __html: exp?.summary }}
@@ -144,10 +169,18 @@ export default function JeremyTorresResume() {
               <h3 className="m-0 text-base">{edu.universityOrCollegeName}</h3>
               <p className="m-1 text-sm" style={{
                 color: resumeInfo?.themeColor
-              }}>{edu.startDate} - {edu.endDate}</p>
-              <p className="m-1 text-sm text-white">Major: {edu.major}</p>
-              <p className="m-1 text-sm text-white">Degree - {edu.degree}</p>
-              <p className="text-sm mt-1 leading-relaxed">{edu.description}</p>
+              }}>
+                {formatDate(edu.startDate)} - {edu.currentlyWorking ? 'Present' : formatDate(edu.endDate)}
+              </p>
+              <p className="m-1 flex flex-wrap gap-4 text-sm text-white">
+                <span className=" px-2 py-1 rounded-full">
+                  <strong>Major:</strong> {edu.major}
+                </span>
+                <span className=" px-2 py-1 rounded-full">
+                  <strong>Degree:</strong> {edu.degree}
+                </span>
+              </p>
+              <p className="m-1 text-sm text-white">{edu.description}</p>
             </div>
           ))}
 
@@ -164,7 +197,7 @@ export default function JeremyTorresResume() {
                     className="h-2 rounded-full"
                     style={{
                       width: skill?.rating * 20 + '%',
-                      backgroundColor: "#ffffff",
+                      backgroundColor: resumeInfo?.themeColor,
                       WebkitPrintColorAdjust: 'exact',
                       printColorAdjust: 'exact'
                     }}
@@ -182,7 +215,7 @@ export default function JeremyTorresResume() {
                 borderColor: resumeInfo?.themeColor
               }}>HOBBIES</div>
               {resumeInfo?.hobbies?.map((hobby, index) => (
-                <div className="mb-5">
+                <div key={index} className="mb-5">
                   <p className="m-1 text-sm">{hobby.title}</p>
                   <p className="m-1 text-sm">{hobby.description}</p>
                 </div>
