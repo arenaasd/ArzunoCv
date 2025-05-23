@@ -38,8 +38,8 @@ export default function JeremyTorresResume() {
   const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
   return (
-    <div className="shadow-lg bg-[#2b2b2b] h-full p-4 md:p-8 lg:p-14 font-arial">
-      <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
+    <div className="bg-[#2b2b2b] py-10 px-4 md:px-8 lg:px-14 font-arial">
+      <div className="max-w-[900px] mx-auto shadow-lg p-6 md:p-10 lg:p-14 text-white" style={{ backgroundColor: '#2b2b2b' }}>
         <div className="w-full flex items-center mb-5">
           {imageUrl && (
             <Image
