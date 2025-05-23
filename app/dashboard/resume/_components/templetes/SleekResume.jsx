@@ -9,6 +9,9 @@ export default function JeremyTorresResume() {
   const imageUrl = resumeInfo?.Image?.url
     ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
     : null;
+
+    const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
+
   return (
     <div className="shadow-lg bg-[#2b2b2b] h-full p-4 md:p-8 lg:p-14 font-arial">
       <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
