@@ -39,7 +39,7 @@ export default function JeremyTorresResume() {
 
   return (
     <div className="shadow-lg bg-[#2b2b2b] h-full p-4 md:p-8 lg:p-14 font-arial">
-      <div className="max-w-5xl mx-auto flex flex-wrap gap-5 text-white" style={{ backgroundColor: '#2b2b2b' }}>
+      <div className="max-w-4xl mx-auto flex flex-wrap gap-5 text-white" >
         <div className="w-full flex items-center mb-5">
           {imageUrl && (
             <Image
