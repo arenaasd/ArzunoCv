@@ -247,10 +247,12 @@ export default function JeremyTorresResume() {
                       </a>
                     )}
                   </div>
-                  <p className="text-sm">
-                    Issued by: <span className="" style={{
-                      color: resumeInfo?.themeColor
-                    }}>{cert.issuer}</span> • <span className="text-white">{cert.date}</span>
+                  <p className="text-sm flex flex-wrap items-center gap-2">
+                    <span>
+                      Issued by: <span style={{ color: resumeInfo?.themeColor, fontWeight: '600' }}>{cert.issuer}</span>
+                    </span>
+                    <span className="text-white">•</span>
+                    <span className="text-white">{cert.date}</span>
                   </p>
                 </div>
               ))}
