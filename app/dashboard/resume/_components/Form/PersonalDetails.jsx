@@ -147,7 +147,7 @@ const PersonalDetails = ({ enableNext }) => {
           phone: formData.phone,
           email: formData.email,
           ...(imageData && { Image: imageData.id })
-        }
+        } 
       };
       console.log('Data to save:', JSON.stringify(dataToSave, null, 2));
       await GlobalApi.UpdateResumeDetails(params?.resumeId, dataToSave);

@@ -2,7 +2,21 @@
 import React, { useContext } from 'react';
 import ResumeInfoContext from "@/Context/ResumeInfoContext";
 import Image from 'next/image';
-import { User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book, Pen, Plane, Info, Award, MessageSquare, Heart } from 'lucide-react';
+import { User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book, Pen, Plane, Info, Award, MessageSquare, Heart, Palette, Camera, Gamepad, Utensils } from 'lucide-react';
+
+// Map hobby titles to icons for dynamic rendering
+const hobbyIcons = {
+  Music: Music,
+  Reading: Book,
+  Writing: Pen,
+  Travel: Plane,
+  Painting: Palette,
+  Photography: Camera,
+  Gaming: Gamepad,
+  Cooking: Utensils,
+  // Add more hobby-to-icon mappings as needed
+  Default: Heart // Fallback icon
+};
 
 // Main App component for the resume template
 function ModernResume() {
@@ -23,6 +37,17 @@ function ModernResume() {
   };
 
   const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
+
+  // Function to get hobby icon based on title
+  const getHobbyIcon = (hobbyTitle) => {
+    const normalizedTitle = hobbyTitle?.toLowerCase();
+    for (const [key, Icon] of Object.entries(hobbyIcons)) {
+      if (normalizedTitle.includes(key.toLowerCase())) {
+        return Icon;
+      }
+    }
+    return hobbyIcons.Default; // Fallback to Heart icon
+  };
 
   return (
     // Overall container for the resume, centering it on the screen
@@ -276,25 +301,38 @@ function ModernResume() {
 
           {/* Hobbies Section */}
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
-            <div className="mt-4">
-              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
+            <div className="mt-6">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 flex items-center justify-start tracking-wider">
                 <Heart size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">HOBBIES</span>
               </h2>
-              <div className="grid grid-cols-1 gap-4 text-gray-700">
-                {resumeInfo?.hobbies?.map((hobby) => (
-                  <div key={hobby.id} className="flex flex-col">
-                    <h6 className="font-semibold text-[#1A374D]">{hobby.title}</h6>
-                    {hobby.description && (
-                      <p className="text-xs text-gray-600">{hobby.description}</p>
-                    )}
-                  </div>
-                ))}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                {resumeInfo?.hobbies?.map((hobby) => {
+                  const HobbyIcon = getHobbyIcon(hobby.title);
+                  return (
+                    <div
+                      key={hobby.id}
+                      className="flex items-start p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all duration-200 border border-gray-200"
+                    >
+                      <HobbyIcon
+                        size={20}
+                        className="mr-3 text-[#1A374D] flex-shrink-0"
+                        style={{ color: themeColor }}
+                      />
+                      <div>
+                        <h6 className="text-sm font-semibold text-[#1A374D] mb-1">{hobby.title}</h6>
+                        {hobby.description && (
+                          <p className="text-xs text-gray-600 leading-relaxed">{hobby.description}</p>
+                        )}
+                      </div>
+                    </div>
+                  );
+                })}
               </div>
             </div>
           )}
         </div>
       </div>
     </div>
-  )
+  );
 }
 export default ModernResume;
