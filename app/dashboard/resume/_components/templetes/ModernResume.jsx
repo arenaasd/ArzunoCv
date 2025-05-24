@@ -204,7 +204,7 @@ function ModernResume() {
                     <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Briefcase size={14} className="text-white" />
                     </div>
-                    <div className="">
+                    <div className="flex items-center justify-between">
                       <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] mb-0.5">{project.title}</h3>
                       {project?.link && (
                         <a
@@ -268,12 +268,12 @@ function ModernResume() {
           )}
 
           {/* Hobbies Section */}
-          {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
-            <>
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+ {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
+            <div className="mt-6">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
                 <Heart size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">HOBBIES</span>
               </h2>
-              <div className="flex flex-wrap justify-start items-center gap-4 sm:gap-6 text-gray-700 mt-2">
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 text-gray-700">
                 {resumeInfo?.hobbies?.map((hobby) => (
                   <div key={hobby.id} className="flex flex-col items-center text-center">
                     {hobby.title.toLowerCase() === 'music' && <Music size={24} className="mb-1.5 text-[#1A374D]" />}
@@ -284,7 +284,19 @@ function ModernResume() {
                   </div>
                 ))}
               </div>
-            </>
+              {resumeInfo?.hobbies?.some(hobby => hobby.description) && (
+                <div className="mt-4 text-sm text-gray-600">
+                  {resumeInfo.hobbies.map((hobby) => (
+                    hobby.description && (
+                      <div key={hobby.id} className="mb-2">
+                        <h6 className="font-semibold text-gray-700">{hobby.title}:</h6>
+                        <p className="text-xs">{hobby.description}</p>
+                      </div>
+                    )
+                  ))}
+                </div>
+              )}
+            </div>
           )}
         </div>
       </div>
