@@ -193,15 +193,17 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.education?.map((edu) => (
-                  <div key={edu.id} className="mb-6 relative">
-                    <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
+                  <div key={edu.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                    <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <GraduationCap size={14} className="text-white" />
                     </div>
-                    <p className="font-bold text-gray-700 text-xs sm:text-sm mb-0.5">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</p>
+                    <p className="font-bold text-xs sm:text-sm mb-1" style={{ color: themeColor }}>
+                      {formatDate(edu.startDate)} - {formatDate(edu.endDate)}
+                    </p>
                     <div>
-                      <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] inline">{edu.degree}</h3>
-                      <span className="text-sm sm:text-base text-gray-700"> in </span>
-                      <span className="text-sm sm:text-base font-medium text-gray-700">{edu.major}</span>
+                      <h3 className="text-base font-semibold text-[#1A374D] inline">{edu.degree}</h3>
+                      <span className="text-base text-gray-700"> in </span>
+                      <span className="text-base font-medium text-gray-700">{edu.major}</span>
                     </div>
                     <p className="text-xs text-gray-600 mb-1">{edu.universityOrCollegeName}</p>
                     {edu.description && (
@@ -223,12 +225,14 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.experience?.map((exp) => (
-                  <div key={exp.id} className="mb-6 relative">
-                    <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
+                  <div key={exp.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                    <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Briefcase size={14} className="text-white" />
                     </div>
-                    <p className="font-bold text-gray-700 text-xs sm:text-sm mb-0.5">{formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate)}</p>
-                    <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] mb-0.5">{exp.title}</h3>
+                    <p className="font-bold text-xs sm:text-sm mb-1" style={{ color: themeColor }}>
+                      {formatDate(exp.startDate)} - {exp.currentlyWorking ? 'Present' : formatDate(exp.endDate)}
+                    </p>
+                    <h3 className="text-base font-semibold text-[#1A374D] mb-0.5">{exp.title}</h3>
                     <p className="text-xs text-gray-600 mb-1">{exp.companyName}, {exp.city}, {exp.state}</p>
                     {exp?.summary && (
                       <div
@@ -250,12 +254,12 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.projects?.map((project) => (
-                  <div key={project.id} className="mb-6 relative">
-                    <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
+                  <div key={project.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                    <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Briefcase size={14} className="text-white" />
                     </div>
                     <div className="flex items-center justify-between">
-                      <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] mb-0.5">{project.title}</h3>
+                      <h3 className="text-base font-semibold text-[#1A374D] mb-0.5">{project.title}</h3>
                       {project?.link && (
                         <a
                           href={project.link}
@@ -295,12 +299,12 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.certificates?.map((cert, index) => (
-                  <div key={index} className="mb-6 relative">
-                    <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
+                  <div key={index} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                    <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Award size={14} className="text-white" />
                     </div>
                     <div className="flex justify-between items-baseline">
-                      <p className="font-bold text-gray-700 text-xs sm:text-sm mb-0.5">{cert?.title}</p>
+                      <p className="font-bold text-xs sm:text-sm mb-0.5">{cert?.title}</p>
                       {cert?.url && (
                         <a
                           href={cert.url}
@@ -312,7 +316,7 @@ function ModernResume() {
                         </a>
                       )}
                     </div>
-                    <p className="text-xs text-gray-600">{cert?.issuer} - {formatDate(cert?.date)}</p>
+                    <p className="text-xs text-gray-600" style={{ color: themeColor }}>{cert?.issuer} - {formatDate(cert?.date)}</p>
                   </div>
                 ))}
               </div>
