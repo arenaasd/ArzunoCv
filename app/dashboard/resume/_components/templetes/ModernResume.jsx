@@ -2,7 +2,10 @@
 import React, { useContext } from 'react';
 import ResumeInfoContext from "@/Context/ResumeInfoContext";
 import Image from 'next/image';
-import { User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book, Pen, Plane, Info, Award, MessageSquare, Heart, Palette, Camera, Gamepad, Utensils } from 'lucide-react';
+import { 
+  User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book, Pen, Plane, Info, Award, MessageSquare, Heart, Palette, Camera, Gamepad, Utensils, Code,
+  Bike, Dumbbell, Mountain, Soccer, Guitar, Film, Paintbrush, Chess, Fish, Sprout, Headphones, Mic, Palette as Art, Sailboat, ShoppingBag, Smartphone, Watch
+} from 'lucide-react';
 
 // Map hobby titles to icons for dynamic rendering
 const hobbyIcons = {
@@ -14,7 +17,24 @@ const hobbyIcons = {
   Photography: Camera,
   Gaming: Gamepad,
   Cooking: Utensils,
-  // Add more hobby-to-icon mappings as needed
+  Coding: Code,
+  Biking: Bike,
+  Fitness: Dumbbell,
+  Hiking: Mountain,
+  Soccer: Soccer,
+  Guitar: Guitar,
+  Movies: Film,
+  Drawing: Paintbrush,
+  Chess: Chess,
+  Fishing: Fish,
+  Gardening: Sprout,
+  Listening: Headphones,
+  Singing: Mic,
+  Art: Art,
+  Sailing: Sailboat,
+  Shopping: ShoppingBag,
+  Technology: Smartphone,
+  Watches: Watch,
   Default: Heart // Fallback icon
 };
 
@@ -40,9 +60,9 @@ function ModernResume() {
 
   // Function to get hobby icon based on title
   const getHobbyIcon = (hobbyTitle) => {
-    const normalizedTitle = hobbyTitle?.toLowerCase();
+    const normalizedTitle = hobbyTitle?.toLowerCase().trim();
     for (const [key, Icon] of Object.entries(hobbyIcons)) {
-      if (normalizedTitle.includes(key.toLowerCase())) {
+      if (normalizedTitle === key.toLowerCase()) {
         return Icon;
       }
     }
