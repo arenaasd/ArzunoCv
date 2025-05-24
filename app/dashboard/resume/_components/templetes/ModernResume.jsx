@@ -41,19 +41,10 @@ function App() {
             </h2>
             <div className="flex flex-col items-start space-y-3 text-sm sm:text-base text-gray-300">
               <div className="flex items-center w-full">
-                <Globe size={16} className="mr-2.5 text-[#9bd0ff]" /> www.yourwebsite.com
-              </div>
-              <div className="flex items-center w-full">
                 <MapPin size={16} className="mr-2.5 text-[#9bd0ff]" /> your address , street , location , abe , country .
               </div>
               <div className="flex items-center w-full">
                 <Phone size={16} className="mr-2.5 text-[#9bd0ff]" /> phone + 00 0123 456 78
-              </div>
-              <div className="flex items-center w-full">
-                <Phone size={16} className="mr-2.5 text-[#9bd0ff]" /> phone + 00 0123 456 78
-              </div>
-              <div className="flex items-center w-full">
-                <Mail size={16} className="mr-2.5 text-[#9bd0ff]" /> youremail@gmail.com
               </div>
               <div className="flex items-center w-full">
                 <Mail size={16} className="mr-2.5 text-[#9bd0ff]" /> youremail@gmail.com
