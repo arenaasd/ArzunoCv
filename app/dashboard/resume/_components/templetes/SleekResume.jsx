@@ -44,16 +44,23 @@ export default function JeremyTorresResume() {
           {imageUrl ? (
             <Image
               src={imageUrl}
-              alt="Profile"
-              width={192}
-              height={192}
-              className="w-full h-full object-cover object-top"
+              alt="Profile Picture"
+              width={100}
+              height={100}
+              className="rounded-full mr-5"
             />
           ) : (
-            <div className="w-full h-full bg-gray-300 flex items-center justify-center">
-              <span className="text-3xl font-bold text-gray-500">
-                {resumeInfo?.firstName?.[0]}{resumeInfo?.lastName?.[0]}
-              </span>
+            <div
+              className="rounded-full mr-5 flex items-center justify-center text-white font-bold"
+              style={{
+                width: '100px',
+                height: '100px',
+                backgroundColor: resumeInfo?.themeColor || '#666',
+                fontSize: '40px',
+                userSelect: 'none',
+              }}
+            >
+              {(resumeInfo?.firstName?.[0] || '') + (resumeInfo?.lastName?.[0] || '')}
             </div>
           )}
           <div className="flex-grow">
