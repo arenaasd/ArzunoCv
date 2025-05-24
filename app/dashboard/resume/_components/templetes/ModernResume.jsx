@@ -75,7 +75,7 @@ function App() {
               <MessageSquare size={20} className="mr-2.5 text-[#9bd0ff]" /> LANGUAGE
             </h2>
             <div className="space-y-4">
-              {['ENGLISH', 'SPANISH', 'CHINESE', 'FRENCH', 'DUTCH'].map((lang, index) => (
+              {['ENGLISH', 'SPANISH'].map((lang, index) => (
                 <div key={lang} className="flex flex-col items-start">
                   <span className="text-sm sm:text-base mb-1.5 text-gray-200">{lang}</span>
                   <div className="w-full bg-gray-600 rounded-full h-2.5">
