@@ -37,7 +37,15 @@ const templates = [
     image: "/templates/sleek.jpg",
     description: "This is the Sleek template. It offers a modern and polished design.",
     component: SleekResume
-  }
+  },
+  {
+      id: 5,
+      title: 'Modern',
+      isPro: true,
+      image: '/templates/Minimalist.jpg',
+      description: 'This is the Modern template. It is modern and good looking.',
+      component: ModernResume,
+    },
 ];
 
 const Loader = () => (

@@ -10,6 +10,7 @@ import MinimalistResume from "../../../dashboard/resume/_components/templetes/Mi
 import ProfessionalResume from "../../../dashboard/resume/_components/templetes/ProfessionalResume"
 import SleekResume from '../../../dashboard/resume/_components/templetes/SleekResume'
 import ShareModal from '@/components/ShareModel'
+import ModernResume from '@/app/dashboard/resume/_components/templetes/ModernResume'
 
 
 const fetcher = (id) => GlobalApi.GetResumeById(id).then(res => res.data.data)
@@ -24,6 +25,8 @@ const getTemplateComponent = (templateId) => {
       return <ProfessionalResume />
       case 4:
         return <SleekResume />
+      case 5:
+        return <ModernResume />
     default:
       return <PreviewSection />
   }

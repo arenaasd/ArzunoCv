@@ -30,6 +30,7 @@ import MinimalistResumePreview from './templetes/MinimalistResume'
 import ProfessionalResume from './templetes/ProfessionalResume'
 import SleekResume from './templetes/SleekResume'
 import ProjectsDetails from './Form/ProjectsDetails'
+import ModernResume from './templetes/ModernResume'
 
 const templates = [
   {
@@ -61,7 +62,15 @@ const templates = [
       title: 'Sleek',
       image: "/templates/sleek.jpg",
       description: "This is the Sleek template. It offers a modern and polished design.",
-      component: SleekResume
+      component: SleekResume,
+  },
+  {
+    id: 5,
+    title: 'Modern',
+    isPro: true,
+    image: '/templates/Minimalist.jpg',
+    description: 'This is the Modern template. It is modern and good looking.',
+    component: ModernResume,
   },
 ]
 
