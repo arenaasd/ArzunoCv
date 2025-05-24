@@ -1,14 +1,14 @@
-'use client'
-import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
-import ResumeInfoContext from '@/Context/ResumeInfoContext'
-import GlobalApi from '@/Service/GlobalApi'
-import { useParams } from 'next/navigation'
-import React, { useContext, useEffect, useState } from 'react'
-import { LoaderCircle, Upload } from 'lucide-react'
-import { toast } from 'sonner'
-import Image from 'next/image'
-import axios from 'axios'
+'use client';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import ResumeInfoContext from '@/Context/ResumeInfoContext';
+import GlobalApi from '@/Service/GlobalApi';
+import { useParams } from 'next/navigation';
+import React, { useContext, useEffect, useState } from 'react';
+import { LoaderCircle, Upload } from 'lucide-react';
+import { toast } from 'sonner';
+import Image from 'next/image';
+import axios from 'axios';
 
 const uploadImageToStrapi = async (imageFile) => {
   console.log('Uploading file:', imageFile); // Debug
@@ -20,9 +20,9 @@ const uploadImageToStrapi = async (imageFile) => {
       formData,
       {
         headers: {
-          'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-          'Content-Type': 'multipart/form-data'
-        }
+          Authorization: `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
+          'Content-Type': 'multipart/form-data',
+        },
       }
     );
     console.log('Strapi upload response:', res.data); // Debug
@@ -58,15 +58,17 @@ const PersonalDetails = ({ enableNext }) => {
         address: resumeInfo.address || '',
         phone: resumeInfo.phone || '',
         email: resumeInfo.email || '',
-        Image: resumeInfo.Image || null
+        Image: resumeInfo.Image || null,
       };
       setFormData(initData);
       if (resumeInfo.Image?.url) {
         const completeUrl = resumeInfo.Image.url.startsWith('http')
           ? resumeInfo.Image.url
           : `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`;
-        console.log('Constructed previewUrl:', completeUrl); // Debug
-        setPreviewUrl(completeUrl);
+        const cacheBuster = Date.now();
+        const urlWithCacheBuster = `${completeUrl}?v=${cacheBuster}`;
+        console.log('Constructed previewUrl:', urlWithCacheBuster); // Debug
+        setPreviewUrl(urlWithCacheBuster);
       }
       if (isFormValid(initData)) {
         setIsSaved(true);
@@ -80,7 +82,7 @@ const PersonalDetails = ({ enableNext }) => {
         address: '',
         phone: '',
         email: '',
-        Image: null
+        Image: null,
       });
     }
   }, [resumeInfo]);
@@ -88,9 +90,9 @@ const PersonalDetails = ({ enableNext }) => {
   const isFormValid = (data) => {
     const requiredFields = ['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email'];
     if (selectedTemplate?.id === 2) {
-      return requiredFields.every(field => data[field]) && data.Image;
+      return requiredFields.every((field) => data[field]) && data.Image;
     }
-    return requiredFields.every(field => data[field]);
+    return requiredFields.every((field) => data[field]);
   };
 
   useEffect(() => {
@@ -99,18 +101,18 @@ const PersonalDetails = ({ enableNext }) => {
     } else {
       enableNext(false);
     }
-  }, [formData, isSaved, selectedTemplate]);
+  }, [formData, isSaved, selectedTemplate, enableNext]);
 
   const HandleInputChange = (e) => {
     const { name, value } = e.target;
     const updatedFormData = {
       ...formData,
-      [name]: value
+      [name]: value,
     };
     setFormData(updatedFormData);
-    setResumeInfo(prev => ({
+    setResumeInfo((prev) => ({
       ...prev,
-      ...updatedFormData
+      ...updatedFormData,
     }));
     setIsSaved(false);
   };
@@ -145,20 +147,20 @@ const PersonalDetails = ({ enableNext }) => {
           address: formData.address,
           phone: formData.phone,
           email: formData.email,
-          ...(imageData && { Image: imageData.id })
-        }
+          ...(imageData && { Image: imageData.id }),
+        },
       };
       await GlobalApi.UpdateResumeDetails(params?.resumeId, dataToSave);
-      setResumeInfo({
-        ...resumeInfo,
+      setResumeInfo((prev) => ({
+        ...prev,
         ...formData,
-        Image: imageData ? imageData : resumeInfo.Image
-      });
+        Image: imageData ? imageData : prev.Image,
+      }));
       setIsSaved(true);
-      toast("Details Updated Successfully.");
+      toast('Details Updated Successfully.');
     } catch (err) {
       console.error('Save error:', err);
-      toast.error("Failed to update details.");
+      toast.error('Failed to update details.');
     } finally {
       setLoading(false);
     }
@@ -172,7 +174,7 @@ const PersonalDetails = ({ enableNext }) => {
       address: '',
       phone: '',
       email: '',
-      Image: null
+      Image: null,
     };
     setFormData(cleared);
     setResumeInfo(cleared);
@@ -193,12 +195,7 @@ const PersonalDetails = ({ enableNext }) => {
             {['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email'].map((field) => (
               <div key={field} className={field === 'jobTitle' || field === 'address' ? 'col-span-2' : ''}>
                 <label className="text-sm capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
-                <Input
-                  name={field}
-                  value={formData[field]}
-                  required
-                  onChange={HandleInputChange}
-                />
+                <Input name={field} value={formData[field]} required onChange={HandleInputChange} />
               </div>
             ))}
           </div>
@@ -213,6 +210,7 @@ const PersonalDetails = ({ enableNext }) => {
               {previewUrl ? (
                 <div className="mb-4">
                   <Image
+                    key={previewUrl} // Add key to force re-render
                     src={previewUrl}
                     width={128}
                     height={128}
@@ -239,25 +237,15 @@ const PersonalDetails = ({ enableNext }) => {
                   accept="image/*"
                 />
               </div>
-              <p className="text-xs text-gray-500 mt-1">
-                PNG, JPG, GIF up to 5MB
-              </p>
+              <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 5MB</p>
             </label>
           </div>
 
           <div className="mt-3 flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClear}
-              disabled={loading}
-            >
+            <Button type="button" variant="outline" onClick={onClear} disabled={loading}>
               Clear
             </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-            >
+            <Button type="submit" disabled={loading}>
               {loading ? <LoaderCircle className="animate-spin" /> : 'Save'}
             </Button>
           </div>

@@ -173,7 +173,7 @@ function ModernResume() {
           {/* Professional Experience Section */}
           {(currentWorkType === 'experience' && resumeInfo?.experience?.length > 0) && (
             <>
-              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-4 flex items-center justify-start tracking-wider">
                 <Briefcase size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">PROFESSIONAL EXPERIENCE</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -200,7 +200,7 @@ function ModernResume() {
           {/* Projects Section */}
           {(currentWorkType === 'projects' && resumeInfo?.projects?.length > 0) && (
             <>
-              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-4 flex items-center justify-start tracking-wider">
                 <Briefcase size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">PROJECTS</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -229,7 +229,7 @@ function ModernResume() {
                           <span
                             key={index}
                             className="px-2 py-0.5 text-[0.7rem] rounded-md text-white"
-                            style={{ backgroundColor: '#1A374D' }}
+                            style={{ backgroundColor: resumeInfo?.themeColor }}
                           >
                             {tech.trim()}
                           </span>
@@ -263,7 +263,7 @@ function ModernResume() {
                           rel="noopener noreferrer"
                           className="text-xs text-blue-600 underline mt-0.5 inline-block"
                         >
-                          View
+                          View Certificate
                         </a>
                       )}
                     </div>
@@ -276,7 +276,7 @@ function ModernResume() {
 
           {/* Hobbies Section */}
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
-            <div className="mt-6">
+            <div className="mt-4">
               <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
                 <Heart size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">HOBBIES</span>
               </h2>
