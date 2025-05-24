@@ -113,7 +113,7 @@ function ModernResume() {
           {/* Contact Section */}
           {(resumeInfo?.phone || resumeInfo?.email || resumeInfo?.address) && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <Phone size={16} className="mr-2 text-[#9bd0ff]" /> CONTACT
               </h2>
               <div className="flex flex-col items-start space-y-2 text-xs sm:text-sm text-gray-300">

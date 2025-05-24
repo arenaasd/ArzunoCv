@@ -16,10 +16,10 @@ const Header = () => {
   return (
     <div
       id="no-print"
-      className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-16 shadow-md p-4 gap-4"
+      className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-12 shadow-md p-3 gap-3"
     >
       <Link href="/">
-        <img src="/main.png" alt="logo" width={90} height={90} />
+        <img src="/main.png" alt="logo" width={60} height={60} />
       </Link>
 
       <div className="flex flex-wrap justify-center sm:justify-end gap-3 items-center">
@@ -48,7 +48,6 @@ const Header = () => {
           </Link>
         )}
 
-
         {/* Theme Toggle */}
         <Button
           variant="ghost"
@@ -64,7 +63,7 @@ const Header = () => {
           <>
             <Link href="/dashboard">
               <Button
-                className="dark:bg-white dark:text-black hover:bg-accent dark:hover:bg-gray-200 text-sm px-3 py-1 sm:text-base sm:px-4 sm:py-2"
+                className="dark:bg-white dark:text-black hover:bg-accent dark:hover:bg-gray-200 text-sm px-3 py-1"
               >
                 Dashboard
               </Button>
@@ -73,7 +72,7 @@ const Header = () => {
           </>
         ) : (
           <Link href="/auth/sign-in">
-            <Button>Get started</Button>
+            <Button className="text-sm px-3 py-1">Get started</Button>
           </Link>
         )}
       </div>
