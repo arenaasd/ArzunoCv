@@ -19,8 +19,13 @@ const Header = () => {
       className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-16 shadow-md p-2 sm:p-4 gap-2 sm:gap-4"
     >
       <Link href="/">
-        <img src="/main.png" alt="logo" width={90} height={90} />
+        <img
+          src="/main.png"
+          alt="logo"
+          className="w-20 h-20 sm:w-16 sm:h-16 xs:w-12 xs:h-12"
+        />
       </Link>
+
 
       <div className="flex flex-wrap justify-center sm:justify-end gap-2 sm:gap-3 items-center">
         {/* UPGRADE Button */}
