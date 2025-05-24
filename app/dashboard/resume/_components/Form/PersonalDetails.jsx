@@ -6,7 +6,7 @@ import { useParams } from 'next/navigation'
 import React, { useContext, useEffect, useState } from 'react'
 import { LoaderCircle, Upload } from 'lucide-react'
 import { toast } from 'sonner'
-import Image from 'next/image';
+import Image from 'next/image'
 import axios from 'axios'
 
 const uploadImageToStrapi = async (imageFile) => {
@@ -19,12 +19,22 @@ const uploadImageToStrapi = async (imageFile) => {
     {
       headers: {
         'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-        'Content-Type': 'multipart/form-data'
-      }
+        'Content-Type': 'multipart/form-data',
+      },
     }
   )
 
-  return res.data[0] // returns uploaded image object
+  // Fix here: access upload data correctly
+  if (res.data && res.data.data && res.data.data.length > 0) {
+    const uploadedFile = res.data.data[0]
+    return {
+      id: uploadedFile.id,
+      url: uploadedFile.attributes.url,
+      // add other attributes if needed
+    }
+  } else {
+    throw new Error('No upload data returned from Strapi')
+  }
 }
 
 const PersonalDetails = ({ enableNext }) => {
@@ -45,11 +55,10 @@ const PersonalDetails = ({ enableNext }) => {
         address: resumeInfo.address || '',
         phone: resumeInfo.phone || '',
         email: resumeInfo.email || '',
-        Image: resumeInfo.Image || null
+        Image: resumeInfo.Image || null,
       }
       setFormData(initData)
 
-      // Set preview URL for existing image
       if (resumeInfo.Image?.url) {
         const completeUrl = resumeInfo.Image.url.startsWith('http')
           ? resumeInfo.Image.url
@@ -62,7 +71,6 @@ const PersonalDetails = ({ enableNext }) => {
       }
     }
   }, [resumeInfo])
-
 
   const isFormValid = (data) => {
     const requiredFields = ['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email']
@@ -84,13 +92,13 @@ const PersonalDetails = ({ enableNext }) => {
     const { name, value } = e.target
     const updatedFormData = {
       ...formData,
-      [name]: value
+      [name]: value,
     }
 
     setFormData(updatedFormData)
     setResumeInfo(prev => ({
       ...prev,
-      ...updatedFormData
+      ...updatedFormData,
     }))
     setIsSaved(false)
   }
@@ -123,26 +131,28 @@ const PersonalDetails = ({ enableNext }) => {
           address: formData.address,
           phone: formData.phone,
           email: formData.email,
-          ...(imageData && { Image: imageData.id })  // Save image ID to link the image
-        }
+          ...(imageData && { Image: imageData.id }),
+        },
       }
-      console.log('Image uploaded:', imageData);  // Check the returned image data
-
 
       await GlobalApi.UpdateResumeDetails(params?.resumeId, dataToSave)
 
       setResumeInfo({
         ...resumeInfo,
         ...formData,
-        Image: imageData ? imageData : resumeInfo.Image
+        Image: imageData
+          ? {
+              id: imageData.id,
+              url: imageData.url,
+            }
+          : resumeInfo.Image,
       })
-      console.log("Image", imageData)
 
       setIsSaved(true)
-      toast("Details Updated Successfully.")
+      toast('Details Updated Successfully.')
     } catch (err) {
       console.error(err)
-      toast.error("Failed to update details.")
+      toast.error('Failed to update details.')
     } finally {
       setLoading(false)
     }
@@ -156,7 +166,7 @@ const PersonalDetails = ({ enableNext }) => {
       address: '',
       phone: '',
       email: '',
-      Image: null
+      Image: null,
     }
     setFormData(cleared)
     setResumeInfo(cleared)
@@ -173,10 +183,10 @@ const PersonalDetails = ({ enableNext }) => {
         <h2 className="font-bold text-lg">Personal Details</h2>
         <p>Get started with the basic information</p>
         <form onSubmit={onSave}>
-          <div className='grid grid-cols-2 mt-5 gap-3'>
-            {['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email'].map((field) => (
+          <div className="grid grid-cols-2 mt-5 gap-3">
+            {['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email'].map(field => (
               <div key={field} className={field === 'jobTitle' || field === 'address' ? 'col-span-2' : ''}>
-                <label className='text-sm capitalize'>{field.replace(/([A-Z])/g, ' $1')}</label>
+                <label className="text-sm capitalize">{field.replace(/([A-Z])/g, ' $1')}</label>
                 <Input
                   name={field}
                   value={formData[field]}
@@ -185,9 +195,9 @@ const PersonalDetails = ({ enableNext }) => {
                 />
               </div>
             ))}
-          </div> 
+          </div>
 
-          {selectedTemplate?.id === 2 || selectedTemplate?.id === 4 && (
+          {(selectedTemplate?.id === 2 || selectedTemplate?.id === 4) && (
             <div className="mt-4">
               <label className="text-sm">Profile Image</label>
               <label
@@ -223,27 +233,17 @@ const PersonalDetails = ({ enableNext }) => {
                     accept="image/*"
                   />
                 </div>
-                <p className="text-xs text-gray-500 mt-1">
-                  PNG, JPG, GIF up to 5MB
-                </p>
+                <p className="text-xs text-gray-500 mt-1">PNG, JPG, GIF up to 5MB</p>
               </label>
             </div>
           )}
 
           <div className="mt-3 flex justify-end gap-2">
-            <Button
-              type="button"
-              variant="outline"
-              onClick={onClear}
-              disabled={loading}
-            >
+            <Button type="button" variant="outline" onClick={onClear} disabled={loading}>
               Clear
             </Button>
-            <Button
-              type="submit"
-              disabled={loading}
-            >
-              {loading ? <LoaderCircle className="animate-spin" /> : "Save"}
+            <Button type="submit" disabled={loading}>
+              {loading ? <LoaderCircle className="animate-spin" /> : 'Save'}
             </Button>
           </div>
         </form>
