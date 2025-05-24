@@ -5,7 +5,7 @@ import { User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book
 function App() {
   return (
     // Overall container for the resume, centering it on the screen
-    <div className="shadow-lg h-full p-6 sm:p-12 font-['Inter'] box-border">
+    <div className="h-full font-['Inter']">
       {/* Main resume card container with shadow and rounded corners */}
       <div className="flex flex-col lg:flex-row w-full mx-auto max-w-4xl bg-white shadow-lg rounded-xl overflow-hidden">
 
