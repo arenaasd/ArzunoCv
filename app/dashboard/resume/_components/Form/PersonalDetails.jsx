@@ -11,10 +11,9 @@ import Image from 'next/image'
 import axios from 'axios'
 
 const uploadImageToStrapi = async (imageFile) => {
-  console.log('Uploading file:', imageFile);
+  console.log('Uploading file:', imageFile); // Debug
   const formData = new FormData();
   formData.append('files', imageFile);
-  
   try {
     const res = await axios.post(
       'https://arzunocv-strapi-backend-production.up.railway.app/api/upload',
@@ -22,26 +21,14 @@ const uploadImageToStrapi = async (imageFile) => {
       {
         headers: {
           'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-          // Don't set Content-Type manually for FormData - let browser set it with boundary
+          'Content-Type': 'multipart/form-data'
         }
       }
     );
-    
-    console.log('Strapi upload response:', res.data);
-    
-    if (!res.data || !res.data[0]) {
-      throw new Error('Invalid response from Strapi upload');
-    }
-    
+    console.log('Strapi upload response:', res.data); // Debug
     return res.data[0];
   } catch (error) {
     console.error('Strapi upload error:', error.response?.data || error.message);
-    if (error.response?.status === 413) {
-      throw new Error('File too large. Please upload a smaller image.');
-    }
-    if (error.response?.status === 401) {
-      throw new Error('Unauthorized. Please check your API key.');
-    }
     throw error;
   }
 };
@@ -100,14 +87,9 @@ const PersonalDetails = ({ enableNext }) => {
 
   const isFormValid = (data) => {
     const requiredFields = ['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email'];
-    
-    // Add template IDs that require images here
-    const imageRequiredTemplates = [2, 5]; // Update this array with your template IDs that need images
-    
-    if (imageRequiredTemplates.includes(selectedTemplate?.id)) {
-      return requiredFields.every(field => data[field]) && (data.Image || image);
+    if (selectedTemplate?.id === 2) {
+      return requiredFields.every(field => data[field]) && data.Image;
     }
-    
     return requiredFields.every(field => data[field]);
   };
 
@@ -117,7 +99,7 @@ const PersonalDetails = ({ enableNext }) => {
     } else {
       enableNext(false);
     }
-  }, [formData, isSaved, selectedTemplate, image]);
+  }, [formData, isSaved, selectedTemplate]);
 
   const HandleInputChange = (e) => {
     const { name, value } = e.target;
@@ -126,11 +108,9 @@ const PersonalDetails = ({ enableNext }) => {
       [name]: value
     };
     setFormData(updatedFormData);
-    
-    // Only update the specific field in resumeInfo to avoid overwriting system fields
     setResumeInfo(prev => ({
       ...prev,
-      [name]: value
+      ...updatedFormData
     }));
     setIsSaved(false);
   };
@@ -154,15 +134,10 @@ const PersonalDetails = ({ enableNext }) => {
     setLoading(true);
     try {
       let imageData = null;
-      
-      // Upload image if one is selected
-      if (image) {
-        console.log('Uploading image for template:', selectedTemplate?.id);
+      if ((selectedTemplate?.id === 2 || selectedTemplate?.id === 5) && image) {
         imageData = await uploadImageToStrapi(image);
-        console.log('Image uploaded successfully:', imageData);
+        console.log('Uploaded image data:', imageData);
       }
-
-      // Only include fields that can be updated - exclude system fields
       const dataToSave = {
         data: {
           firstName: formData.firstName,
@@ -171,34 +146,20 @@ const PersonalDetails = ({ enableNext }) => {
           address: formData.address,
           phone: formData.phone,
           email: formData.email,
-          // Save the complete image object instead of just the ID
-          ...(imageData && { Image: imageData })
+          ...(imageData && { Image: imageData.id })
         }
       };
-
-      // Remove any system fields that might be included accidentally
-      const fieldsToExclude = ['id', 'documentId', 'createdAt', 'updatedAt', 'publishedAt'];
-      fieldsToExclude.forEach(field => {
-        if (dataToSave.data[field]) {
-          delete dataToSave.data[field];
-        }
-      });
-
-      console.log('Data to save:', dataToSave); // Debug log
-
+      console.log('Data to save:', JSON.stringify(dataToSave, null, 2));
       await GlobalApi.UpdateResumeDetails(params?.resumeId, dataToSave);
-
       setResumeInfo({
         ...resumeInfo,
         ...formData,
         Image: imageData ? imageData : resumeInfo.Image
       });
-
       setIsSaved(true);
       toast("Details Updated Successfully.");
     } catch (err) {
-      console.error('Save error:', err);
-      console.error('Full error response:', err.response?.data);
+      console.error('Save error:', err.response?.data || err.message);
       toast.error("Failed to update details.");
     } finally {
       setLoading(false);
@@ -244,47 +205,48 @@ const PersonalDetails = ({ enableNext }) => {
             ))}
           </div>
 
-          {/* Image upload section - always visible for testing */}
-          <div className="mt-4">
-            <label className="text-sm">Profile Image</label>
-            <label
-              htmlFor="file-upload"
-              className="mt-2 flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-50"
-            >
-              {previewUrl ? (
-                <div className="mb-4">
-                  <Image
-                    src={previewUrl}
-                    width={128}
-                    height={128}
-                    alt="Profile preview"
-                    className="w-32 h-32 object-cover object-top rounded-full"
-                    onError={() => console.log('Image failed to load:', previewUrl)}
+          {selectedTemplate?.id === 2 || selectedTemplate?.id === 5 ? (
+            <div className="mt-4">
+              <label className="text-sm">Profile Image</label>
+              <label
+                htmlFor="file-upload"
+                className="mt-2 flex flex-col items-center border-2 border-dashed border-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-50"
+              >
+                {previewUrl ? (
+                  <div className="mb-4">
+                    <Image
+                      src={previewUrl}
+                      width={128}
+                      height={128}
+                      alt="Profile preview"
+                      className="w-32 h-32 object-cover object-top rounded-full"
+                      onError={() => console.log('Image failed to load:', previewUrl)}
+                    />
+                  </div>
+                ) : (
+                  <div className="mb-4 w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center">
+                    <Upload className="text-gray-400" />
+                  </div>
+                )}
+                <div className="flex text-sm leading-6 text-gray-600">
+                  <span className="relative rounded-md bg-white font-semibold text-blue-600 hover:text-blue-500">
+                    Upload a profile image
+                  </span>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
+                    onChange={handleImageChange}
+                    accept="image/*"
                   />
                 </div>
-              ) : (
-                <div className="mb-4 w-32 h-32 bg-gray-100 rounded-full flex items-center justify-center">
-                  <Upload className="text-gray-400" />
-                </div>
-              )}
-              <div className="flex text-sm leading-6 text-gray-600">
-                <span className="relative rounded-md bg-white font-semibold text-blue-600 hover:text-blue-500">
-                  Upload a profile image
-                </span>
-                <input
-                  id="file-upload"
-                  name="file-upload"
-                  type="file"
-                  className="sr-only"
-                  onChange={handleImageChange}
-                  accept="image/*"
-                />
-              </div>
-              <p className="text-xs text-gray-500 mt-1">
-                PNG, JPG, GIF up to 5MB
-              </p>
-            </label>
-          </div>
+                <p className="text-xs text-gray-500 mt-1">
+                  PNG, JPG, GIF up to 5MB
+                </p>
+              </label>
+            </div>
+          ) : null}
 
           <div className="mt-3 flex justify-end gap-2">
             <Button
