@@ -5,9 +5,9 @@ import { User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book
 function App() {
   return (
     // Overall container for the resume, centering it on the screen
-    <div className="min-h-screen bg-gray-100 flex items-center justify-center p-6 sm:p-12 font-['Inter'] box-border">
+    <div className="shadow-lg h-full p-6 sm:p-12 font-['Inter'] box-border">
       {/* Main resume card container with shadow and rounded corners */}
-      <div className="flex flex-col lg:flex-row w-full max-w-6xl bg-white shadow-xl rounded-xl overflow-hidden">
+      <div className="flex flex-col lg:flex-row w-full mx-auto max-w-4xl bg-white shadow-lg rounded-xl overflow-hidden">
 
         {/* Left Sidebar - Dark Blue Section */}
         <div className="w-full lg:w-1/3 bg-[#1A374D] text-white p-8 sm:p-10 flex flex-col items-center relative">
