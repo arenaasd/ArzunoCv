@@ -87,9 +87,14 @@ const PersonalDetails = ({ enableNext }) => {
 
   const isFormValid = (data) => {
     const requiredFields = ['firstName', 'lastName', 'jobTitle', 'address', 'phone', 'email'];
-    if (selectedTemplate?.id === 2) {
-      return requiredFields.every(field => data[field]) && data.Image;
+    
+    // Add template IDs that require images here
+    const imageRequiredTemplates = [2, 5]; // Update this array with your template IDs that need images
+    
+    if (imageRequiredTemplates.includes(selectedTemplate?.id)) {
+      return requiredFields.every(field => data[field]) && (data.Image || image);
     }
+    
     return requiredFields.every(field => data[field]);
   };
 
@@ -99,7 +104,7 @@ const PersonalDetails = ({ enableNext }) => {
     } else {
       enableNext(false);
     }
-  }, [formData, isSaved, selectedTemplate]);
+  }, [formData, isSaved, selectedTemplate, image]);
 
   const HandleInputChange = (e) => {
     const { name, value } = e.target;
@@ -134,8 +139,12 @@ const PersonalDetails = ({ enableNext }) => {
     setLoading(true);
     try {
       let imageData = null;
-      if (selectedTemplate?.id === 2 && image) {
+      
+      // Upload image if one is selected
+      if (image) {
+        console.log('Uploading image for template:', selectedTemplate?.id);
         imageData = await uploadImageToStrapi(image);
+        console.log('Image uploaded successfully:', imageData);
       }
 
       const dataToSave = {
@@ -150,6 +159,8 @@ const PersonalDetails = ({ enableNext }) => {
           ...(imageData && { Image: imageData })
         }
       };
+
+      console.log('Data to save:', dataToSave); // Debug log
 
       await GlobalApi.UpdateResumeDetails(params?.resumeId, dataToSave);
 
@@ -208,7 +219,7 @@ const PersonalDetails = ({ enableNext }) => {
             ))}
           </div>
 
-          {/* Removed conditional rendering for testing */}
+          {/* Image upload section - always visible for testing */}
           <div className="mt-4">
             <label className="text-sm">Profile Image</label>
             <label
