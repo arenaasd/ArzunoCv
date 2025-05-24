@@ -8,6 +8,7 @@ import PreviewSection from '../../_components/PreviewSection';
 import MinimalistResumePreview from '../../_components/templetes/MinimalistResume';
 import ProfessionalResume from '../../_components/templetes/ProfessionalResume';
 import SleekResume from '../../_components/templetes/SleekResume';
+import ModernResume from '../../_components/templetes/ModernResume';
 
 const templates = [
   {
