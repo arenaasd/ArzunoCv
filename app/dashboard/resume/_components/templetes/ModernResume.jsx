@@ -55,7 +55,7 @@ function ModernResume() {
           {/* About Me Section */}
           {resumeInfo?.summary && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <Info size={16} className="mr-2 text-[#9bd0ff]" /> ABOUT ME
               </h2>
               <p className="text-xs sm:text-sm text-gray-300 text-center leading-relaxed">
@@ -98,7 +98,7 @@ function ModernResume() {
           {/* Professional Skills Section */}
           {resumeInfo?.skills?.length > 0 && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <Award size={16} className="mr-2 text-[#9bd0ff]" /> PROFESSIONAL SKILLS
               </h2>
               <div className="space-y-3">
@@ -117,14 +117,19 @@ function ModernResume() {
           {/* Language Section */}
           {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <MessageSquare size={16} className="mr-2 text-[#9bd0ff]" /> LANGUAGE
               </h2>
               <div className="space-y-3">
                 {resumeInfo?.languages?.map((lang, index) => (
-                  <div key={index} className="flex flex-col items-start">
+                  <div key={index} className="flex justify-between items-start">
                     <span className="text-xs sm:text-sm mb-1 text-gray-200">{lang.title}</span>
-                    <span className="text-xs text-gray-300">({lang.level})</span>
+                    <span
+                      className="text-xs px-2 py-1 rounded-full text-white"
+                      style={{ backgroundColor: themeColor }}
+                    >
+                      {lang.level}
+                    </span>
                   </div>
                 ))}
               </div>
@@ -137,7 +142,7 @@ function ModernResume() {
           {/* Formal Education Section */}
           {resumeInfo?.education?.length > 0 && (
             <>
-              <h2 className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 flex items-center justify-start tracking-wider">
                 <GraduationCap size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">FORMAL EDUCATION</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -163,7 +168,7 @@ function ModernResume() {
           {/* Professional Experience Section */}
           {(currentWorkType === 'experience' && resumeInfo?.experience?.length > 0) && (
             <>
-              <h2 className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Briefcase size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">PROFESSIONAL EXPERIENCE</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -190,7 +195,7 @@ function ModernResume() {
           {/* Projects Section */}
           {(currentWorkType === 'projects' && resumeInfo?.projects?.length > 0) && (
             <>
-              <h2 className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Briefcase size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">PROJECTS</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -199,17 +204,19 @@ function ModernResume() {
                     <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Briefcase size={14} className="text-white" />
                     </div>
-                    <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] mb-0.5">{project.title}</h3>
-                    {project?.link && (
-                      <a
-                        href={project.link}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 underline mt-0.5 inline-block"
-                      >
-                        View Project
-                      </a>
-                    )}
+                    <div className="">
+                      <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] mb-0.5">{project.title}</h3>
+                      {project?.link && (
+                        <a
+                          href={project.link}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline mt-0.5 inline-block"
+                        >
+                          View Project
+                        </a>
+                      )}
+                    </div>
                     <p className="text-xs text-gray-500 leading-relaxed mt-1">{project.description}</p>
                     {project.techs && (
                       <div className="mt-2 flex flex-wrap gap-2">
@@ -233,7 +240,7 @@ function ModernResume() {
           {/* Certificates Section */}
           {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
             <>
-              <h2 className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Award size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">CERTIFICATIONS</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -263,7 +270,7 @@ function ModernResume() {
           {/* Hobbies Section */}
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
             <>
-              <h2 className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Heart size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">HOBBIES</span>
               </h2>
               <div className="flex flex-wrap justify-start items-center gap-4 sm:gap-6 text-gray-700 mt-2">
