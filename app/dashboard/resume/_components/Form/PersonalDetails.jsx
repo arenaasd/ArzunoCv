@@ -136,6 +136,7 @@ const PersonalDetails = ({ enableNext }) => {
         ...formData,
         Image: imageData ? imageData : resumeInfo.Image
       })
+      console.log("Image", imageData)
 
       setIsSaved(true)
       toast("Details Updated Successfully.")
