@@ -68,7 +68,7 @@ const templates = [
     id: 5,
     title: 'Modern',
     isPro: true,
-    image: '/templates/Minimalist.jpg',
+    image: '/templates/modern.png',
     description: 'This is the Modern template. It is modern and good looking.',
     component: ModernResume,
   },

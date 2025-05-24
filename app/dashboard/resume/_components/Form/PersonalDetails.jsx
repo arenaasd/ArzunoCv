@@ -11,9 +11,10 @@ import Image from 'next/image'
 import axios from 'axios'
 
 const uploadImageToStrapi = async (imageFile) => {
-  console.log('Uploading file:', imageFile); // Debug
+  console.log('Uploading file:', imageFile);
   const formData = new FormData();
   formData.append('files', imageFile);
+  
   try {
     const res = await axios.post(
       'https://arzunocv-strapi-backend-production.up.railway.app/api/upload',
@@ -21,14 +22,26 @@ const uploadImageToStrapi = async (imageFile) => {
       {
         headers: {
           'Authorization': `Bearer ${process.env.NEXT_PUBLIC_STRAPI_API_KEY}`,
-          'Content-Type': 'multipart/form-data'
+          // Don't set Content-Type manually for FormData - let browser set it with boundary
         }
       }
     );
-    console.log('Strapi upload response:', res.data); // Debug
+    
+    console.log('Strapi upload response:', res.data);
+    
+    if (!res.data || !res.data[0]) {
+      throw new Error('Invalid response from Strapi upload');
+    }
+    
     return res.data[0];
   } catch (error) {
     console.error('Strapi upload error:', error.response?.data || error.message);
+    if (error.response?.status === 413) {
+      throw new Error('File too large. Please upload a smaller image.');
+    }
+    if (error.response?.status === 401) {
+      throw new Error('Unauthorized. Please check your API key.');
+    }
     throw error;
   }
 };
@@ -113,9 +126,11 @@ const PersonalDetails = ({ enableNext }) => {
       [name]: value
     };
     setFormData(updatedFormData);
+    
+    // Only update the specific field in resumeInfo to avoid overwriting system fields
     setResumeInfo(prev => ({
       ...prev,
-      ...updatedFormData
+      [name]: value
     }));
     setIsSaved(false);
   };
@@ -147,6 +162,7 @@ const PersonalDetails = ({ enableNext }) => {
         console.log('Image uploaded successfully:', imageData);
       }
 
+      // Only include fields that can be updated - exclude system fields
       const dataToSave = {
         data: {
           firstName: formData.firstName,
@@ -159,6 +175,14 @@ const PersonalDetails = ({ enableNext }) => {
           ...(imageData && { Image: imageData })
         }
       };
+
+      // Remove any system fields that might be included accidentally
+      const fieldsToExclude = ['id', 'documentId', 'createdAt', 'updatedAt', 'publishedAt'];
+      fieldsToExclude.forEach(field => {
+        if (dataToSave.data[field]) {
+          delete dataToSave.data[field];
+        }
+      });
 
       console.log('Data to save:', dataToSave); // Debug log
 
@@ -174,6 +198,7 @@ const PersonalDetails = ({ enableNext }) => {
       toast("Details Updated Successfully.");
     } catch (err) {
       console.error('Save error:', err);
+      console.error('Full error response:', err.response?.data);
       toast.error("Failed to update details.");
     } finally {
       setLoading(false);
