@@ -7,6 +7,7 @@ import { User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book
 // Main App component for the resume template
 function ModernResume() {
   const { resumeInfo } = useContext(ResumeInfoContext);
+  const themeColor = resumeInfo?.themeColor || '#1A374D'; // Fallback color
 
   const imageUrl = resumeInfo?.Image?.url
     ? `https://arzunocv-strapi-backend-production.up.railway.app${resumeInfo.Image.url}`
@@ -49,13 +50,13 @@ function ModernResume() {
           {/* Name and Tagline */}
           <div className="text-center mb-6 sm:mb-8">
             <h1 className="text-2xl sm:text-3xl font-bold uppercase tracking-wider">{resumeInfo?.firstName} {resumeInfo?.lastName}</h1>
-            <p className="text-sm text-gray-300 mt-0.5">{resumeInfo?.jobTitle}</p>
+            <p className="text-sm text-gray-300 mt-0.5" style={{ color: themeColor }}>{resumeInfo?.jobTitle}</p>
           </div>
 
           {/* About Me Section */}
           {resumeInfo?.summary && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <Info size={16} className="mr-2 text-[#9bd0ff]" /> ABOUT ME
               </h2>
               <p className="text-xs sm:text-sm text-gray-300 text-center leading-relaxed">
@@ -98,7 +99,7 @@ function ModernResume() {
           {/* Professional Skills Section */}
           {resumeInfo?.skills?.length > 0 && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <Award size={16} className="mr-2 text-[#9bd0ff]" /> PROFESSIONAL SKILLS
               </h2>
               <div className="space-y-3">
@@ -117,7 +118,7 @@ function ModernResume() {
           {/* Language Section */}
           {resumeInfo?.selectedExtraSections?.includes('languages') && resumeInfo?.languages?.length > 0 && (
             <div className="w-full mb-6 sm:mb-8">
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-sm font-semibold uppercase border-b border-gray-600 pb-2 mb-3 text-center flex items-center justify-center tracking-wider">
                 <MessageSquare size={16} className="mr-2 text-[#9bd0ff]" /> LANGUAGE
               </h2>
               <div className="space-y-3">
@@ -126,7 +127,7 @@ function ModernResume() {
                     <span className="text-xs sm:text-sm mb-1 text-gray-200">{lang.title}</span>
                     <span
                       className="text-xs px-2 py-1 rounded-full text-white"
-                      style={{ backgroundColor: resumeInfo?.themeColor }}
+                      style={{ backgroundColor: themeColor }}
                     >
                       {lang.level}
                     </span>
@@ -142,7 +143,7 @@ function ModernResume() {
           {/* Formal Education Section */}
           {resumeInfo?.education?.length > 0 && (
             <>
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 flex items-center justify-start tracking-wider">
                 <GraduationCap size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">FORMAL EDUCATION</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -152,7 +153,11 @@ function ModernResume() {
                       <GraduationCap size={14} className="text-white" />
                     </div>
                     <p className="font-bold text-gray-700 text-xs sm:text-sm mb-0.5">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</p>
-                    <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] mb-0.5">{edu.degree} in {edu.major}</h3>
+                    <div>
+                      <h3 className="text-sm sm:text-base font-semibold text-[#1A374D] inline">{edu.degree}</h3>
+                      <span className="text-sm sm:text-base text-gray-700"> in </span>
+                      <span className="text-sm sm:text-base font-medium text-gray-700">{edu.major}</span>
+                    </div>
                     <p className="text-xs text-gray-600 mb-1">{edu.universityOrCollegeName}</p>
                     {edu.description && (
                       <p className="text-xs text-gray-500 leading-relaxed">
@@ -168,7 +173,7 @@ function ModernResume() {
           {/* Professional Experience Section */}
           {(currentWorkType === 'experience' && resumeInfo?.experience?.length > 0) && (
             <>
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Briefcase size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">PROFESSIONAL EXPERIENCE</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -195,7 +200,7 @@ function ModernResume() {
           {/* Projects Section */}
           {(currentWorkType === 'projects' && resumeInfo?.projects?.length > 0) && (
             <>
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Briefcase size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">PROJECTS</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -240,7 +245,7 @@ function ModernResume() {
           {/* Certificates Section */}
           {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
             <div>
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Award size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">CERTIFICATIONS</span>
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
@@ -249,18 +254,20 @@ function ModernResume() {
                     <div className="absolute -left-8 sm:-left-10 top-0 w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Award size={14} className="text-white" />
                     </div>
-                    <p className="font-bold text-gray-700 text-xs sm:text-sm mb-0.5">{cert?.title}</p>
+                    <div className="flex justify-between items-baseline">
+                      <p className="font-bold text-gray-700 text-xs sm:text-sm mb-0.5">{cert?.title}</p>
+                      {cert?.url && (
+                        <a
+                          href={cert.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-xs text-blue-600 underline mt-0.5 inline-block"
+                        >
+                          View
+                        </a>
+                      )}
+                    </div>
                     <p className="text-xs text-gray-600">{cert?.issuer} - {formatDate(cert?.date)}</p>
-                    {cert?.url && (
-                      <a
-                        href={cert.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="text-xs text-blue-600 underline mt-0.5 inline-block"
-                      >
-                        View Certificate
-                      </a>
-                    )}
                   </div>
                 ))}
               </div>
@@ -270,38 +277,24 @@ function ModernResume() {
           {/* Hobbies Section */}
           {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
             <div className="mt-6">
-              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
                 <Heart size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">HOBBIES</span>
               </h2>
-              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 text-gray-700">
+              <div className="grid grid-cols-1 gap-4 text-gray-700">
                 {resumeInfo?.hobbies?.map((hobby) => (
-                  <div key={hobby.id} className="flex flex-col items-center text-center">
-                    {hobby.title.toLowerCase() === 'music' && <Music size={24} className="mb-1.5 text-[#1A374D]" />}
-                    {hobby.title.toLowerCase() === 'reading' && <Book size={24} className="mb-1.5 text-[#1A374D]" />}
-                    {hobby.title.toLowerCase() === 'writing' && <Pen size={24} className="mb-1.5 text-[#1A374D]" />}
-                    {hobby.title.toLowerCase() === 'travel' && <Plane size={24} className="mb-1.5 text-[#1A374D]" />}
-                    <span className="text-xs font-medium">{hobby.title}</span>
+                  <div key={hobby.id} className="flex flex-col">
+                    <h6 className="font-semibold text-[#1A374D]">{hobby.title}</h6>
+                    {hobby.description && (
+                      <p className="text-xs text-gray-600">{hobby.description}</p>
+                    )}
                   </div>
                 ))}
               </div>
-              {resumeInfo?.hobbies?.some(hobby => hobby.description) && (
-                <div className="mt-4 text-sm text-gray-600">
-                  {resumeInfo.hobbies.map((hobby) => (
-                    hobby.description && (
-                      <div key={hobby.id} className="mb-2">
-                        <h6 className="font-semibold text-gray-700">{hobby.title}:</h6>
-                        <p className="text-xs">{hobby.description}</p>
-                      </div>
-                    )
-                  ))}
-                </div>
-              )}
             </div>
           )}
         </div>
       </div>
     </div>
-  );
+  )
 }
-
 export default ModernResume;
