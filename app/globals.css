@@ -68,8 +68,14 @@ body {
     display: none;
   }
   #print-area {
-    display: block;
-    transform-origin: top left;
+    display: block !important;
+    transform-origin: top left !important;
+    max-width: 1024px;
+    width: 100% !important;
+    margin: 0 auto !important;
+    padding: 0 !important;
+    zoom: 1 !important;
+    transform: none !important;
   }
   .dark {
     all: unset !important;
