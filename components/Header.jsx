@@ -16,13 +16,13 @@ const Header = () => {
   return (
     <div
       id="no-print"
-      className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-12 shadow-md p-3 gap-3"
+      className="flex flex-wrap sm:flex-nowrap justify-between items-center h-auto sm:h-16 shadow-md p-2 sm:p-4 gap-2 sm:gap-4"
     >
       <Link href="/">
-        <img src="/main.png" alt="logo" width={60} height={60} />
+        <img src="/main.png" alt="logo" width={48} height={48} className="sm:w-[90px] sm:h-[90px]" />
       </Link>
 
-      <div className="flex flex-wrap justify-center sm:justify-end gap-3 items-center">
+      <div className="flex flex-wrap justify-center sm:justify-end gap-2 sm:gap-3 items-center">
         {/* UPGRADE Button */}
         {currentPlan === 'basic' ? (
           <Link
@@ -63,7 +63,7 @@ const Header = () => {
           <>
             <Link href="/dashboard">
               <Button
-                className="dark:bg-white dark:text-black hover:bg-accent dark:hover:bg-gray-200 text-sm px-3 py-1"
+                className="dark:bg-white dark:text-black hover:bg-accent dark:hover:bg-gray-200 text-xs px-2 py-1 sm:text-base sm:px-4 sm:py-2"
               >
                 Dashboard
               </Button>
@@ -72,7 +72,9 @@ const Header = () => {
           </>
         ) : (
           <Link href="/auth/sign-in">
-            <Button className="text-sm px-3 py-1">Get started</Button>
+            <Button className="text-xs px-2 py-1 sm:text-base sm:px-4 sm:py-2">
+              Get started
+            </Button>
           </Link>
         )}
       </div>

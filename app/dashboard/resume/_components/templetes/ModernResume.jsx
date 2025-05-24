@@ -2,9 +2,47 @@
 import React, { useContext } from 'react';
 import ResumeInfoContext from "@/Context/ResumeInfoContext";
 import Image from 'next/image';
-import { 
-  User, Globe, MapPin, Phone, Mail, GraduationCap, Briefcase, Music, Book, Pen, Plane, Info, Award, MessageSquare, Heart, Palette, Camera, Gamepad, Utensils, Code,
-  Bike, Dumbbell, Mountain, Soccer, Guitar, Film, Paintbrush, Chess, Fish, Sprout, Headphones, Mic, Palette as Art, Sailboat, ShoppingBag, Smartphone, Watch
+import {
+  User,
+  Globe,
+  MapPin,
+  Phone,
+  Mail,
+  GraduationCap,
+  Briefcase,
+  Music,
+  Book,
+  Pen,
+  Plane,
+  Info,
+  Award,
+  MessageSquare,
+  Heart,
+  Palette,
+  Camera,
+  Gamepad,
+  Utensils,
+  Code,
+  Bike,
+  Dumbbell,
+  Mountain,
+  Soccer,
+  Guitar,
+  Film,
+  Paintbrush,
+  Chess,
+  Fish,
+  Sprout,
+  Headphones,
+  Mic,
+  Palette as Art,
+  Sailboat,
+  ShoppingBag,
+  Smartphone,
+  Watch,
+  Hammer,
+  PawPrint,
+  Archive
 } from 'lucide-react';
 
 // Map hobby titles to icons for dynamic rendering
@@ -35,6 +73,18 @@ const hobbyIcons = {
   Shopping: ShoppingBag,
   Technology: Smartphone,
   Watches: Watch,
+  Blogging: Pen,
+  LanguageLearning: MessageSquare,
+  Volunteering: Award,
+  Meditation: Info,
+  DIY: Hammer,
+  Animals: PawPrint,
+  Collecting: Archive,
+  Fashion: ShoppingBag,
+  Podcasts: Headphones,
+  Running: Dumbbell,
+  BoardGames: Gamepad,
+  Spirituality: Globe,
   Default: Heart // Fallback icon
 };
 
