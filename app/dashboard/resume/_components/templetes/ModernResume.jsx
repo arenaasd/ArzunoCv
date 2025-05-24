@@ -268,9 +268,9 @@ function ModernResume() {
           )}
 
           {/* Hobbies Section */}
- {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
+          {resumeInfo?.selectedExtraSections?.includes('hobbies') && resumeInfo?.hobbies?.length > 0 && (
             <div className="mt-6">
-              <h2 style={{ color: themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
+              <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-4 sm:mb-6 flex items-center justify-start tracking-wider">
                 <Heart size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">HOBBIES</span>
               </h2>
               <div className="grid grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6 text-gray-700">
