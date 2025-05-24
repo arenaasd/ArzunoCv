@@ -126,7 +126,7 @@ function ModernResume() {
                     <span className="text-xs sm:text-sm mb-1 text-gray-200">{lang.title}</span>
                     <span
                       className="text-xs px-2 py-1 rounded-full text-white"
-                      style={{ backgroundColor: themeColor }}
+                      style={{ backgroundColor: resumeInfo?.themeColor }}
                     >
                       {lang.level}
                     </span>
@@ -239,7 +239,7 @@ function ModernResume() {
 
           {/* Certificates Section */}
           {resumeInfo?.selectedExtraSections?.includes('certificates') && resumeInfo?.certificates?.length > 0 && (
-            <>
+            <div>
               <h2 style={{ color: resumeInfo?.themeColor }} className="text-xl sm:text-2xl font-bold uppercase text-[#1A374D] mb-6 sm:mb-8 mt-6 flex items-center justify-start tracking-wider">
                 <Award size={18} className="mr-2 text-[#1A374D]" /> <span className="align-middle">CERTIFICATIONS</span>
               </h2>
@@ -264,7 +264,7 @@ function ModernResume() {
                   </div>
                 ))}
               </div>
-            </>
+            </div>
           )}
 
           {/* Hobbies Section */}
