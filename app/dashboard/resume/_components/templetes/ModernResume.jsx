@@ -193,7 +193,7 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.education?.map((edu) => (
-                  <div key={edu.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                  <div key={edu.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200">
                     <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <GraduationCap size={14} className="text-white" />
                     </div>
@@ -225,7 +225,7 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.experience?.map((exp) => (
-                  <div key={exp.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                  <div key={exp.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200">
                     <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Briefcase size={14} className="text-white" />
                     </div>
@@ -254,7 +254,7 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.projects?.map((project) => (
-                  <div key={project.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                  <div key={project.id} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 ">
                     <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Briefcase size={14} className="text-white" />
                     </div>
@@ -299,7 +299,7 @@ function ModernResume() {
               </h2>
               <div className="relative border-l-2 border-gray-300 pl-6 sm:pl-8">
                 {resumeInfo?.certificates?.map((cert, index) => (
-                  <div key={index} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 hover:bg-gray-100 transition-all duration-200">
+                  <div key={index} className="mb-6 relative p-4 rounded-lg bg-gray-50 border border-gray-200 ">
                     <div className="absolute left-[-0.875rem] sm:left-[-1.25rem] top-[-0.75rem] w-7 h-7 rounded-full bg-[#1A374D] flex items-center justify-center border-2 border-white shadow-md shadow-[#1A374D]">
                       <Award size={14} className="text-white" />
                     </div>
@@ -335,7 +335,7 @@ function ModernResume() {
                   return (
                     <div
                       key={hobby.id}
-                      className="flex items-start p-4 rounded-lg bg-gray-50 hover:bg-gray-100 transition-all duration-200 border border-gray-200"
+                      className="flex items-start p-4 rounded-lg bg-gray-50  border border-gray-200"
                     >
                       <HobbyIcon
                         size={20}
