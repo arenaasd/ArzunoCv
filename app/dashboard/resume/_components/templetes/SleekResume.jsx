@@ -38,17 +38,23 @@ export default function JeremyTorresResume() {
   const currentWorkType = resumeInfo?.selectedWorkType || 'experience';
 
   return (
-    <div className="shadow-lg bg-[#2b2b2b] h-full p-4 md:p-8 lg:p-14 font-arial">
+    <div className="shadow-lg bg-[#2b2b2b] min-h-screen p-4 md:p-8 lg:p-14 font-arial">
       <div className="max-w-4xl mx-auto flex flex-wrap gap-5 text-white" >
         <div className="w-full flex items-center mb-5">
-          {imageUrl && (
+          {imageUrl ? (
             <Image
               src={imageUrl}
-              alt="Profile Picture"
-              width={100}
-              height={100}
-              className="rounded-full mr-5"
+              alt="Profile"
+              width={192}
+              height={192}
+              className="w-full h-full object-cover object-top"
             />
+          ) : (
+            <div className="w-full h-full bg-gray-300 flex items-center justify-center">
+              <span className="text-3xl font-bold text-gray-500">
+                {resumeInfo?.firstName?.[0]}{resumeInfo?.lastName?.[0]}
+              </span>
+            </div>
           )}
           <div className="flex-grow">
             <p className="font-bold text-lg">{resumeInfo?.jobTitle}</p>
